@@ -1,0 +1,1 @@
+export const DELETE_TICKET = "DELETE_TICKET";

@@ -1,0 +1,23 @@
+[
+    {
+      "question": "My PC is turned on, but the monitor shows nothing. What can I do?",
+      "answer": "Check if the VGA cable at the back of the CPU is connected properly. Disconnect and reconnect the cable"
+    },
+    {
+      "question": "My Keyboard is not working. Help!",
+      "answer": "Check if your keyboard is probably plugged into the USB cable. Try connecting it to other cables. Raise a ticket if the problem persists"
+    },
+    {
+      "question": "My PC is running slow and everything is lagging. What could be wrong?",
+      "answer": "Press Ctlr + Alt + Delete and open up the task manager. Take a screenshot of the processes and submit this along with a ticket."
+    },
+    {
+      "question": "My PC does not work. Can I get a better one so I can complete my work?",
+      "answer": "No"
+    },
+    {
+      "question": "My monitor is displaying a countdown timer and my CPU is beeping. Am I in any danger?",
+      "answer": "Yes. Run."
+    }
+  ]
+  

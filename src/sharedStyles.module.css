@@ -1,0 +1,16 @@
+.logincard {
+  position: absolute;
+  margin-top: 10%;
+  margin-left: 25%;
+}
+
+.loginScreenLeft {
+
+  width: calc(100% / 3);
+  background-color: gold;
+}
+
+.loginScreenRight {
+  background-color: black;
+  width: calc(2*(100% / 3))
+}
