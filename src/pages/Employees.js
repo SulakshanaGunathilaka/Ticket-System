@@ -58,17 +58,15 @@ export default function EmployeePage() {
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
   const [user, setUser] = useState(null);
-   const [searchQuery, setSearchQuery] = useState('');
-
+  const [searchQuery, setSearchQuery] = useState('');
   const [data, setData] = useState(null);
   const [userDetails, setUserDetails] = useState("");
-
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-
   const user1 = AuthService.getCurrentUser();
 
- 
+
+
+ //---------------Users Filter Function----------------//
 
   const performSearch = async () => {
     try {
@@ -102,6 +100,9 @@ export default function EmployeePage() {
 
   console.log("roles");
   console.log(user1.user.roles[0].name);
+
+
+  //-----------------UserService.getAllUsers Function--------------//
 
   useEffect(() => {
     console.log("initial load");
@@ -137,6 +138,11 @@ export default function EmployeePage() {
   }, [totalPages]);
  
 
+
+//-----------------GetNewPage Function--------------//
+
+
+
   async function getNewPage(pageNo) {
     setLoading(true);
     try {
@@ -155,6 +161,8 @@ export default function EmployeePage() {
     }
   }
 
+//-----------------UpdatePageNumbers Function--------------//
+
   function updatePageNumbers() {
     const pageNumberArray = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -162,6 +170,9 @@ export default function EmployeePage() {
     }
     setPageNumbers(pageNumberArray);
   }
+
+
+
 
   const handleDelete = async (userId) => {
     // loginUser(username,password)
@@ -190,7 +201,7 @@ export default function EmployeePage() {
     handleDelete(userId);
   };
 
-
+//-----------------ViewUser Function--------------//
 
   const ViewUser = (userId) => {
     // const UserID = props.userID
@@ -233,10 +244,7 @@ export default function EmployeePage() {
     setShowModal1(true);
   };
 
-  // const handleClickedit = (userId) => {
-  //   finalSubmit(userId);
-  //   setShowModal2(true);
-  // };
+ 
 
 
   const UserStatus = (userId) => {
@@ -314,9 +322,7 @@ export default function EmployeePage() {
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
-    {/* <input class="bg-gray-100 outline-none" type="text" placeholder="Article name or keyword..."  value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    onKeyDown={handleKeyDown} /> */}
+
 
 <input
         className="bg-gray-100 outline-none"
@@ -334,15 +340,7 @@ export default function EmployeePage() {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </div>
-    {isDropdownOpen && (
-          <div className="absolute bg-white rounded-lg shadow-lg">
-            <ul className="py-2">
-              <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">id</li>
-              <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">name</li>
-              <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">employee post</li>
-            </ul>
-          </div>
-        )}
+ 
   </div>
   <div class="bg-black py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
     <button  onClick={performSearch}  >
@@ -361,31 +359,21 @@ export default function EmployeePage() {
                   <th className="text-center w-64" scope="col">First Name</th>
                   <th className="text-center w-64">Last Name</th>
                   <th className="text-center w-64">Email</th>
-                  {/* <th className="text-center w-64">Status</th> */}
-                  {/* <th className="text-center w-64">Commands</th> */}
+                 
                 </tr>
               </thead>
               <tbody>
-                {/* const items = userList.map((user) => ( */}
+               
                 {userList?.map((user) => (
                   <tr className="" key={user.id}>
                     <td className="text-center">{user.firstName}</td>
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
                     <td className="text-center">
-                      {/* {" "} */}
-                      {/* {user.userStatus == "ACTIVE" ? (
-                        <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
-                          ACTIVE
-                        </span>
-                      ) : (
-                        <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
-                          INACTIVE
-                        </span>
-                      )} */}
+                     
                     </td>
                     <td className="text-center">
-                      {/* {console.log("admin"+ user1.roles.name)} */}
+                     
                       {user1.user.roles[0].name == "ADMIN" ? (
                         <button
                           type="button"

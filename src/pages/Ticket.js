@@ -103,7 +103,7 @@ export default function TicketPage() {
 
  
 
-  // this one is correc//
+//-------------------Add Ticket Function----------------//
 
   const AddTickets = (e) => {
     try {
@@ -183,7 +183,7 @@ export default function TicketPage() {
   }, [totalPages]);
 
 
-
+//-------------------GetNewPage Function----------------//
   
   async function getNewPage(pageNo) {
     setLoading(true);
@@ -245,6 +245,9 @@ export default function TicketPage() {
   //   handleLogin(ticketId);
   // }, );
 
+
+
+  //-------------------Ticket Filter Function----------------//
 
   const performSearch = async () => {
     try {
