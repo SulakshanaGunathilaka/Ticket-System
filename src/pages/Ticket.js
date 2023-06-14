@@ -36,6 +36,8 @@ import {
 import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
+import { connect, useDispatch } from "react-redux";
+import { deleteTicket } from "../redux/actions/ticketAction";
 
 function Icon({ id, open }) {
   return (
@@ -72,6 +74,7 @@ export default function TicketPage() {
   const [userId, setUserId] = useState('');
   const [type, setType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshFlag, setRefreshFlag] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -114,7 +117,7 @@ export default function TicketPage() {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
           userId: userId,
@@ -128,6 +131,8 @@ export default function TicketPage() {
           // alert('Successfully Added')
           CommonToasts.basicToast("Successfully Added");
           setShowModal(false);
+          setRefreshFlag(!refreshFlag)
+
           // navigate("/")
         }
       }).catch((error) => {
@@ -139,10 +144,17 @@ export default function TicketPage() {
       setLoading(false);
     }
   };
-  
+
   const [tickets, setTickets] = useState([]);
 
 
+  const dispatch = useDispatch();
+
+  
+  const handleDelete = (ticketId) => {
+    dispatch(deleteTicket(ticketId));
+    window.location.reload();
+  };
 
 
 
@@ -211,28 +223,28 @@ export default function TicketPage() {
   }
 
   
-  const handleDelete = async (ticketId) => {
-    // loginUser(username,password)
-    setLoading(true);
-    await delay(1000);
-    console.log("start");
-    console.log(loading);
+  // const handleDelete = async (ticketId) => {
+  //   // loginUser(username,password)
+  //   setLoading(true);
+  //   await delay(1000);
+  //   console.log("start");
+  //   console.log(loading);
 
-    try {
-      await TicketService.DeleteTicket(ticketId).then(() => {
-        console.log("sucess");
-        setLoading(false);
+  //   try {
+  //     await TicketService.DeleteTicket(ticketId).then(() => {
+  //       console.log("sucess");
+  //       setLoading(false);
 
-        // CommonToasts.basicToast("Successfully Logged In")
-        // navigate("/home")
-      });
-    } catch (e) {
-      console.log("Error");
-      console.log(e);
-      setLoading(false);
-      // CommonToasts.errorToast(e.message)
-    }
-  };
+  //       // CommonToasts.basicToast("Successfully Logged In")
+  //       // navigate("/home")
+  //     });
+  //   } catch (e) {
+  //     console.log("Error");
+  //     console.log(e);
+  //     setLoading(false);
+  //     // CommonToasts.errorToast(e.message)
+  //   }
+  // };
 
   const handleClick = (ticketId) => {
     setShowModal(true);
@@ -261,6 +273,7 @@ export default function TicketPage() {
 
       console.log(response.data);
       setTicketList(response.data.body.content);
+      
     } catch (error) {
       console.error(error);
     }
@@ -398,7 +411,7 @@ export default function TicketPage() {
                      <button
                        type="button"
                        class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                       onClick={() => handleClick(ticket.id)}
+                       onClick={() => handleDelete(ticket.id)}
                      >
                        <svg
                          xmlns="http://www.w3.org/2000/svg"
