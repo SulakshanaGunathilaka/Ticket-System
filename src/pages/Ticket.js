@@ -36,8 +36,8 @@ import {
 import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
-import { connect, useDispatch } from "react-redux";
-import { deleteTicket } from "../redux/actions/ticketAction";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { deleteTicket, getAllTickets } from "../redux/actions/ticketAction";
 
 function Icon({ id, open }) {
   return (
@@ -55,8 +55,7 @@ function Icon({ id, open }) {
   );
 }
 
-
-export default function TicketPage() {
+ function TicketPage(props) {
 
 
   const [ticketList, setTicketList] = useState([]);
@@ -86,13 +85,19 @@ export default function TicketPage() {
     }
 
   });
+  const { tickets, pageNo, pageSize } = props;
 
+
+  console.log("test Ticket List",tickets)
+  useEffect(() => {
+    dispatch(getAllTickets(pageNo, pageSize));
+   
+  }, []);
 
   const [data, setData] = useState(null);
   const [userDetails, setUserDetails] = useState("");
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 
   const user1 = AuthService.getCurrentUser();
 
@@ -101,8 +106,6 @@ export default function TicketPage() {
   };
 
   const formattedDate = moment(ticket.createdDate).format('MMMM Do YYYY, h:mm:ss a');
-
-
 
  
 
@@ -145,7 +148,7 @@ export default function TicketPage() {
     }
   };
 
-  const [tickets, setTickets] = useState([]);
+  // const [tickets, setTickets] = useState([]);
 
 
   const dispatch = useDispatch();
@@ -161,31 +164,36 @@ export default function TicketPage() {
   console.log("roles");
   console.log(user1.user.roles[0].name);
 
-  useEffect(() => {
-    console.log("initial load");
+  // useEffect(() => {
+  //   dispatch(getAllTickets(pageNo, pageSize)); 
+  // }, []);
 
-    async function getAllTickets() {
-      setLoading(true);
-      try {
-        const response = await TicketService.getAllTickets(1, 5);
-        //await delay(2000);
 
-        console.log("Hellooo", response)
-        setData(response.data.body.content);
-        setTicketList(response.data.body);
-        setTotalPages(response.data.body.totalPages);
-        setCurrentPage(1);
-        setLoading(false);
-      } catch (e) {
-        CommonToasts.errorToast(e.message);
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   console.log("initial load");
 
-    getAllTickets();
-    setCurrentPage(1);
-    updatePageNumbers();
-  }, []);
+  //   async function getAllTickets() {
+  //     setLoading(true);
+  //     try {
+  //       const response = await TicketService.getAllTickets(1, 5);
+  //       //await delay(2000);
+
+  //       console.log("Hellooo", response)
+  //       setData(response.data.body.content);
+  //       setTicketList(response.data.body);
+  //       setTotalPages(response.data.body.totalPages);
+  //       setCurrentPage(1);
+  //       setLoading(false);
+  //     } catch (e) {
+  //       CommonToasts.errorToast(e.message);
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   getAllTickets();
+  //   setCurrentPage(1);
+  //   updatePageNumbers();
+  // }, []);
 
 
   useEffect(() => {
@@ -204,7 +212,7 @@ export default function TicketPage() {
       //await delay(2000);
 
       setData(response.data.body.content);
-      setTicketList(response.data.body);
+      // setTicketList(response.data.body);
       setTotalPages(response.data.body.totalPages);
       setCurrentPage(pageNo);
       setLoading(false);
@@ -246,11 +254,7 @@ export default function TicketPage() {
   //   }
   // };
 
-  const handleClick = (ticketId) => {
-    setShowModal(true);
-   
-    handleDelete(ticketId);
-  };
+
 
 
   // useEffect((ticketId) => {
@@ -313,8 +317,8 @@ export default function TicketPage() {
         <TitleText titleText="Ticket" />
 
 
-        {loading ? CommonSpinners.pageSpinner("Fetching Users")
-          :
+        {/* {loading ? CommonSpinners.pageSpinner("Fetching Users")
+          : */}
           <div className=" absolute mt-4 h-[82%] w-[82%] bg-white rounded-lg border border-gray-200 shadow-md">
 
             <div class="space-y-10">
@@ -372,7 +376,7 @@ export default function TicketPage() {
             <div className="flex flex-wrap overflow-auto h-3/4  ">
 
 
-            {ticketList?.map((ticket,index) => (
+            {tickets?.tickets?.body.map((ticket,index) => (
 
 
 <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-1 mt-2 max-w-sm shadow-lg w-5/6 h-auto">
@@ -464,7 +468,7 @@ export default function TicketPage() {
             </nav>
           </div>
 
-        }
+        {/* } */}
 
       </div>
 
@@ -671,3 +675,19 @@ export default function TicketPage() {
     </>
   );
 }
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getAllTickets: (pageNo, pageSize) => dispatch(getAllTickets(pageNo, pageSize)),
+//   };
+// };
+
+// export default connect(null, mapDispatchToProps)(TicketPage);
+
+function mapStateToProps(state) {
+  return {
+    tickets: state.fieldData,
+  };
+}
+
+export default connect(mapStateToProps, {})(TicketPage)

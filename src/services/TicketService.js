@@ -8,6 +8,7 @@ const user1 = AuthService.getCurrentUser();
 
 const getAllTickets = async (pageNo, pageSize) => {
   // const user = JSON.parse(localStorage.getItem("user"));
+  const user1 = AuthService.getCurrentUser();
 
   try {
     return await axios
