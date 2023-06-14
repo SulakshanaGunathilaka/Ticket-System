@@ -39,6 +39,9 @@ import moment from "moment";
 import { connect, useDispatch } from "react-redux";
 import { deleteTicket } from "../redux/actions/ticketAction";
 
+
+
+
 function Icon({ id, open }) {
   return (
     <svg
@@ -67,6 +70,7 @@ export default function TicketPage() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
+  const [showModal3, setShowModal3] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
   const [user, setUser] = useState(null);
@@ -75,6 +79,13 @@ export default function TicketPage() {
   const [type, setType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
+
+
+
+
+
+
+
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -93,14 +104,25 @@ export default function TicketPage() {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-
+  const formatCreatedDate = (createdDate) => {
+    const formattedDate = moment(createdDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+    return formattedDate;
+  };
   const user1 = AuthService.getCurrentUser();
 
-  const ticket = {
-    createdDate: '2023-06-13T10:30:00Z' // Replace with your actual ticket created date
-  };
+  // const ticket = {
+  //   createdDate: new Date().toISOString()
+  // };
 
-  const formattedDate = moment(ticket.createdDate).format('MMMM Do YYYY, h:mm:ss a');
+ 
+  // const formattedDate = moment(ticket.createdDate).format('MMMM Do YYYY, h:mm:ss a');
+  // console.log(formattedDate);
+  // new Date().toISOString() 
+  
+
+  
+  
+  
 
 
 
@@ -301,7 +323,6 @@ export default function TicketPage() {
 
 
 
-  
 
 
 
@@ -320,14 +341,14 @@ export default function TicketPage() {
             <div class="space-y-10">
 
 
- <div class="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl">
+ <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
 
-  <div class="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
+  <div class="flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
     <input
-        className="bg-gray-100 outline-none"
+        className="bg-gray-200 outline-none"
         type="text"
         placeholder="Article name or keyword..."
         value={searchQuery}
@@ -336,9 +357,9 @@ export default function TicketPage() {
       />
   </div>
  
-  <div class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
+  <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
     <button onClick={performSearch}>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 ">
   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
 </svg>
 
@@ -348,16 +369,15 @@ export default function TicketPage() {
   <div class="flex justify-between">
   
   <button
-    className="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+    className="p-1 bg-white w-11 h-11 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-4"
        type="button"
     
        onClick={() => setShowModal1(true)}
       > 
-     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mx-1 top-16">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 </svg>
-
-     </button>
+  </button>
   
      
 </div>
@@ -375,30 +395,38 @@ export default function TicketPage() {
             {ticketList?.map((ticket,index) => (
 
 
-<div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-1 mt-2 max-w-sm shadow-lg w-5/6 h-auto">
+<div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
   <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
   <div class="px-6 py-4">
     <div class="flex justify-between items-center">
       <div class="flex flex-col">
-        <div class="font-bold text-xl mb-2"> {ticket.user.firstName} {""} {ticket.user.lastName}</div>
-        <p class="text-gray-700 text-base">
-          {ticket.description}
-        </p>
-        <p class="text-gray-700 text-base">
-          {ticket.type}
-        </p>
+       
+        <button class="text-gray-700 text-base font-bold "onClick={() => setShowModal3(true)}>
+         DESCRIPTION
+        </button>
+        <div class="text-base mb-2">{ticket.user.firstName} {""} {ticket.user.lastName}</div>
+    
+         {ticket.type== "SOFTWARE" ? (
+                        <span className="px-3 py-1 bg-blue-300  rounded-full text-sm font-semibold text-black-600">
+                          SOFTWARE
+                        </span>
+                      ) : (
+                        <span className=" px-3 py-1 bg-blue-400  rounded-full text-sm font-semibold text-black-600">
+                          HARDWARE
+                        </span>
+                      )}
       </div>
 
       <a href="#" class="inline-block pb-12">
        
-      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 ml-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-200 rounded-full">
+      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
       {ticket.id}
   </span>
       </a>
     </div>
     <dl class="mt-6 flex gap-4 sm:gap-6">
       <div class="flex flex-col-reverse">
-        <dt class="text-sm font-medium text-gray-600">{formattedDate}</dt>
+        <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
         <dd class="text-xs text-gray-500">Date</dd>
       </div>
       <div class="flex flex-col-reverse">
@@ -406,11 +434,12 @@ export default function TicketPage() {
         <dd class="text-xs text-gray-500">Ticket Status</dd>
       </div>
     </dl>
-
-    <a href="#" className="inline-block mt-2">
+    <div class="flex flex-row-reverse ml-10">
+  <div>
+  <a href="#" className="inline-block mt-4 ml-10">
                      <button
                        type="button"
-                       class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                       class="p-2 bg-white border border-red-400 w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                        onClick={() => handleDelete(ticket.id)}
                      >
                        <svg
@@ -429,10 +458,14 @@ export default function TicketPage() {
                       </svg>
                      </button>
                   </a>
-  </div>
 
- 
- 
+  </div>
+  
+</div>
+    
+
+   
+  </div>
 </div>
 
 
@@ -543,6 +576,7 @@ export default function TicketPage() {
 
       {showModal1 ? (
         <>
+    
           <div className="fixed inset-0 z-10 overflow-y-auto">
             <div
               className="fixed inset-0 w-full h-full bg-black opacity-40"
@@ -598,7 +632,7 @@ export default function TicketPage() {
 
 
 
-                    <div className="w-full">
+    <div className="w-full">
   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
     Description
   </label>
@@ -620,7 +654,68 @@ export default function TicketPage() {
                      >
                        add
                       </button>
-                      <span class="tooltiptext">Click to add a ticket</span>
+                      
+                    
+                  </div>
+                </div>
+
+
+              </div>
+
+
+            </div>
+         
+
+
+        </>
+      ) : null}
+
+
+
+{showModal3 ? (
+        <>
+    {ticketList?.map((ticket,index) => (
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal3(false)}
+            ></div>
+            <div>
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                   
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal3(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+              
+                   
+                    
+                  <p class="text-gray-700 text-base font-bold "   >
+                  {ticket.description}
+                 </p>
+
+               
+                    <br />
+             
+                     
+                      
                     
                   </div>
                 </div>
@@ -631,10 +726,16 @@ export default function TicketPage() {
 
             </div>
        
-
+       ))}
 
         </>
       ) : null}
+
+
+
+
+
+
 
 <style js>{`
 .tooltip {
