@@ -1,5 +1,5 @@
 // reducer.js
-import { DELETE_TICKET,GET_ALL_TICKETS,GET_ALL_TICKETS_SUCCESS,GET_ALL_TICKETS_ERROR } from "../actions/Types";
+import { DELETE_TICKET,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS } from "../actions/Types";
 
 const initialState = {
   tickets: [],
@@ -24,19 +24,25 @@ const reducer = (state = initialState, action) => {
           loading: true,
           error: null,
         };
-      case GET_ALL_TICKETS_SUCCESS:
+      case SUCCESS:
         return {
           ...state,
           tickets: action.payload,
           loading: false,
           error: null,
         };
-      case GET_ALL_TICKETS_ERROR:
+      case ERROR:
         return {
           ...state,
           loading: false,
           error: action.error,
         };
+        case TICKET_ADD_SUCCESS:
+      return {
+        ...state,
+        tickets: [...state.tickets, action.payload],
+        error: null,
+      };
     default:
       return state;
   }
