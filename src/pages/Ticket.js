@@ -37,7 +37,7 @@ import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { addTickets, deleteTicket, getAllTickets } from "../redux/actions/ticketAction";
+import { addTickets, deleteTicket, getAllTickets, viewTicketDescription } from "../redux/actions/ticketAction";
 
 
 
@@ -77,6 +77,7 @@ function TicketPage(props) {
   const [userId, setUserId] = useState('');
   const [type, setType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -88,7 +89,7 @@ function TicketPage(props) {
     }
 
   });
-  const { tickets, pageNo, pageSize } = props;
+  const { tickets, pageNo, pageSize, ticketById } = props;
 
 
   console.log("test Ticket List", tickets)
@@ -96,6 +97,23 @@ function TicketPage(props) {
     dispatch(getAllTickets(pageNo, pageSize));
 
   }, []);
+
+
+
+  // useEffect(() => {
+  //   dispatch(viewTicketDescription(ticketId));
+  // }, []);
+
+
+  const handleView = (data) => {
+    // dispatch(viewTicketDescription(ticketId));
+    setShowModal3(true)
+    setSelectedTicket(data)
+    console.log("View Ticket", data)
+
+  };
+
+  // console.log("View Ticket",ticketById)
 
 
 
@@ -198,11 +216,6 @@ function TicketPage(props) {
     setSearchQuery(event.target.value);
   };
 
-  const [selectedType, setSelectedType] = useState();
-
-  const handleTypeChange = (event) => {
-    setSelectedType(event.target.value);
-  };
 
 
   return (
@@ -278,7 +291,7 @@ function TicketPage(props) {
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
 
-                      <button class="text-gray-700 text-base font-bold " onClick={() => setShowModal3(true)}>
+                      <button class="text-gray-700 text-base font-bold " onClick={() => handleView(ticket)}>
                         DESCRIPTION
                       </button>
                       <div class="text-base mb-2">{ticket.user.firstName} {""} {ticket.user.lastName}</div>
@@ -551,59 +564,70 @@ function TicketPage(props) {
 
       {showModal3 ? (
         <>
-          {ticketList?.map((ticket, index) => (
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div
-                className="fixed inset-0 w-full h-full bg-black opacity-40"
-                onClick={() => setShowModal3(false)}
-              ></div>
-              <div>
-                <div className="flex items-center min-h-screen px-4 py-8">
-                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
-                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-
-                      <button
-                        type="button"
-                        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        onClick={() => setShowModal3(false)}
+          {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal3(false)}
+            ></div>
+            <div>
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <div class="font-bold text-xl mb-2">Description</div>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal3(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-
-
-
-                    <p class="text-gray-700 text-base font-bold "   >
-                      {ticket.description}
-                    </p>
-
-
-                    <br />
-
-
-
-
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
                   </div>
+
+
+
+                  <p class="text-gray-700 text-base font-bold "   >
+
+
+
+                  </p>
+                  <div class="px-6 py-4">
+
+                    <p class="text-gray-700 text-base">
+                      {selectedTicket.description}
+                    </p>
+                  </div>
+
                 </div>
 
 
+                <br />
+
               </div>
-
-
             </div>
 
-          ))}
+
+          </div>
+
+          <div class="max-w-sm rounded overflow-hidden shadow-lg">
+
+
+          </div>
+
+
+
+          {/* ))}  */}
 
         </>
       ) : null}
@@ -661,6 +685,7 @@ function TicketPage(props) {
 function mapStateToProps(state) {
   return {
     tickets: state.fieldData,
+
   };
 }
 

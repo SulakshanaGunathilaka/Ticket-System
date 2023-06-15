@@ -1,6 +1,6 @@
 // actions.js
 import axios from "axios";
-import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS } from "./Types";
+import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS } from "./Types";
 import AuthService from "../../services/AuthenticationService";
 import urls from "../../common/Urls";
 import CommonToasts from "../../common/Toasts";
@@ -113,4 +113,35 @@ export const addTickets = (userId, type, description) => async (dispatch) => {
 
     CommonToasts.errorToast(error.message);
   }
+};
+
+
+export const viewTicketDescription = (ticketId) => {
+  const user1 = AuthService.getCurrentUser();
+
+  return (dispatch) => {
+    axios({
+      method: "get",
+      url: "http://localhost:8080/tickets/" + ticketId,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        Authorization:
+          `Bearer ` +
+          user1.jwt,
+      },
+      data: null,
+      mode: "cors",
+    }).then((res) => {
+      console.log("response", res);
+      var tickets = res.data.body;
+      dispatch(setTicketDetails(tickets));
+    });
+  };
+};
+const setTicketDetails = (tickets) => {
+  return {
+    type: SET_TICKET_DETAILS,
+    payload: tickets,
+  };
 };
