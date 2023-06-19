@@ -318,7 +318,7 @@ export default function EmployeePage() {
 <input
         className="bg-gray-200  outline-none"
         type="text"
-        placeholder="Article name or keyword..."
+        placeholder="Search......"
         value={searchQuery}
         onChange={handleSearchInputChange}
         onKeyDown={handleKeyDown}
