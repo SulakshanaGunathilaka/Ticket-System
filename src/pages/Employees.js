@@ -197,7 +197,7 @@ export default function EmployeePage() {
     console.log(userId);
     axios({
       method: "get",
-      url: "http://localhost:8080/users/" + userId,
+      url: "http://localhost:8080/users/"+ userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
