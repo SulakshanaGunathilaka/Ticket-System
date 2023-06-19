@@ -1,7 +1,9 @@
 // actions.js
 import axios from "axios";
-import { DELETE_TICKET } from "./Types";
+import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS } from "./Types";
 import AuthService from "../../services/AuthenticationService";
+import urls from "../../common/Urls";
+import CommonToasts from "../../common/Toasts";
 
 
 
@@ -33,5 +35,113 @@ export const deleteTicket = (ticketId) => {
         // Handle error
         console.error("Error deleting ticket:", error);
       });
+  };
+};
+
+export const getAllTickets = (pageNo, pageSize) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_ALL_TICKETS });
+
+    try {
+      const user1 = AuthService.getCurrentUser();
+      const response = await axios.get(urls.GET_ALL_TICKETS_URL, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + user1.jwt,
+        },
+        params: {
+          pageNo: pageNo,
+          pageSize: pageSize,
+        },
+      });
+
+      dispatch({
+        type: SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        dispatch({
+          type: ERROR,
+          error: 'Error. Token is not Valid',
+        });
+      } else {
+        dispatch({
+          type: ERROR,
+          error: 'Error: Something Went Wrong',
+        });
+      }
+    }
+  };
+};
+
+
+export const addTickets = (userId, type, description) => async (dispatch) => {
+  const user1 = AuthService.getCurrentUser();
+
+  try {
+    const res = await axios.post(
+      'http://localhost:8080/tickets/dto',
+      {
+        userId: userId,
+        type: type,
+        description: description,
+      },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ${user1.jwt}`,
+        },
+        mode: "cors",
+      }
+    );
+
+    if (res.status === 200) {
+      dispatch({
+        type: TICKET_ADD_SUCCESS,
+        payload: res.data, // Modify this according to your response structure
+      });
+
+      CommonToasts.basicToast("Successfully Added");
+    }
+  } catch (error) {
+    dispatch({
+      type: ERROR,
+      payload: error.message,
+    });
+
+    CommonToasts.errorToast(error.message);
+  }
+};
+
+
+export const viewTicketDescription = (ticketId) => {
+  const user1 = AuthService.getCurrentUser();
+
+  return (dispatch) => {
+    axios({
+      method: "get",
+      url: "http://localhost:8080/tickets/" + ticketId,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        Authorization:
+          `Bearer ` +
+          user1.jwt,
+      },
+      data: null,
+      mode: "cors",
+    }).then((res) => {
+      console.log("response", res);
+      var tickets = res.data.body;
+      dispatch(setTicketDetails(tickets));
+    });
+  };
+};
+const setTicketDetails = (tickets) => {
+  return {
+    type: SET_TICKET_DETAILS,
+    payload: tickets,
   };
 };

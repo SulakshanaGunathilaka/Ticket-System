@@ -54,43 +54,6 @@ const DeleteUser = (userId) => {
   });
 };
 
-// const ViewUser = async (userId) => {
-//   console.log("userId");
-//   console.log(userId);
-  
-
-//   await axios
-//       .get(urls.VIEW_USER, {
-//           userId: userId,
-          
-//       }).then((response) => {
-//           if (response.status === 200) {
-
-//               //if (response.data.body.user) {
-//                   // localStorage.removeItem("user");
-//                   localStorage.setItem("SingleUser", JSON.stringify(response.data.body));
-//                   //console.log("token saved angi ",response.data.body);
-//              // }
-//              console.log("response code");
-//             //  console.log(response.status);
-//               return response.data;
-//           }
-
-//       }).catch((e) => {
-//               if(e.response.status === 403)
-//               throw new Error("Error. Username or Password Incorrect")
-//               else{
-//                   throw new Error("Error: Something Went Wrong")
-//               }
-          
-
-//       });
-
-
-
-
-
-// };
 
 
 const UserService = {
