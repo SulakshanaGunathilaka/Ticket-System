@@ -2,7 +2,6 @@ import { React, useState, useEffect } from "react";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
-import TicketService from "../services/TicketService";
 import axios from "axios";
 import Badge from "react-badges";
 import SearchBar from "../components/SearchBar";
@@ -161,7 +160,7 @@ function TicketPage(props) {
   async function getNewPage(pageNo) {
     setLoading(true);
     try {
-      const response = await TicketService.getAllTickets(pageNo, 5);
+      const response = await getAllTickets(pageNo, 5);
       //await delay(2000);
 
       setData(response.data.body.content);
@@ -292,7 +291,7 @@ function TicketPage(props) {
                     <div class="flex flex-col">
 
                       <button class="text-gray-700 text-base font-bold " onClick={() => handleView(ticket)}>
-                        DESCRIPTION
+                        {ticket.description}
                       </button>
                       <div class="text-base mb-2">{ticket.user.firstName} {""} {ticket.user.lastName}</div>
 
