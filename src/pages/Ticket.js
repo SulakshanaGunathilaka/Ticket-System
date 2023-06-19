@@ -290,7 +290,7 @@ function TicketPage(props) {
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
 
-                      <button class="text-gray-700 text-base font-bold " onClick={() => handleView(ticket)}>
+                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView(ticket)}>
                         {ticket.description}
                       </button>
                       <div class="text-base mb-2">{ticket.user.firstName} {""} {ticket.user.lastName}</div>
@@ -328,7 +328,7 @@ function TicketPage(props) {
                       <a href="#" className="inline-block mt-4 ml-10">
                         <button
                           type="button"
-                          class="p-2 bg-white border border-red-400 w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                           onClick={() => handleDelete(ticket.id)}
                         >
                           <svg
@@ -564,14 +564,14 @@ function TicketPage(props) {
       {showModal3 ? (
         <>
           {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
-          <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="fixed inset-0 z-10 overflow-y-auto " >
             <div
               className="fixed inset-0 w-full h-full bg-black opacity-40"
               onClick={() => setShowModal3(false)}
             ></div>
             <div>
               <div className="flex items-center min-h-screen px-4 py-8">
-                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <div class="font-bold text-xl mb-2">Description</div>
                     <button
@@ -603,7 +603,7 @@ function TicketPage(props) {
                   </p>
                   <div class="px-6 py-4">
 
-                    <p class="text-gray-700 text-base">
+                    <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.description}
                     </p>
                   </div>
@@ -619,7 +619,7 @@ function TicketPage(props) {
 
           </div>
 
-          <div class="max-w-sm rounded overflow-hidden shadow-lg">
+          <div class="max-w-sm rounded overflow-hidden shadow-lg ">
 
 
           </div>
@@ -663,6 +663,38 @@ function TicketPage(props) {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+.ellipsis {
+  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  width:250px;
+  font-weight: bold;
+  text-align: left;
+}
+.break {
+  overflow-wrap: break-word;
+  white-space: break;
+  overflow:hidden;
+  width:400px;
+  text-align: left;
+}
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  overflow-y: auto;
+  width: 500px;
+  height: 300px;
+  margin: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
 }
 
   
