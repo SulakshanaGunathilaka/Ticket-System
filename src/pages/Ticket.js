@@ -128,7 +128,7 @@ function TicketPage(props) {
     return formattedDate;
   };
   const user1 = AuthService.getCurrentUser();
-  console.log("user1 test details",user1.user.userId)
+  console.log("user1 test details", user1.user.userId)
 
 
   const dispatch = useDispatch();
@@ -503,7 +503,12 @@ function TicketPage(props) {
 
                   <div className=' w-full '>
                     <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User Id</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"readonly value={user1.user.userId}  onChange={(e) => setUserId(e.target.value)} />
+                    <input
+                      type="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      // value={user1.user.userId}
+                      onChange={(e) => setUserId(e.target.value)}
+                    />
 
                   </div>
 
