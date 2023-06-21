@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect ,useDidMountEffect } from "react";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
@@ -141,7 +141,28 @@ function TicketPage(props) {
     window.location.reload();
 
   };
+  // useEffect(() => {
+  //   const addTicket = (userId, type, description) => {
+  //     dispatch(addTickets(userId, type, description));
+  //     window.location.reload();
+  //   };
 
+  
+  //   addTicket(userId, type, description);
+
+   
+  // }, [user1.user.userId]); 
+
+
+  // useDidMountEffect(() => {
+  //    addTicket = (userId, type, description) => {
+  //     dispatch(addTickets(userId, type, description));
+  //     window.location.reload();
+  //   };
+
+  
+  //   addTicket(userId, type, description);
+  // }, [user1.user.userId]);
 
   console.log("roles");
   console.log(user1.user.roles[0].name);
