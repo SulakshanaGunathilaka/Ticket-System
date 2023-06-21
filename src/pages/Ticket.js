@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect} from "react";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
@@ -37,6 +37,7 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { addTickets, deleteTicket, getAllTickets, viewTicketDescription } from "../redux/actions/ticketAction";
+import useDidMountEffect from "../common/didMountEffect";
 
 
 
@@ -89,15 +90,13 @@ function TicketPage(props) {
 
   });
   const { tickets, pageNo, pageSize, ticketById } = props;
+  
 
 
+   useEffect(() => {
+    dispatch(getAllTickets(pageNo, pageSize,status));
 
-
-  console.log("test Ticket List", tickets)
-  useEffect(() => {
-    dispatch(getAllTickets(pageNo, pageSize));
-
-  }, []);
+  }, [status]);
 
 
 
@@ -128,7 +127,6 @@ function TicketPage(props) {
     return formattedDate;
   };
   const user1 = AuthService.getCurrentUser();
-  console.log("user1 test details", user1.user.userId)
 
 
   const dispatch = useDispatch();
@@ -146,6 +144,13 @@ function TicketPage(props) {
   };
 
 
+
+  
+  useDidMountEffect(() => {
+    setUserId(user1.user.userId)
+  }, [tickets]);
+
+
   console.log("roles");
   console.log(user1.user.roles[0].name);
 
@@ -156,8 +161,6 @@ function TicketPage(props) {
 
     updatePageNumbers();
   }, [totalPages]);
-
-
 
 
   async function getNewPage(pageNo) {
@@ -197,11 +200,12 @@ function TicketPage(props) {
         },
         params: {
           q: searchQuery,
+          status:status,
         },
       });
 
       console.log(response.data);
-      setTicketList(response.data.body.content);
+      
 
     } catch (error) {
       console.error(error);
@@ -217,9 +221,17 @@ function TicketPage(props) {
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  const handleSearchStatus = (event) => {
+    setStatus(event.target.value);
+  };
 
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
 
+  
 
+  
   return (
     <>
       <div className=" bg-grey h-fit w-full ">
@@ -235,14 +247,12 @@ function TicketPage(props) {
 
             <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
 
-              <div class="flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="#444444">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
+                
                 <input
-                  className="bg-gray-200 outline-none"
+                  className=" bg-gray-200 outline-none"
                   type="text"
-                  placeholder="Article name or keyword..."
+                  placeholder="Search......"
                   value={searchQuery}
                   onChange={handleSearchInputChange}
                   onKeyDown={handleKeyDown}
@@ -251,22 +261,34 @@ function TicketPage(props) {
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
                 <button onClick={performSearch}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#444444" class="w-8 h-8 ">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
 
                 </button>
               </div>
+              <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={handleSearchStatus}
+                      value={status}
+                    >
+                      <option value="">Status</option>
+                      <option value="OPEN">OPEN</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="CLOSED">CLOSED</option>
+                    </select>
+
 
               <div class="flex justify-between">
 
                 <button
-                  className="p-1 bg-white w-11 h-11 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-4"
+                  className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
                   onClick={() => setShowModal1(true)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mx-1 top-16">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                   </svg>
                 </button>
@@ -502,13 +524,8 @@ function TicketPage(props) {
                   </div>
 
                   <div className=' w-full '>
-                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User Id</label>
-                    <input
-                      type="text"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      // value={user1.user.userId}
-                      onChange={(e) => setUserId(e.target.value)}
-                    />
+                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)}  />
 
                   </div>
 
@@ -539,6 +556,7 @@ function TicketPage(props) {
                       placeholder="Description"
                       onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
+                 
                   </div>
 
 

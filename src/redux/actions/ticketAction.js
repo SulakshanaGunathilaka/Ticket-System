@@ -1,6 +1,6 @@
 // actions.js
 import axios from "axios";
-import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS } from "./Types";
+import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS,SEARCH_SUCCESS,SET_SEARCH_QUERY,SET_SEARCH_STATUS } from "./Types";
 import AuthService from "../../services/AuthenticationService";
 import urls from "../../common/Urls";
 import CommonToasts from "../../common/Toasts";
@@ -38,7 +38,7 @@ export const deleteTicket = (ticketId) => {
   };
 };
 
-export const getAllTickets = (pageNo, pageSize) => {
+export const getAllTickets = (pageNo, pageSize,status,q) => {
   return async (dispatch) => {
     dispatch({ type: GET_ALL_TICKETS });
 
@@ -52,6 +52,8 @@ export const getAllTickets = (pageNo, pageSize) => {
         params: {
           pageNo: pageNo,
           pageSize: pageSize,
+          q: q ? q:"",
+          status:status,
         },
       });
 
@@ -144,4 +146,46 @@ const setTicketDetails = (tickets) => {
     type: SET_TICKET_DETAILS,
     payload: tickets,
   };
+};
+
+export const performSearch = (searchQuery, status) => {
+  const user1 = AuthService.getCurrentUser();
+  return async (dispatch, getState) => {
+    try {
+     
+
+      const response = await axios.get('http://localhost:8080/tickets/filter', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          Authorization:
+          `Bearer ` +
+          user1.jwt,
+        },
+        params: {
+          q: searchQuery,
+          status: status,
+        },
+      });
+
+      console.log(response.data);
+
+      // Dispatch the response data to update the store
+      dispatch({ type: SEARCH_SUCCESS, data: response.data });
+      var tickets = response.data;
+      dispatch(setTicketDetails(tickets));
+    } catch (error) {
+      console.error(error);
+      // Dispatch an error action if necessary
+      dispatch({ type: ERROR, error: error.message });
+    }
+  };
+};
+
+export const handleSearchInputChange = (searchQuery) => {
+  return { type: SET_SEARCH_QUERY, searchQuery };
+};
+
+export const handleSearchStatus = (status) => {
+  return { type: SET_SEARCH_STATUS, status };
 };
