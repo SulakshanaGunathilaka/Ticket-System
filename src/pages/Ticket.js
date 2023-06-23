@@ -1,4 +1,4 @@
-import { React, useState, useEffect ,useDidMountEffect } from "react";
+import { React, useState, useEffect} from "react";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
@@ -36,7 +36,8 @@ import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { addTickets, deleteTicket, getAllTickets, viewTicketDescription } from "../redux/actions/ticketAction";
+import { addTickets, deleteTicket, getAllTickets, performSearch, viewTicketDescription } from "../redux/actions/ticketAction";
+import useDidMountEffect from "../common/didMountEffect";
 
 
 
@@ -89,10 +90,10 @@ function TicketPage(props) {
 
   });
   const { tickets, pageNo, pageSize, ticketById } = props;
+  
 
 
-  console.log("test Ticket List", tickets)
-  useEffect(() => {
+   useEffect(() => {
     dispatch(getAllTickets(pageNo, pageSize));
 
   }, []);
@@ -164,6 +165,13 @@ function TicketPage(props) {
   //   addTicket(userId, type, description);
   // }, [user1.user.userId]);
 
+
+  
+  useDidMountEffect(() => {
+    setUserId(user1.user.userId)
+  }, [tickets]);
+
+
   console.log("roles");
   console.log(user1.user.roles[0].name);
 
@@ -203,26 +211,27 @@ function TicketPage(props) {
 
 
 
-  const performSearch = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/tickets/filter', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          Authorization: `Bearer ${user1.jwt}`,
-        },
-        params: {
-          q: searchQuery,
-        },
-      });
+  // const performSearch = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:8080/tickets/filter', {
+  //       headers: {
+  //         'Access-Control-Allow-Origin': '*',
+  //         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+  //         Authorization: `Bearer ${user1.jwt}`,
+  //       },
+  //       params: {
+  //         q: searchQuery,
+  //         status:status,
+  //       },
+  //     });
 
-      console.log(response.data);
-      setTicketList(response.data.body.content);
+  //     console.log(response.data);
+      
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -230,8 +239,20 @@ function TicketPage(props) {
     }
   };
 
+    
+
+
+    
+  const handleSearch = (searchQuery,status) => {
+    dispatch(performSearch(searchQuery, status));
+   
+  };
+
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
+  };
+  const handleSearchStatus = (event) => {
+    setStatus(event.target.value);
   };
 
   const handleDescriptionChange = (e) => {
@@ -240,6 +261,7 @@ function TicketPage(props) {
 
   
 
+  
   return (
     <>
       <div className=" bg-grey h-fit w-full ">
@@ -261,25 +283,39 @@ function TicketPage(props) {
                   className=" bg-gray-200 outline-none"
                   type="text"
                   placeholder="Search......"
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
+                  // value={searchQuery}
+                  // onChange={handleSearchInputChange}
+                  onChange={(e) => handleSearchInputChange(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
               </div>
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
-                <button onClick={performSearch}>
+                <button   onClick={() => handleSearch(searchQuery,status)}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
 
                 </button>
               </div>
+              <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      // onClick={handleSearchStatus}
+                      onChange={(e) => handleSearchStatus(e.target.value)}
+                      // value={status}
+                    >
+                      <option value="">Status</option>
+                      <option value="OPEN">OPEN</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="CLOSED">CLOSED</option>
+                    </select>
+
 
               <div class="flex justify-between">
 
                 <button
-                  className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-4"
+                  className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
                   onClick={() => setShowModal1(true)}
@@ -339,13 +375,15 @@ function TicketPage(props) {
                       <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
                       <dd class="text-xs text-gray-500">Date</dd>
                     </div>
-                    <div class="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600">{ticket.status}</dt>
-                      <dd class="text-xs text-gray-500">Ticket Status</dd>
-                    </div>
+                   
                   </dl>
                   <div class="flex flex-row-reverse ml-10">
-                    <div>
+                  <dl class="mt-6 flex gap-4 sm:gap-6">
+                  <div class="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
+                      
+                    </div>
+                    <div class="flex flex-col-reverse"> 
                       <a href="#" className="inline-block mt-4 ml-10">
                         <button
                           type="button"
@@ -370,8 +408,9 @@ function TicketPage(props) {
                       </a>
 
                     </div>
-
+                    </dl>
                   </div>
+              
 
 
 
@@ -494,7 +533,7 @@ function TicketPage(props) {
             ></div>
             <div>
               <div className="flex items-center min-h-screen px-4 py-8">
-                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
                       Create New Tickets
@@ -520,8 +559,8 @@ function TicketPage(props) {
                   </div>
 
                   <div className=' w-full '>
-                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User Id</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.userId}  onChange={(e) => setUserId(user1.user.userId)} />
+                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)}  />
 
                   </div>
 
@@ -560,10 +599,10 @@ function TicketPage(props) {
 
                   <button
                     type="button"
-                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
                     onClick={() => addTicket(userId, type, description)}
                   >
-                    add
+                    Add
                   </button>
 
 
@@ -712,6 +751,22 @@ function TicketPage(props) {
   overflow-y: auto;
   width: 500px;
   height: 300px;
+  margin: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+}
+.modal-container1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  overflow-y: auto;
+  width: 800px;
+  height: 500px;
   margin: auto;
   background-color: white;
   border: 1px solid #ccc;
