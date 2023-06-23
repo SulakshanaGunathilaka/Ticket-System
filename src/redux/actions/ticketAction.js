@@ -1,6 +1,6 @@
 // actions.js
 import axios from "axios";
-import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS,SEARCH_SUCCESS,SET_SEARCH_QUERY,SET_SEARCH_STATUS } from "./Types";
+import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS,SEARCH_SUCCESS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SET_SEARCH_USERID } from "./Types";
 import AuthService from "../../services/AuthenticationService";
 import urls from "../../common/Urls";
 import CommonToasts from "../../common/Toasts";
@@ -38,7 +38,7 @@ export const deleteTicket = (ticketId) => {
   };
 };
 
-export const getAllTickets = (pageNo, pageSize,status,q) => {
+export const getAllTickets = (page, pageSize,status,searchQuery) => {
   return async (dispatch) => {
     dispatch({ type: GET_ALL_TICKETS });
 
@@ -50,9 +50,9 @@ export const getAllTickets = (pageNo, pageSize,status,q) => {
           Authorization: 'Bearer ' + user1.jwt,
         },
         params: {
-          pageNo: pageNo,
+          page: page,
           pageSize: pageSize,
-          q: q ? q:"",
+          searchQuery: searchQuery,
           status:status,
         },
       });
@@ -148,7 +148,7 @@ const setTicketDetails = (tickets) => {
   };
 };
 
-export const performSearch = (searchQuery, status) => {
+export const performSearch = (searchQuery, status,userId,page, pageSize) => {
   const user1 = AuthService.getCurrentUser();
   return async (dispatch, getState) => {
     try {
@@ -165,6 +165,10 @@ export const performSearch = (searchQuery, status) => {
         params: {
           q: searchQuery,
           status: status,
+          userId:userId,
+          page:page,
+          pageSize:pageSize,
+        
         },
       });
 
@@ -175,8 +179,6 @@ export const performSearch = (searchQuery, status) => {
       var tickets = response.data;
       dispatch(setTicketDetails(tickets));
       console.log("Search ticketssssssssssss",tickets)
-      dispatch(handleSearchInputChange(searchQuery))
-      dispatch(handleSearchStatus(status))
     } catch (error) {
       console.error(error);
       // Dispatch an error action if necessary
@@ -191,4 +193,7 @@ export const handleSearchInputChange = (searchQuery) => {
 
 export const handleSearchStatus = (status) => {
   return { type: SET_SEARCH_STATUS, status };
+};
+export const handleSearchUserId = (userId) => {
+  return { type: SET_SEARCH_USERID, userId };
 };

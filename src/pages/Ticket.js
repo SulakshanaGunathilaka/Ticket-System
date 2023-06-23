@@ -1,4 +1,4 @@
-import { React, useState, useEffect} from "react";
+import { React, useState, useEffect } from "react";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
@@ -36,8 +36,9 @@ import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { addTickets, deleteTicket, getAllTickets, performSearch, viewTicketDescription } from "../redux/actions/ticketAction";
+import { addTickets, deleteTicket, getAllTickets, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription } from "../redux/actions/ticketAction";
 import useDidMountEffect from "../common/didMountEffect";
+import UserService from "../services/UserService";
 
 
 
@@ -61,7 +62,7 @@ function Icon({ id, open }) {
 function TicketPage(props) {
 
 
-  const [ticketList, setTicketList] = useState([]);
+  const [userList, setUserList] = useState([]);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
@@ -89,12 +90,12 @@ function TicketPage(props) {
     }
 
   });
-  const { tickets, pageNo, pageSize, ticketById } = props;
-  
+  const { tickets, page, pageSize, ticketById } = props;
 
 
-   useEffect(() => {
-    dispatch(getAllTickets(pageNo, pageSize));
+
+  useEffect(() => {
+    dispatch(performSearch(page, pageSize, status, searchQuery, userId));
 
   }, []);
 
@@ -148,10 +149,10 @@ function TicketPage(props) {
   //     window.location.reload();
   //   };
 
-  
+
   //   addTicket(userId, type, description);
 
-   
+
   // }, [user1.user.userId]); 
 
 
@@ -161,12 +162,12 @@ function TicketPage(props) {
   //     window.location.reload();
   //   };
 
-  
+
   //   addTicket(userId, type, description);
   // }, [user1.user.userId]);
 
 
-  
+
   useDidMountEffect(() => {
     setUserId(user1.user.userId)
   }, [tickets]);
@@ -184,16 +185,16 @@ function TicketPage(props) {
   }, [totalPages]);
 
 
-  async function getNewPage(pageNo) {
+  async function getNewPage(page) {
     setLoading(true);
     try {
-      const response = await getAllTickets(pageNo, 5);
+      const response = await getAllTickets(page, 5);
       //await delay(2000);
 
       setData(response.data.body.content);
       // setTicketList(response.data.body);
       setTotalPages(response.data.body.totalPages);
-      setCurrentPage(pageNo);
+      setCurrentPage(page);
       setLoading(false);
     } catch (e) {
       CommonToasts.errorToast(e.message);
@@ -226,7 +227,7 @@ function TicketPage(props) {
   //     });
 
   //     console.log(response.data);
-      
+
 
   //   } catch (error) {
   //     console.error(error);
@@ -239,29 +240,75 @@ function TicketPage(props) {
     }
   };
 
-    
 
 
-    
-  const handleSearch = (searchQuery,status) => {
-    dispatch(performSearch(searchQuery, status));
-   
+
+
+  const handleSearch = (searchQuery, status, userId) => {
+    dispatch(performSearch(searchQuery, status, userId));
   };
 
-  const handleSearchInputChange = (event) => {
-    setSearchQuery(event.target.value);
+
+
+  const handleSearchInputChangess = (searchQuery) => {
+    dispatch(handleSearchInputChange(searchQuery));
   };
-  const handleSearchStatus = (event) => {
-    setStatus(event.target.value);
+  const handleSearchStatuss = (status) => {
+    dispatch(handleSearchStatus(status));
+  };
+  const handleSearchUserIdd = (userId) => {
+    dispatch(handleSearchUserId(userId));
   };
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
-  
 
-  
+
+
+  useEffect(() => {
+    console.log("initial load");
+
+    async function getAllUsers() {
+      setLoading(true);
+      try {
+        const response = await UserService.getAllUsers(1, 5);
+        //await delay(2000);
+
+        console.log("Hellooo", response)
+        setData(response.data.body.content);
+        setUserList(response.data.body);
+
+        setTotalPages(response.data.body.totalPages);
+        setCurrentPage(1);
+        setLoading(false);
+      } catch (e) {
+        CommonToasts.errorToast(e.message);
+        setLoading(false);
+      }
+    }
+
+    getAllUsers();
+    setCurrentPage(1);
+    updatePageNumbers();
+  }, []);
+
+
+
+  function updatePageNumbers() {
+    const pageNumberArray = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumberArray.push(i);
+    }
+    setPageNumbers(pageNumberArray);
+  }
+
+  console.log("userId.........................", userList)
+
+
+
+
   return (
     <>
       <div className=" bg-grey h-fit w-full ">
@@ -278,20 +325,20 @@ function TicketPage(props) {
             <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
 
               <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
-                
+
                 <input
                   className=" bg-gray-200 outline-none"
                   type="text"
                   placeholder="Search......"
                   // value={searchQuery}
                   // onChange={handleSearchInputChange}
-                  onChange={(e) => handleSearchInputChange(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
               </div>
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
-                <button   onClick={() => handleSearch(searchQuery,status)}>
+                <button onClick={() => handleSearch(searchQuery, status, userId)}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
@@ -299,17 +346,36 @@ function TicketPage(props) {
                 </button>
               </div>
               <select
-                      id="type"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      // onClick={handleSearchStatus}
-                      onChange={(e) => handleSearchStatus(e.target.value)}
-                      // value={status}
-                    >
-                      <option value="">Status</option>
-                      <option value="OPEN">OPEN</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="CLOSED">CLOSED</option>
-                    </select>
+                id="type"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                // onClick={handleSearchStatus}
+                onChange={(e) => setStatus(e.target.value)}
+              // value={status}
+              >
+                <option value="">Status</option>
+                <option value="">All</option>
+                <option value="OPEN">OPEN</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+
+
+              <select
+                id="type"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                // onClick={handleSearchStatus}
+                onChange={(e) => setUserId(e.target.value)}
+              // value={tickets?.user?.id}
+              >
+                <option value="">User Id</option>
+                {userList?.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.id}
+                  </option>
+                ))}
+                {/* <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="CLOSED">CLOSED</option> */}
+              </select>
 
 
               <div class="flex justify-between">
@@ -338,7 +404,7 @@ function TicketPage(props) {
           <div className="flex flex-wrap overflow-auto h-3/4  ">
 
 
-            {tickets?.tickets?.body?.map((ticket, index) => (
+            {tickets?.searchResults?.body?.content?.map((ticket, index) => (
 
 
               <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
@@ -375,42 +441,42 @@ function TicketPage(props) {
                       <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
                       <dd class="text-xs text-gray-500">Date</dd>
                     </div>
-                   
+
                   </dl>
                   <div class="flex flex-row-reverse ml-10">
-                  <dl class="mt-6 flex gap-4 sm:gap-6">
-                  <div class="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
-                      
-                    </div>
-                    <div class="flex flex-col-reverse"> 
-                      <a href="#" className="inline-block mt-4 ml-10">
-                        <button
-                          type="button"
-                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                          onClick={() => handleDelete(ticket.id)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
-                        </button>
-                      </a>
+                    <dl class="mt-6 flex gap-4 sm:gap-6">
+                      <div class="flex flex-col-reverse">
+                        <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
 
-                    </div>
+                      </div>
+                      <div class="flex flex-col-reverse">
+                        <a href="#" className="inline-block mt-4 ml-10">
+                          <button
+                            type="button"
+                            class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                            onClick={() => handleDelete(ticket.id)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </button>
+                        </a>
+
+                      </div>
                     </dl>
                   </div>
-              
+
 
 
 
@@ -560,7 +626,7 @@ function TicketPage(props) {
 
                   <div className=' w-full '>
                     <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)}  />
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)} />
 
                   </div>
 
@@ -591,7 +657,7 @@ function TicketPage(props) {
                       placeholder="Description"
                       onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
-                 
+
                   </div>
 
 

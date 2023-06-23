@@ -1,14 +1,15 @@
 // reducer.js
-import { DELETE_TICKET,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,SET_TICKET_DETAILS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SEARCH_SUCCESS } from "../actions/Types";
+import { DELETE_TICKET,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,SET_TICKET_DETAILS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SEARCH_SUCCESS,SET_SEARCH_USERID } from "../actions/Types";
 
 const initialState = {
   tickets: [],
   loading: false,
   error: null,
   ticketDescription: null,
-  searchQuery: '',
-  status: '',
-  searchResults: null,
+  searchQuery: null,
+  status: null,
+  searchResults: [],
+  userId: null
  
 
 };
@@ -70,6 +71,11 @@ const reducer = (state = initialState, action) => {
           return {
           ...state, 
           searchResults: action.data, error: null 
+        };
+        case SET_SEARCH_USERID:
+          return {
+          ...state, 
+          userId: action.userId
         };
     
     default:
