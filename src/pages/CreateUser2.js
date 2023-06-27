@@ -27,22 +27,22 @@ function CreateUser2() {
     gender: "",
     dateOfBirth: "",
 
-    addressLine1: "",
-      addressLine2: "",
-      city: "",
-      province: "",
+    // addressLine1: "",
+    //   addressLine2: "",
+    //   city: "",
+    //   province: "",
 
-      accountNo: "",
-      bankName: "",
-      bankBranch: "",
-      accountType: "",
+    //   accountNo: "",
+    //   bankName: "",
+    //   bankBranch: "",
+    //   accountType: "",
 
-      employmentStatus: "",
-      start: "",
-      duration: "",
+    //   employmentStatus: "",
+    //   start: "",
+    //   duration: "",
 
-      value: "",
-      type: "",
+    //   value: "",
+    //   type: "",
 
   });
 
@@ -96,12 +96,12 @@ function CreateUser2() {
       state.start &&
       state.duration
     ) {
-      setFormNo(formNo + 1);
-    } else if (
-      formNo === 5 &&
-      state.value &&
-      state.type
-    ) {
+    //   setFormNo(formNo + 1);
+    // } else if (
+    //   formNo === 5 &&
+    //   state.value &&
+    //   state.type
+    // ) {
       setFormNo(formNo + 1);
     } else {
       toast.error("Please fillup all input field");
@@ -138,11 +138,11 @@ function CreateUser2() {
         accountType: state.accountType,
       },
 
-      employeeLifeCycle:{
-        employmentStatus: state.employmentStatus,
-        start: state.start,
-        duration: state.duration,
-      },
+      // employeeLifeCycle:{
+      //   employmentStatus: state.employmentStatus,
+      //   start: state.start,
+      //   duration: state.duration,
+      // },
 
       salary: {
         salaryItemList: [

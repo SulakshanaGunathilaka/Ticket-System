@@ -76,6 +76,7 @@ function TicketPage(props) {
   const [user, setUser] = useState(null);
   const [description, setDescription] = useState('');
   const [userId, setUserId] = useState('');
+  const [userId1, setUserId1] = useState('');
   const [type, setType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
@@ -168,9 +169,9 @@ function TicketPage(props) {
 
 
 
-  useDidMountEffect(() => {
-    setUserId(user1.user.userId)
-  }, [tickets]);
+  // useDidMountEffect(() => {
+  //   setUserId(user1.user.userId)
+  // }, [tickets]);
 
 
   console.log("roles");
