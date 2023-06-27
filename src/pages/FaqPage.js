@@ -8,6 +8,8 @@ import CommonToasts from "../common/Toasts";
 const FAQPage = () => {
    
   const [showModal, setShowModal] = useState(false);
+  const [showModal1, setShowModal1] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState('');
   const [question, setQuestion] = useState('');
@@ -44,6 +46,7 @@ const FAQPage = () => {
           // CommonToasts.basicToast("Successfully Added");
           setShowModal(false);
           GetFaq();
+         
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -58,6 +61,8 @@ const FAQPage = () => {
   useEffect(() => {
 
     GetFaq();
+  
+  
   }, []);
 
 
@@ -80,6 +85,7 @@ const FAQPage = () => {
           setFaqItems(res.data.body);
           // CommonToasts.basicToast("Successfully Displayed");
           setShowModal(false);
+       
   
        
         }
@@ -95,21 +101,132 @@ const FAQPage = () => {
 
 
 
+const FaqDelete = (faqItemId) => {
+  setLoading(true);
+
+  try {
+    axios({
+      method: "delete",
+      url: `http://localhost:8080/faqItems/${faqItemId}`,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        Authorization: `Bearer ${user1.jwt}`,
+      },
+      data: null,
+      mode: "cors",
+    })
+      .then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
+          // setFaqItems(res.data.body);
+          const updatedFaqItems = faqItems.filter(
+            (faqItem) => faqItem.id !== faqItemId
+          );
+          setFaqItems(updatedFaqItems);
+          CommonToasts.basicToast("Successfully Deleted");
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+  } catch (e) {
+    CommonToasts.errorToast(e.message);
+    setLoading(false);
+  }
+};
+
+
+// const ViewFaq = (id) => {
+//   try {
+//     axios({
+//       method: "get",
+//       url: 'http://localhost:8080/faqItems/'+ id,
+//       headers: {
+//         "Access-Control-Allow-Origin": "*",
+//         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+//         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+//         "Authorization": `Bearer ` +  user1.jwt,
+//       },
+//       data: null,
+//       mode: "cors",
+//     }).then((res) => {
+//       console.log("response", res);
+//       if (res.status == 200) {
+//         setFaqItems(res.data.body);
+//         // CommonToasts.basicToast("Successfully Displayed");
+      
+     
+//       }
+//     }).catch((error) => {
+//       CommonToasts.errorToast(error.message);
+//       setLoading(false);
+//     });
+//   } catch (e) {
+//     CommonToasts.errorToast(e.message);
+//     setLoading(false);
+//   }
+// }
+const [questionDetails, setQuestionDetails] = useState(null);
+
+
+
+
+
+
+// View FAQ Function //
+
+const ViewFaq = (faqItemId) => {
+  try {
+    axios({
+      method: "get",
+      url: 'http://localhost:8080/faqItems/'+ faqItemId,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        "Authorization": `Bearer ` +  user1.jwt,
+      },
+      data: null,
+      mode: "cors",
+    }).then((res) => {
+      console.log("response", res);
+      if (res.status == 200) {
+        setQuestionDetails(res.data); 
+        setShowModal2(true);
+       
+      }
+    }).catch((error) => {
+      CommonToasts.errorToast(error.message);
+      setLoading(false);
+    });
+  } catch (e) {
+    CommonToasts.errorToast(e.message);
+    setLoading(false);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
   return (
-    // <div className="container mx-auto py-10">
-    //   <h1 className="text-3xl font-bold mb-5">Frequently Asked Questions</h1>
-    //   <div className="space-y-6">
-    //     {qaData.map((qa, index) => (
-    //       <div key={index}>
-    //         <h2 className="text-xl font-semibold">{qa.question}</h2>
-    //         <p>{qa.answer}</p>
-    //       </div>
-    //     ))}
-    //   </div>
-    // </div>
+ 
 
 
 
@@ -120,13 +237,7 @@ const FAQPage = () => {
 
 
 
-    <div className=" bg-grey h-fit w-full ">
-
-
-
-
-
-    
+    <div className=" bg-grey h-fit w-full "> 
 <section className="dark:bg-gray-800 dark:text-gray-100">
 	<div className="container flex flex-col justify-center px-4 py-8 mx-auto md:p-8">
 		<h2 className="text-2xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
@@ -160,7 +271,7 @@ we 've already been asked.</p>
         <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                            
+                            onClick={() => FaqDelete(faqItem.id)}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -178,12 +289,14 @@ we 've already been asked.</p>
                             </svg>
                           </button>
 
-        </div>
-        <div class="inline-block   ">
-        <button
+                             </div>
+                           <div class="inline-block   ">
+                           <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                            
+                            onClick={() => ViewFaq(faqItem.id)}
+
+
                           >
                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
@@ -244,11 +357,7 @@ we 've already been asked.</p>
                     </button>
                   </div>
 
-                  <div className=' w-full '>
-                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)}/>
-
-                  </div>
+                 
 
                  
 
@@ -275,7 +384,7 @@ we 've already been asked.</p>
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                       placeholder="Description"
                       onChange={(e) => setAnswer(e.target.value)}
-                    
+                  
                     ></textarea>
 
                   </div>
@@ -308,7 +417,88 @@ we 've already been asked.</p>
 
 
 
-        
+{showModal2  ?(
+        <>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal2(false)}
+            ></div>
+            <div>
+          
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                    Edit Question
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal2(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                 
+
+                 
+
+
+
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    Question
+                    </label>
+                    <p>{questionDetails.question}</p>
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Answer
+                    </label>
+                    <p  className="text-gray-900">{questionDetails.question}</p>
+                
+
+                  </div>
+
+                  <br />
+
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                 
+                  >
+                    Add
+                  </button>
+
+
+                </div>
+              </div>
+
+  
+            </div>
+          
+
+          </div>
+
+
+
+        </>
+      ) : null}
+   
    
    
 
