@@ -80,6 +80,7 @@ export default function EmployeePage() {
         },
         params: {
           q: searchQuery,
+          status:status,
         },
       });
 
@@ -334,6 +335,21 @@ export default function EmployeePage() {
 
                 </button>
               </div>
+
+              <div className="w-48">
+                    <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setStatus(e.target.value)}
+                    >
+                      <option value="">Select type</option>
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="INACTIVE">INACTIVE</option>
+                      <option value="DEACTIVATED">DEACTIVATED</option>
+                      <option value="DORMANT">DORMANT</option>
+                    </select>
+                  </div>
+
 </div>
 </div>
 
@@ -346,7 +362,7 @@ export default function EmployeePage() {
                   <th className="text-center w-64" scope="col">First Name</th>
                   <th className="text-center w-64">Last Name</th>
                   <th className="text-center w-64">Email</th>
-                  {/* <th className="text-center w-64">Status</th> */}
+                  <th className="text-center w-64">Status</th>
                   {/* <th className="text-center w-64">Commands</th> */}
                 </tr>
               </thead>
@@ -358,16 +374,22 @@ export default function EmployeePage() {
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
                     <td className="text-center">
-                      {/* {" "} */}
-                      {/* {user.userStatus == "ACTIVE" ? (
+                      {/* {" "}
+                      {user.userStatus == "ACTIVE" ? (
                         <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
                           ACTIVE
                         </span>
-                      ) : (
+                      ) : user.userStatus == " INACTIVE" ?  (
                         <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
                           INACTIVE
                         </span>
-                      )} */}
+                      ): user.userStatus == " DEACTIVATED" ? (
+                        <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
+                           DEACTIVATED
+                        </span>):(<span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
+                        DORMANT
+                        </span>)} */}
+                        {user.userStatus}
                     </td>
                     <td className="text-center">
                       {/* {console.log("admin"+ user1.roles.name)} */}

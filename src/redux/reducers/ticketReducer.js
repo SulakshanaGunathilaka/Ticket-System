@@ -9,7 +9,9 @@ const initialState = {
   searchQuery: null,
   status: null,
   searchResults: [],
-  userId: null
+  userId: null,
+  page:[],
+  offset:[]
  
 
 };

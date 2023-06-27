@@ -63,7 +63,8 @@ function TicketPage(props) {
 
 
   const [userList, setUserList] = useState([]);
-  const [pageNumbers, setPageNumbers] = useState([]);
+  const [page, setPage] = useState([]);
+  // const [totalPages, setOffset] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -91,16 +92,17 @@ function TicketPage(props) {
     }
 
   });
-  const { tickets, page, pageSize, ticketById } = props;
+  const { tickets, ticketById } = props;
 
 
 
   useEffect(() => {
-    dispatch(performSearch(page, pageSize, status, searchQuery, userId));
+    dispatch(performSearch(page, status, searchQuery, userId,
+      ));
 
   }, []);
 
-
+console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
 
   // useEffect(() => {
   //   dispatch(viewTicketDescription(ticketId));
@@ -169,9 +171,9 @@ function TicketPage(props) {
 
 
 
-  // useDidMountEffect(() => {
-  //   setUserId(user1.user.userId)
-  // }, [tickets]);
+  useDidMountEffect(() => {
+    setUserId1(user1.user.userId)
+  }, [tickets]);
 
 
   console.log("roles");
@@ -183,18 +185,18 @@ function TicketPage(props) {
     console.log("updatePageNumbers");
 
     updatePageNumbers();
-  }, [totalPages]);
+  }, [tickets?.searchResults?.body?.totalPages]);
 
 
   async function getNewPage(page) {
     setLoading(true);
     try {
-      const response = await getAllTickets(page, 5);
+      const response = await getAllTickets(1, 5);
       //await delay(2000);
 
       setData(response.data.body.content);
       // setTicketList(response.data.body);
-      setTotalPages(response.data.body.totalPages);
+      setTotalPages(tickets?.searchResults?.body?.totalPages);
       setCurrentPage(page);
       setLoading(false);
     } catch (e) {
@@ -205,10 +207,10 @@ function TicketPage(props) {
 
   function updatePageNumbers() {
     const pageNumberArray = [];
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <= tickets?.searchResults?.body?.totalPages; i++) {
       pageNumberArray.push(i);
     }
-    setPageNumbers(pageNumberArray);
+    setPage(pageNumberArray);
   }
 
 
@@ -245,8 +247,10 @@ function TicketPage(props) {
 
 
 
-  const handleSearch = (searchQuery, status, userId) => {
-    dispatch(performSearch(searchQuery, status, userId));
+  const handleSearch = (searchQuery, status, userId
+    ) => {
+    dispatch(performSearch(searchQuery, status, userId
+      ));
   };
 
 
@@ -281,7 +285,7 @@ function TicketPage(props) {
         setData(response.data.body.content);
         setUserList(response.data.body);
 
-        setTotalPages(response.data.body.totalPages);
+        setTotalPages(tickets?.searchResults?.body?.totalPages);
         setCurrentPage(1);
         setLoading(false);
       } catch (e) {
@@ -299,10 +303,10 @@ function TicketPage(props) {
 
   function updatePageNumbers() {
     const pageNumberArray = [];
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <=tickets?.searchResults?.body?.totalPage; i++) {
       pageNumberArray.push(i);
     }
-    setPageNumbers(pageNumberArray);
+    setPage(pageNumberArray);
   }
 
   console.log("userId.........................", userList)
@@ -356,7 +360,9 @@ function TicketPage(props) {
                 <option value="">Status</option>
                 <option value="">All</option>
                 <option value="OPEN">OPEN</option>
+                <option value="ACCEPTED">ACCEPTED</option>
                 <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="COMPLETED">COMPLETED</option>
                 <option value="CLOSED">CLOSED</option>
               </select>
 
@@ -493,7 +499,7 @@ function TicketPage(props) {
           <nav className='block'>
             <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
               <li>
-                {pageNumbers.map((number) => (
+                {page.map((number) => (
                   <a
                     onClick={() => {
                       getNewPage(number);
@@ -627,7 +633,7 @@ function TicketPage(props) {
 
                   <div className=' w-full '>
                     <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)} />
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId1(user1.user.userId)} />
 
                   </div>
 
@@ -667,7 +673,7 @@ function TicketPage(props) {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={() => addTicket(userId, type, description)}
+                    onClick={() => addTicket(userId1, type, description)}
                   >
                     Add
                   </button>
