@@ -144,14 +144,14 @@ function CreateUser2() {
       //   duration: state.duration,
       // },
 
-      salary: {
-        salaryItemList: [
-            {
-                value: state.value,
-                type: state.type,
-            }
-        ]
-    },
+    //   salary: {
+    //     salaryItemList: [
+    //         {
+    //             value: state.value,
+    //             type: state.type,
+    //         }
+    //     ]
+    // },
 
   designation: {
       designationName: state.designationName,
