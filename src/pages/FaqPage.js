@@ -336,7 +336,7 @@ const handleInput = (event, characterLimit) => {
 		<h2 className="text-2xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
     <div class="flex items-center justify-between mt-4 gap-x-4 shrink-0">
     <p className="mt-4 mb-8 dark:text-gray-400">If you've got any questions about Sketch for team, read on below for answers to some of the most common ones
-we 've already been asked.</p>
+    we 've already been asked.</p>
 
         <button class= "p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"onClick={() => setShowModal(true)}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
