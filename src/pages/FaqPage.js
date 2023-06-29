@@ -180,7 +180,9 @@ const [questionDetails, setQuestionDetails] = useState(null);
 // View FAQ Function //
 
 const ViewFaq = (faqItemId) => {
+
   try {
+    const faqItem = { id: faqItemId };
     axios({
       method: "get",
       url: 'http://localhost:8080/faqItems/'+ faqItemId,
@@ -463,13 +465,13 @@ we 've already been asked.</p>
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                     Question
                     </label>
-                    <p>{questionDetails.question}</p>
+                    <p>{questionDetails && questionDetails.question}</p>
                   </div>
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Answer
                     </label>
-                    <p  className="text-gray-900">{questionDetails.question}</p>
+                    <p  className="text-gray-900">{questionDetails && questionDetails.question}</p>
                 
 
                   </div>
