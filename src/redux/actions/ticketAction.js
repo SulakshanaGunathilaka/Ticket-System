@@ -1,6 +1,6 @@
 // actions.js
 import axios from "axios";
-import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS,SEARCH_SUCCESS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SET_SEARCH_USERID } from "./Types";
+import { DELETE_TICKET ,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,VIEW_TICKET_DESCRIPTION,SET_TICKET_DETAILS,SEARCH_SUCCESS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SET_SEARCH_USERID,FETCH_TICKET_PAGE,FETCH_TICKET_OFFSET } from "./Types";
 import AuthService from "../../services/AuthenticationService";
 import urls from "../../common/Urls";
 import CommonToasts from "../../common/Toasts";
@@ -179,6 +179,8 @@ export const performSearch = (searchQuery, status,userId,page,offset) => {
       var tickets = response.data;
       dispatch(setTicketDetails(tickets));
       console.log("Search ticketssssssssssss",tickets)
+
+      // dispatch(fetchTicket(page));
     } catch (error) {
       console.error(error);
       // Dispatch an error action if necessary
@@ -196,4 +198,61 @@ export const handleSearchStatus = (status) => {
 };
 export const handleSearchUserId = (userId) => {
   return { type: SET_SEARCH_USERID, userId };
+};
+
+
+
+
+export const getTicketPages = (page,offset) => {
+  const user1 = AuthService.getCurrentUser();
+  return async (dispatch, getState) => {
+    try {
+     
+
+      const res = await axios.get( `http://localhost:8080/tickets/page?page=1&offset=10`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          Authorization:
+          `Bearer ` +
+          user1.jwt,
+        },
+      });
+
+      console.log("pagination",res)
+
+     if (res.status === 200) {
+      dispatch({
+        type: FETCH_TICKET_PAGE,
+        payload: res.data.content, 
+      });
+      dispatch({
+        type: FETCH_TICKET_OFFSET,
+        payload: res.data.totalPages, 
+      });
+     
+      var tickets = res.data.body;
+      dispatch(setTicketDetails(tickets));
+      
+    }
+    } catch (error) {
+      console.error(error);
+      // Dispatch an error action if necessary
+      dispatch({ type: ERROR, error: error.message });
+    }
+  };
+};
+
+
+
+export const fetchTicketpage = (page) => {
+  return {
+    type: FETCH_TICKET_PAGE,page
+  };
+};
+
+export const fetchTicketoffset = (offset) => {
+  return {
+    type: FETCH_TICKET_OFFSET,offset
+  };
 };
