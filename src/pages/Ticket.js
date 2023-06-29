@@ -36,7 +36,7 @@ import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { addTickets, deleteTicket, getAllTickets, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription } from "../redux/actions/ticketAction";
+import { addTickets, deleteTicket, getAllTickets, getTicketPages, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription, fetchTicket } from "../redux/actions/ticketAction";
 import useDidMountEffect from "../common/didMountEffect";
 import UserService from "../services/UserService";
 
@@ -63,11 +63,11 @@ function TicketPage(props) {
 
 
   const [userList, setUserList] = useState([]);
-  const [page, setPage] = useState([]);
+  // const [page, setPage] = useState([]);
   // const [totalPages, setOffset] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  // const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -92,17 +92,17 @@ function TicketPage(props) {
     }
 
   });
-  const { tickets, ticketById } = props;
+  const { tickets, ticketById,page, offset } = props;
 
 
 
   useEffect(() => {
-    dispatch(performSearch(page, status, searchQuery, userId,
-      ));
+    dispatch(performSearch(status, searchQuery, userId,
+    ));
 
   }, []);
 
-console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
+  // console.log("pageeeeeeeeeee",tickets?.searchResults?.body.totalElement)
 
   // useEffect(() => {
   //   dispatch(viewTicketDescription(ticketId));
@@ -160,7 +160,7 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
   useEffect(() => {
     console.log("updatePageNumbers");
 
-    updatePageNumbers();
+    // updatePageNumbers();
   }, [tickets?.searchResults?.body?.totalPages]);
 
 
@@ -172,8 +172,8 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
 
       setData(response.data.body.content);
       // setTicketList(response.data.body);
-      setTotalPages(tickets?.searchResults?.body?.totalPages);
-      setCurrentPage(page);
+      // setTotalPages(tickets?.searchResults?.body?.totalPages);
+      // setCurrentPage(page);
       setLoading(false);
     } catch (e) {
       CommonToasts.errorToast(e.message);
@@ -181,13 +181,13 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
     }
   }
 
-  function updatePageNumbers() {
-    const pageNumberArray = [];
-    for (let i = 1; i <= tickets?.searchResults?.body?.totalPages; i++) {
-      pageNumberArray.push(i);
-    }
-    setPage(pageNumberArray);
-  }
+  // function updatePageNumbers() {
+  //   const pageNumberArray = [];
+  //   for (let i = 1; i <= tickets?.searchResults?.body?.totalPages; i++) {
+  //     pageNumberArray.push(i);
+  //   }
+  //   setPage(pageNumberArray);
+  // }
 
 
 
@@ -199,17 +199,30 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
     }
   };
 
+  // useEffect(() => {
+  //   dispatch(getTicketPages(page));
+  // }, [currentPage, fetchTicket]);
 
-
+  console.log("pages", tickets.page);
 
 
   const handleSearch = (searchQuery, status, userId
-    ) => {
+  ) => {
     dispatch(performSearch(searchQuery, status, userId
-      ));
+    ));
   };
 
 
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    dispatch(getTicketPages(page, offset,currentPage));
+  }, [currentPage, page, offset]);
+
+  const pageNumbers = Array.from({offset }, (_, index) => index + 1);
 
   const handleSearchInputChangess = (searchQuery) => {
     dispatch(handleSearchInputChange(searchQuery));
@@ -225,6 +238,7 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
     setDescription(e.target.value);
   };
 
+console.log("ticketpage.........................................",tickets?.searchResults?.body)
 
 
 
@@ -241,8 +255,8 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
         setData(response.data.body.content);
         setUserList(response.data.body);
 
-        setTotalPages(tickets?.searchResults?.body?.totalPages);
-        setCurrentPage(1);
+        // setTotalPages(tickets?.searchResults?.body?.totalPages);
+        // setCurrentPage(1);
         setLoading(false);
       } catch (e) {
         CommonToasts.errorToast(e.message);
@@ -251,22 +265,21 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
     }
 
     getAllUsers();
-    setCurrentPage(1);
-    updatePageNumbers();
+    // setCurrentPage(1);
+    // updatePageNumbers();
   }, []);
 
 
 
-  function updatePageNumbers() {
-    const pageNumberArray = [];
-    for (let i = 1; i <=tickets?.searchResults?.body?.totalPage; i++) {
-      pageNumberArray.push(i);
-    }
-    setPage(pageNumberArray);
-  }
+  // function updatePageNumbers() {
+  //   const pageNumberArray = [];
+  //   for (let i = 1; i <=tickets?.searchResults?.body?.totalPage; i++) {
+  //     pageNumberArray.push(i);
+  //   }
+  //   setPage(pageNumberArray);
+  // }
 
-  console.log("userId.........................", userList)
-
+  console.log("userId.........................", tickets?.searchResults?.body?.content)
 
 
 
@@ -393,7 +406,7 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
                       <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView(ticket)}>
                         {ticket.description}
                       </button>
-                      <div class="text-base mb-2">{ticket.user.firstName} {""} {ticket.user.lastName}</div>
+                      <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
                       {ticket.type == "SOFTWARE" ? (
                         <span className="px-3 py-1 bg-blue-300  rounded-full text-sm font-semibold text-black-600">
@@ -468,23 +481,23 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
 
           <nav className='block'>
             <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-              <li>
-                {page.map((number) => (
-                  <a
-                    onClick={() => {
-                      getNewPage(number);
-                    }}
-                    href='#'
-                    className={
-                      currentPage === number
-                        ? "bg-blue border-sky-500  mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium"
-                        : "bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium"
-                    }
-                  >
-                    {number}
-                  </a>
-                ))}
+              {pageNumbers.map((number) => (
+              <li >
+                <a
+                  onClick={() => handlePageChange(number)}
+                  href='#'
+                  className={
+                    currentPage === number
+                      ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                      : 
+                    'bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                  }
+                >
+                  {number}
+                   1
+                </a>
               </li>
+              ))} 
             </ul>
           </nav>
         </div>
@@ -625,6 +638,7 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
                       <option value="HARDWARE">HARDWARE</option>
                     </select>
                   </div>
+                  
 
 
 
@@ -681,7 +695,7 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <div class="font-bold text-xl mb-2">Description</div>
+                    <div class="font-bold text-xl mb-2">View Ticket</div>
                     <button
                       type="button"
                       className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -710,11 +724,18 @@ console.log("pageeeeeeeeeee",tickets?.searchResults?.body)
 
                   </p>
                   <div class="px-6 py-4">
-
+                    <h1>Description</h1>
                     <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.description}
                     </p>
                   </div>
+                  <div class="px-6 py-4">
+                  <h1>Status</h1>
+                    <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.status}
+                    </p>
+                  </div>
+
 
                 </div>
 

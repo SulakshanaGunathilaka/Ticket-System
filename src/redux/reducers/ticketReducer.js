@@ -1,5 +1,5 @@
 // reducer.js
-import { DELETE_TICKET,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,SET_TICKET_DETAILS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SEARCH_SUCCESS,SET_SEARCH_USERID } from "../actions/Types";
+import { DELETE_TICKET,GET_ALL_TICKETS,SUCCESS,ERROR,TICKET_ADD_SUCCESS,SET_TICKET_DETAILS,SET_SEARCH_QUERY,SET_SEARCH_STATUS,SEARCH_SUCCESS,SET_SEARCH_USERID,FETCH_TICKET_PAGE,FETCH_TICKET_OFFSET } from "../actions/Types";
 
 const initialState = {
   tickets: [],
@@ -11,7 +11,8 @@ const initialState = {
   searchResults: [],
   userId: null,
   page:[],
-  offset:[]
+  offset:1
+
  
 
 };
@@ -78,6 +79,18 @@ const reducer = (state = initialState, action) => {
           return {
           ...state, 
           userId: action.userId
+        };
+        case FETCH_TICKET_PAGE:
+          return {
+          ...state, 
+          page: action.page,
+          // totalPages: action.totalPages,
+        };
+        case FETCH_TICKET_OFFSET:
+          return {
+          ...state, 
+          // ticketItems: action.ticketItems,
+          offset: action.offset,
         };
     
     default:

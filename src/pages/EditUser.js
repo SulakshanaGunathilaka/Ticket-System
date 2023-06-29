@@ -72,10 +72,10 @@ export default function EditUser() {
     departmentname: "",
     agency: "",
 
-    rolesname: "",
+    // rolesname: "",
 
-    privilegesname: "",
-    roles: ""
+    // privilegesname: "",
+    // roles: ""
 
 
 
@@ -132,15 +132,15 @@ export default function EditUser() {
         agency: state.agency,
       },
 
-      roles: {
-        name:state.rolesname,
-        privileges: [
-          {
-            name: state.privilegesname,
-            roles: [state.roles],
-          }
-        ]
-      },
+      // roles: {
+      //   name:state.rolesname,
+      //   privileges: [
+      //     {
+      //       name: state.privilegesname,
+      //       roles: [state.roles],
+      //     }
+      //   ]
+      // },
 
       designation: {
         designationName: state.designationName,
@@ -185,7 +185,7 @@ export default function EditUser() {
                 Basic Information
               </AccordionHeader>
               <AccordionBody>
-                <button>
+                {/* <button>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -200,7 +200,7 @@ export default function EditUser() {
                       d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                     />
                   </svg>
-                </button>
+                </button> */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="First Name" />
@@ -528,6 +528,7 @@ export default function EditUser() {
                 {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg" >
                 SAVE
               </button> */}
+          
               </AccordionBody>
             </Accordion>
             <Accordion open={open === 5} icon={<Icon id={5} open={open} />}>
@@ -580,9 +581,17 @@ export default function EditUser() {
                 {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">
                 SAVE
               </button> */}
+                  <button
+                  onClick={finalSubmit}
+                  className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
+
+
+                >
+                  Submit
+                </button>
               </AccordionBody>
             </Accordion>
-            <Accordion open={open === 6} icon={<Icon id={6} open={open} />}>
+            {/* <Accordion open={open === 6} icon={<Icon id={6} open={open} />}>
               <AccordionHeader onClick={() => handleOpen(6)}>
                 Roles
               </AccordionHeader>
@@ -597,9 +606,9 @@ export default function EditUser() {
                     id="rolesname"
                     placeholder="rolesname"
                     {...register("rolesname", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.value?.message}</p> */}
-                </div>
+                {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Privilages name" />
                   <FormInputField
@@ -610,9 +619,9 @@ export default function EditUser() {
                     id="privilegesname"
                     placeholder="privilegesname"
                     {...register("privilegesname", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.type?.message}</p> */}
-                </div>
+                {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Roles" />
                   <FormInputField
@@ -623,10 +632,10 @@ export default function EditUser() {
                     id="roles"
                     placeholder="roles"
                     {...register("roles", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.type?.message}</p> */}
-                </div>
-                <button
+                {/* </div> */}
+                {/* <button
                   onClick={finalSubmit}
                   className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
 
@@ -634,8 +643,8 @@ export default function EditUser() {
                 >
                   Submit
                 </button>
-              </AccordionBody>
-            </Accordion>
+              </AccordionBody> */}
+            {/* </Accordion> */}
 
           </Fragment>
         </form>
