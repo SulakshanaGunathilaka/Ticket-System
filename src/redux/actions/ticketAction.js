@@ -78,14 +78,14 @@ export const getAllTickets = (page, pageSize,status,searchQuery) => {
 };
 
 
-export const addTickets = (userId, type, description) => async (dispatch) => {
+export const addTickets = (userId1, type, description) => async (dispatch) => {
   const user1 = AuthService.getCurrentUser();
 
   try {
     const res = await axios.post(
       'http://localhost:8080/tickets/dto',
       {
-        userId: userId,
+        userId: userId1,
         type: type,
         description: description,
       },
@@ -148,7 +148,7 @@ const setTicketDetails = (tickets) => {
   };
 };
 
-export const performSearch = (searchQuery, status,userId,page, pageSize) => {
+export const performSearch = (searchQuery, status,userId,page,offset) => {
   const user1 = AuthService.getCurrentUser();
   return async (dispatch, getState) => {
     try {
@@ -167,7 +167,7 @@ export const performSearch = (searchQuery, status,userId,page, pageSize) => {
           status: status,
           userId:userId,
           page:page,
-          pageSize:pageSize,
+          offset:offset,
         
         },
       });

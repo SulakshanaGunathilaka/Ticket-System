@@ -66,6 +66,9 @@ const FAQPage = () => {
   }, []);
 
 
+//Get All Function //
+
+
   const GetFaq = (e) => {
     try {
       axios({
@@ -99,6 +102,8 @@ const FAQPage = () => {
     }
   }
 
+
+// Faq Delete Function //
 
 
 const FaqDelete = (faqItemId) => {
@@ -140,37 +145,8 @@ const FaqDelete = (faqItemId) => {
 };
 
 
-// const ViewFaq = (id) => {
-//   try {
-//     axios({
-//       method: "get",
-//       url: 'http://localhost:8080/faqItems/'+ id,
-//       headers: {
-//         "Access-Control-Allow-Origin": "*",
-//         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-//         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-//         "Authorization": `Bearer ` +  user1.jwt,
-//       },
-//       data: null,
-//       mode: "cors",
-//     }).then((res) => {
-//       console.log("response", res);
-//       if (res.status == 200) {
-//         setFaqItems(res.data.body);
-//         // CommonToasts.basicToast("Successfully Displayed");
-      
-     
-//       }
-//     }).catch((error) => {
-//       CommonToasts.errorToast(error.message);
-//       setLoading(false);
-//     });
-//   } catch (e) {
-//     CommonToasts.errorToast(e.message);
-//     setLoading(false);
-//   }
-// }
-const [questionDetails, setQuestionDetails] = useState(null);
+
+// const [questionDetails, setQuestionDetails] = useState(null);
 
 
 
@@ -196,7 +172,7 @@ const ViewFaq = (faqItemId) => {
     }).then((res) => {
       console.log("response", res);
       if (res.status == 200) {
-        setQuestionDetails(res.data); 
+        setQuestionDetails(res.data.body); 
         setShowModal2(true);
        
       }
@@ -213,6 +189,10 @@ const ViewFaq = (faqItemId) => {
 
 
 
+const handleClickView = (faqItemId) => {
+  ViewFaq (faqItemId)
+  setShowModal2(true);
+};
 
 
 
@@ -220,7 +200,127 @@ const ViewFaq = (faqItemId) => {
 
 
 
+const [questionDetails, setQuestionDetails] = useState({
+  question: '',
+  answer: '',
+});
 
+
+const EditFaq = (e) => {
+  try {
+    axios({
+      method: "put",
+      url: 'http://localhost:8080/faqItems',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        "Authorization": `Bearer ${user1.jwt}`,
+      },
+      data: {
+        id: questionDetails.id,
+        question: questionDetails.question,
+        answer: questionDetails.answer, 
+      },
+      mode: "cors",
+    }).then((res) => {
+      console.log("response", res);
+      if (res.status === 200) {
+        setShowModal2(false);
+        GetFaq();
+        CommonToasts.basicToast("Successfully Edited");
+      }
+    }).catch((error) => {
+      CommonToasts.errorToast(error.message);
+      setLoading(false);
+    });
+  } catch (e) {
+    CommonToasts.errorToast(e.message);
+    setLoading(false);
+  }
+};
+
+
+const [currentPage, setCurrentPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
+
+// const getFaq = () => {
+//   axios({
+//     method: 'get',
+//     url: `http://localhost:8080/faqItems/page?page=${currentPage}&offset=10`,
+//     headers: {
+//       'Access-Control-Allow-Origin': '*',
+//       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+//       Authorization: `Bearer ${user1.jwt}`,
+//     },
+//     mode: 'cors',
+//   })
+//     .then((res) => {
+//       console.log('response', res);
+//       if (res.status === 200) {
+//         setFaqItems(res.data.content);
+//         setTotalPages(res.data.totalPages);
+//       }
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// };
+
+// const handleNextPage = () => {
+//   if (currentPage < totalPages) {
+//     setCurrentPage(currentPage + 1);
+//   }
+// };
+
+// useEffect(() => {
+//   getFaq();
+// }, [currentPage]);
+
+const getFaq = (page) => {
+  axios({
+    method: 'get',
+    url: `http://localhost:8080/faqItems/page?page=${page}&offset=10`,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      Authorization: `Bearer ${user1.jwt}`,
+    },
+    mode: 'cors',
+  })
+    .then((res) => {
+      console.log('response', res);
+      if (res.status === 200) {
+        setFaqItems(res.data.content);
+        setTotalPages(res.data.totalPages);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+};
+
+useEffect(() => {
+  getFaq(currentPage);
+}, [currentPage]);
+
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+
+
+
+const handleInput = (event, characterLimit) => {
+  let value = event.target.value;
+
+  if (value.length > characterLimit) {
+    value = value.slice(0, characterLimit);
+  }
+
+  event.target.value = value;
+};
 
 
 
@@ -230,15 +330,6 @@ const ViewFaq = (faqItemId) => {
   return (
  
 
-
-
-
-
-
-
-
-
-
     <div className=" bg-grey h-fit w-full "> 
 <section className="dark:bg-gray-800 dark:text-gray-100">
 	<div className="container flex flex-col justify-center px-4 py-8 mx-auto md:p-8">
@@ -247,19 +338,13 @@ const ViewFaq = (faqItemId) => {
     <p className="mt-4 mb-8 dark:text-gray-400">If you've got any questions about Sketch for team, read on below for answers to some of the most common ones
 we 've already been asked.</p>
 
-        <button class=" text-xs bg-gray-900 font-medium rounded-lg hover:bg-gray-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none"onClick={() => setShowModal(true)}>
-            ADD
+        <button class= "p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"onClick={() => setShowModal(true)}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                  </svg>
         </button>
     </div>
-		
- 
-
-  
-
-
-                
-   
-		<div className="space-y-4">
+		<div className="space-y-4 overflow-y-auto max-h-128  "style={{ maxHeight: '500px' }}>
     {faqItems?.map((faqItem,index) => ( 
 
 			<details className="w-full border rounded-lg" open="">
@@ -267,7 +352,6 @@ we 've already been asked.</p>
 				<summary className="px-4 py-6 focus:outline-none focus-visible:ri">{faqItem.question}</summary>
       
 				<p className="px-4 py-6 pt-0 ml-4  dark:text-gray-400">{faqItem.answer} </p>
-
         <div class="bg-gray-200">
         <div class="inline-block  px-4 py-2">
         <button
@@ -295,8 +379,9 @@ we 've already been asked.</p>
                            <div class="inline-block   ">
                            <button
                             type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                            onClick={() => ViewFaq(faqItem.id)}
+                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                            // onClick={() => ViewFaq(faqItem.id)}
+                            onClick={() => handleClickView(faqItem.id)}
 
 
                           >
@@ -317,11 +402,31 @@ we 've already been asked.</p>
       </details>
 		
     ))}
-		
+		  {/* <button onClick={handleNextPage}>Next Page</button> */}
+   
 		</div>
   
 	</div>
 </section>
+<nav className='block'>
+        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
+          {pageNumbers.map((number) => (
+            <li key={number}>
+              <a
+                onClick={() => handlePageChange(number)}
+                href='#'
+                className={
+                  currentPage === number
+                    ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                }
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
         
 {showModal ? (
@@ -370,11 +475,13 @@ we 've already been asked.</p>
                     Question
                     </label>
                     <textarea
-                      id="description"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="Description"
-                      onChange={(e) => setQuestion(e.target.value)}
-                    ></textarea>
+  id="description"
+  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+  placeholder="Description"
+  onChange={(e) => setQuestion(e.target.value)}
+  onInput={(e) => handleInput(e, 3000)}
+></textarea>
+
 
                   </div>
                   <div className="w-full">
@@ -386,6 +493,7 @@ we 've already been asked.</p>
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                       placeholder="Description"
                       onChange={(e) => setAnswer(e.target.value)}
+                      onInput={(e) => handleInput(e, 3000)}
                   
                     ></textarea>
 
@@ -419,7 +527,10 @@ we 've already been asked.</p>
 
 
 
-{showModal2  ?(
+{/* Edit Modal */}
+
+
+{showModal2   ?  (
         <>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -465,14 +576,39 @@ we 've already been asked.</p>
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                     Question
                     </label>
-                    <p>{questionDetails && questionDetails.question}</p>
+                  
+                    <textarea
+                type="text"
+                id="question"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={questionDetails.question}
+                onChange={(e) =>
+                  setQuestionDetails({
+                    ...questionDetails,
+                    question: e.target.value,
+                  })
+                }
+                onInput={(e) => handleInput(e, 1000)}
+              />
                   </div>
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Answer
                     </label>
-                    <p  className="text-gray-900">{questionDetails && questionDetails.question}</p>
-                
+                    
+                    <textarea
+                type="text"
+                id="question"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={questionDetails.answer}
+                onChange={(e) =>
+                  setQuestionDetails({
+                    ...questionDetails,
+                    answer: e.target.value,
+                  })
+                }
+                onInput={(e) => handleInput(e, 1000)}
+              />
 
                   </div>
 
@@ -481,7 +617,7 @@ we 've already been asked.</p>
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                 
+                    onClick={EditFaq}
                   >
                     Add
                   </button>

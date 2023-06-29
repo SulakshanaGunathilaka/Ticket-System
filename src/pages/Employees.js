@@ -48,7 +48,7 @@ export default function EmployeePage() {
 
 
   const [userList, setUserList] = useState([]);
-  const [pageNumbers, setPageNumbers] = useState([]);
+  // const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -80,6 +80,7 @@ export default function EmployeePage() {
         },
         params: {
           q: searchQuery,
+          status:status,
         },
       });
 
@@ -160,7 +161,7 @@ export default function EmployeePage() {
     for (let i = 1; i <= totalPages; i++) {
       pageNumberArray.push(i);
     }
-    setPageNumbers(pageNumberArray);
+    // setPageNumbers(pageNumberArray);
   }
 
   const handleDelete = async (userId) => {
@@ -224,6 +225,10 @@ export default function EmployeePage() {
 
   
 
+
+
+
+
   
     
   
@@ -284,6 +289,82 @@ export default function EmployeePage() {
   };
 
 
+  // const getEmployeepage = (page) => {
+  //   axios({
+  //     method: 'get',
+  //     url: `http://localhost:8080/users/page?page=${page}&offset=10`,
+  //     headers: {
+  //       'Access-Control-Allow-Origin': '*',
+  //       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+  //       Authorization: `Bearer ${user1.jwt}`,
+  //     },
+  //     mode: 'cors',
+  //   })
+  //     .then((res) => {
+  //       console.log('response', res);
+  //       if (res.status === 200) {
+  //         setData(res.data.body.content);
+  //         setUserList(res.data.body);
+  //         setTotalPages(res.data.totalPages);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+  
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
+  
+  // useEffect(() => {
+  //   getEmployeepage(currentPage);
+  // }, [currentPage]);
+  
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  
+  const getEmployeePage = (page) => {
+    axios({
+      method: 'get',
+      url: `http://localhost:8080/users/page?page=${page}&offset=10`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        Authorization: `Bearer ${user1.jwt}`,
+      },
+      mode: 'cors',
+    })
+      .then((res) => {
+        console.log('response', res);
+        if (res.status === 200) {
+          setTotalPages(res.data.totalPages);
+          setUserList(res.data.content);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    getEmployeePage(currentPage);
+  }, [currentPage]);
+
+
+
+
+
+ 
+
+
+
+
+
+
 
   return (
     <>
@@ -334,6 +415,21 @@ export default function EmployeePage() {
 
                 </button>
               </div>
+
+              <div className="w-48">
+                    <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setStatus(e.target.value)}
+                    >
+                      <option value="">Select type</option>
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="INACTIVE">INACTIVE</option>
+                      <option value="DEACTIVATED">DEACTIVATED</option>
+                      <option value="DORMANT">DORMANT</option>
+                    </select>
+                  </div>
+
 </div>
 </div>
 
@@ -346,7 +442,7 @@ export default function EmployeePage() {
                   <th className="text-center w-64" scope="col">First Name</th>
                   <th className="text-center w-64">Last Name</th>
                   <th className="text-center w-64">Email</th>
-                  {/* <th className="text-center w-64">Status</th> */}
+                  <th className="text-center w-64">Status</th>
                   {/* <th className="text-center w-64">Commands</th> */}
                 </tr>
               </thead>
@@ -358,16 +454,22 @@ export default function EmployeePage() {
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
                     <td className="text-center">
-                      {/* {" "} */}
-                      {/* {user.userStatus == "ACTIVE" ? (
+                      {/* {" "}
+                      {user.userStatus == "ACTIVE" ? (
                         <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
                           ACTIVE
                         </span>
-                      ) : (
+                      ) : user.userStatus == " INACTIVE" ?  (
                         <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
                           INACTIVE
                         </span>
-                      )} */}
+                      ): user.userStatus == " DEACTIVATED" ? (
+                        <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
+                           DEACTIVATED
+                        </span>):(<span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
+                        DORMANT
+                        </span>)} */}
+                        {user.userStatus}
                     </td>
                     <td className="text-center">
                       {/* {console.log("admin"+ user1.roles.name)} */}
@@ -455,26 +557,47 @@ export default function EmployeePage() {
             {/* )} */}
 
             <nav className='block'>
-              <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-                <li>
-                  {pageNumbers.map((number) => (
-                    <a
-                      onClick={() => {
-                        getNewPage(number);
-                      }}
-                      href='#'
-                      className={
-                        currentPage === number
-                          ? "bg-blue border-sky-500  mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium"
-                          : "bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium"
-                      }
-                    >
-                      {number}
-                    </a>
-                  ))}
-                </li>
-              </ul>
-            </nav>
+        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
+          {pageNumbers.map((number) => (
+            <li key={number}>
+              <a
+                onClick={() => handlePageChange(number)}
+                href='#'
+                className={
+                  currentPage === number
+                    ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                }
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+
+{/* <button onClick={() => getEmployeepage(currentPage + 1)}>Next Page</button> */}
+
+            {/* <nav className='block'>
+        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
+          {pageNumbers.map((number) => (
+            <li key={number}>
+              <a
+                onClick={() => handlePageChange(number)}
+                href='#'
+                className={
+                  currentPage === number
+                    ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    : 'bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                }
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav> */}
 
           </div>
 
