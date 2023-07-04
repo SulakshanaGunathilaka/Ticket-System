@@ -61,39 +61,71 @@ function Icon({ id, open }) {
 export default function TicketPage1() {
 
 
-  const [userList, setUserList] = useState([]);
-  // const [page, setPage] = useState([]);
-  // const [totalPages, setOffset] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
+
   const [showModal1, setShowModal1] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [showModal3, setShowModal3] = useState(false);
-  const [userStatus, setUserStatus] = useState("");
-  const [status, setStatus] = useState("");
-  const [user, setUser] = useState(null);
   const [description, setDescription] = useState('');
-  const [userId, setUserId] = useState('');
-  const [userId1, setUserId1] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTicket, setSelectedTicket] = useState('');
-  const [refreshFlag, setRefreshFlag] = useState(false)
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      userId: "",
-      type: "",
-      description: "",
-      title:"",
+  const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState(true);
 
-
-    }
-
-  });
  
+
+  const user1 = AuthService.getCurrentUser();
+  console.log("hiiiiiiiiiiiiiiiiii",user1)
+
+
+  // Create FAQ Function //
+  const CreatTicket = (e) => {
+    try {
+      axios({
+        method: "post",
+        url: 'http://localhost:8080/tickets/dto',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` +  user1.jwt,
+        },
+        data: {
+          userId: user1.user.userId,
+          type: type,
+          description: description,
+          title:title,
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+        
+          CommonToasts.basicToast("Successfully Ticket Added");
+          setShowModal1(false);
+        
+         
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -182,7 +214,7 @@ export default function TicketPage1() {
                   className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
-                //   onClick={() => setShowModal1(true)}
+                  onClick={() => setShowModal1(true)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -241,15 +273,13 @@ export default function TicketPage1() {
                     </div>
 
                   </dl>
-                  <div class="flex flex-row-reverse ml-10">
-                    <dl class="mt-6 flex gap-4 sm:gap-6">
-                      <div class="flex flex-col-reverse">
-                        <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>cferf</dt>
 
-                      </div>
-                      <div class="flex flex-col-reverse">
-                        <a href="#" className="inline-block mt-4 ml-10">
-                          <button
+                  <div class="flex items-center justify-between mt-2">
+                  <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>cferf</dt>
+
+        <div class="flex items-center">
+          
+        <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                             // onClick={() => handleDelete(ticket.id)}
@@ -269,11 +299,13 @@ export default function TicketPage1() {
                               />
                             </svg>
                           </button>
-                        </a>
+        </div>
+    </div>
 
-                      </div>
-                    </dl>
-                  </div>
+
+
+
+                
 
 
 
@@ -319,7 +351,122 @@ export default function TicketPage1() {
       </div>
   
 
-     
+      {showModal1 ? (
+        <>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal1(false)}
+            ></div>
+            <div>
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                      Create New Tickets
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal1(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className=' w-full '>
+                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)}/>
+
+                  </div>
+
+                  <div className=' w-full '>
+                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">Title</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  onChange={(e) => setTitle(e.target.value)} />
+
+                  </div>
+
+                  <div className="w-full">
+                    <label htmlFor="type" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Type
+                    </label>
+                    <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setType(e.target.value)}
+                    >
+                      <option value="">Select type</option>
+                      <option value="SOFTWARE">SOFTWARE</option>
+                      <option value="HARDWARE">HARDWARE</option>
+                    </select>
+                  </div>
+                  
+
+
+
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Description
+                    </label>
+                    <textarea
+                      id="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      placeholder="Description"
+                      onChange={(e) => setDescription(e.target.value)}
+                    ></textarea>
+
+                  </div>
+
+
+                  <br />
+
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    onClick={CreatTicket}
+                  >
+                    Add
+                  </button>
+
+
+                </div>
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+
+        </>
+      ) : null}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
