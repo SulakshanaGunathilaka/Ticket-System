@@ -82,6 +82,7 @@ export default function TicketPage1() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
+  const[tickets,setTickets]= useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       userId: "",
@@ -93,9 +94,80 @@ export default function TicketPage1() {
     }
 
   });
- 
 
+  const user1 = AuthService.getCurrentUser();
 
+  useEffect(() => {
+    console.log("initial load");
+
+    async function getAllUsers() {
+      setLoading(true);
+      try {
+        const response = await UserService.getAllUsers(1, 5);
+        //await delay(2000);
+
+        console.log("Hellooo", response)
+        // setData(response.data.body.content);
+        setUserList(response.data.body);
+
+        // setTotalPages(tickets?.searchResults?.body?.totalPages);
+        // setCurrentPage(1);
+        setLoading(false);
+      } catch (e) {
+        CommonToasts.errorToast(e.message);
+        setLoading(false);
+      }
+    }
+
+    getAllUsers();
+    // setCurrentPage(1);
+    // updatePageNumbers();
+  }, []);
+
+const GetTickets = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/tickets/filter`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          Authorization: `Bearer ${user1.jwt}`,
+        },
+        params: {
+          q: searchQuery,
+          status:status,
+          userId:userId,
+        },
+      });
+
+      console.log(response.data);
+      setTickets(response.data.body.content);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+
+    GetTickets();
+  
+  
+  }, []);
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      GetTickets();
+    }
+  };
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const formatCreatedDate = (createdDate) => {
+    const formattedDate = moment(createdDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+    return formattedDate;
+  };
 
 
 
@@ -118,21 +190,19 @@ export default function TicketPage1() {
 
               <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
 
-                <input
-                  className=" bg-gray-200 outline-none"
-                  type="text"
-                  placeholder="Search......"
-                  // value={searchQuery}
-                  // onChange={handleSearchInputChange}
-                //   onChange={(e) => setSearchQuery(e.target.value)}
-                //   onKeyDown={handleKeyDown}
-                />
+              <input
+        className="bg-gray-200  outline-none"
+        type="text"
+        placeholder="Search......"
+        value={searchQuery}
+        onChange={handleSearchInputChange}
+        onKeyDown={handleKeyDown}
+      />
               </div>
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
                 <button
-                // onClick={() => handleSearch(searchQuery, status, userId)}
-                >
+                onClick={GetTickets}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
@@ -143,8 +213,8 @@ export default function TicketPage1() {
                 id="type"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
-                // onChange={(e) => setStatus(e.target.value)}
-              // value={status}
+                onChange={(e) => setStatus(e.target.value)}
+            //    value={status}
               >
                 <option value="">Status</option>
                 <option value="">All</option>
@@ -160,19 +230,18 @@ export default function TicketPage1() {
                 id="type"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
-                // onChange={(e) => setUserId(e.target.value)}
+                 onChange={(e) => setUserId(e.target.value)}
               // value={tickets?.user?.id}
               >
                 <option value="">User Id</option>
-                {/* {userList?.map((user) => ( */}
+                {userList?.map((user) => ( 
                   <option
-                //    key={user.id} value={user.id}
+                   key={user.id} value={user.id}
                    >
-                    {/* {user.id} */}kijkik
+               {user.id}
                   </option>
-                {/* ))} */}
-                {/* <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="CLOSED">CLOSED</option> */}
+               ))} 
+           
               </select>
 
 
@@ -202,87 +271,88 @@ export default function TicketPage1() {
           <div className="flex flex-wrap overflow-auto h-3/4  ">
 
 
-            {/* {tickets?.searchResults?.body?.content?.map((ticket, index) => ( */}
+          
 
-
+          {tickets.map((ticket, index) => (
               <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
-                <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
-                <div class="px-6 py-4">
-                  <div class="flex justify-between items-center">
-                    <div class="flex flex-col">
+              <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
+              <div class="px-6 py-4">
+                <div class="flex justify-between items-center">
+                  <div class="flex flex-col">
 
-                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" >
-                        hmjjm
-                      </button>
-                      <div class="text-base mb-2">jnthjnth</div>
+                    <button class=" text-gray-700 text-base font-bold " className="ellipsis"
+                    //  onClick={() => handleView(ticket)}
+                     >
+                      {ticket.title}
+                    </button>
+                    <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
-                      {/* {ticket.type == "SOFTWARE" ? ( */}
-                        <span className="px-3 py-1 bg-blue-300  rounded-full text-sm font-semibold text-black-600">
-                          SOFTWARE
-                        </span>
-                      {/* ) : ( */}
-                        <span className=" px-3 py-1 bg-blue-400  rounded-full text-sm font-semibold text-black-600">
-                          HARDWARE
-                        </span>
-                      {/* )} */}
-                    </div>
-
-                    <a href="#" class="inline-block pb-12">
-
-                      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
-                        {/* {ticket.id} */}
+                    {ticket.type == "SOFTWARE" ? (
+                      <span className="px-3 py-1 bg-blue-300  rounded-full text-sm font-semibold text-black-600">
+                        SOFTWARE
                       </span>
-                    </a>
+                    ) : (
+                      <span className=" px-3 py-1 bg-blue-400  rounded-full text-sm font-semibold text-black-600">
+                        HARDWARE
+                      </span>
+                    )}
                   </div>
+
+                  <a href="#" class="inline-block pb-12">
+
+                    <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
+                      {ticket.id}
+                    </span>
+                  </a>
+                </div>
+                <dl class="mt-6 flex gap-4 sm:gap-6">
+                  <div class="flex flex-col-reverse">
+                    <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
+                    <dd class="text-xs text-gray-500">Date</dd>
+                  </div>
+
+                </dl>
+                <div class="flex flex-row-reverse ml-10">
                   <dl class="mt-6 flex gap-4 sm:gap-6">
                     <div class="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600">frrfr</dt>
-                      <dd class="text-xs text-gray-500">Date</dd>
+                      <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
+
                     </div>
-
-                  </dl>
-                  <div class="flex flex-row-reverse ml-10">
-                    <dl class="mt-6 flex gap-4 sm:gap-6">
-                      <div class="flex flex-col-reverse">
-                        <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>cferf</dt>
-
-                      </div>
-                      <div class="flex flex-col-reverse">
-                        <a href="#" className="inline-block mt-4 ml-10">
-                          <button
-                            type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                            // onClick={() => handleDelete(ticket.id)}
+                    <div class="flex flex-col-reverse">
+                      <a href="#" className="inline-block mt-4 ml-10">
+                        <button
+                          type="button"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                          // onClick={() => handleDelete(ticket.id)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke-width="1.5"
-                              stroke="currentColor"
-                              class="w-4 h-4"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                              />
-                            </svg>
-                          </button>
-                        </a>
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                            />
+                          </svg>
+                        </button>
+                      </a>
 
-                      </div>
-                    </dl>
-                  </div>
-
-
-
-
+                    </div>
+                  </dl>
                 </div>
+
+
+
+
               </div>
+            </div>
 
-
-
+))}
           </div>
 
 
