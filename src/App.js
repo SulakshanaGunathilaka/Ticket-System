@@ -22,6 +22,7 @@ import TicketPage from './pages/Ticket';
 import FAQPage from './pages/FaqPage';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import TicketPage1 from './pages/Ticket1';
 
 
 
@@ -78,6 +79,7 @@ function App() {
             <Route path='/calendar' element={<Calendar />} />
             {/* <Route path='/fullcalendar' element={<ReactBigCalendar />} /> */}
             <Route path='/leave' element={<TicketPage />} />
+            <Route path='/ticket' element={<TicketPage1 />} />
             <Route path='/fullcalendar' element={<FAQPage/>} />
             
          

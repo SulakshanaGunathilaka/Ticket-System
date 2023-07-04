@@ -10,8 +10,8 @@ const initialState = {
   status: null,
   searchResults: [],
   userId: null,
-  page:[],
-  offset:1
+  page:1,
+  offset:10
 
  
 

@@ -78,7 +78,7 @@ export const getAllTickets = (page, pageSize,status,searchQuery) => {
 };
 
 
-export const addTickets = (userId1, type, description) => async (dispatch) => {
+export const addTickets = (userId1, type, description,title) => async (dispatch) => {
   const user1 = AuthService.getCurrentUser();
 
   try {
@@ -88,6 +88,7 @@ export const addTickets = (userId1, type, description) => async (dispatch) => {
         userId: userId1,
         type: type,
         description: description,
+        title:title,
       },
       {
         headers: {
@@ -154,7 +155,7 @@ export const performSearch = (searchQuery, status,userId,page,offset) => {
     try {
      
 
-      const response = await axios.get('http://localhost:8080/tickets/filter', {
+      const response = await axios.get(`http://localhost:8080/tickets/filter?page=1&offset=10`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -166,8 +167,7 @@ export const performSearch = (searchQuery, status,userId,page,offset) => {
           q: searchQuery,
           status: status,
           userId:userId,
-          page:page,
-          offset:offset,
+         
         
         },
       });
@@ -179,6 +179,10 @@ export const performSearch = (searchQuery, status,userId,page,offset) => {
       var tickets = response.data;
       dispatch(setTicketDetails(tickets));
       console.log("Search ticketssssssssssss",tickets)
+      dispatch(fetchTicketpage(response.data.totalElements
+        ));
+      dispatch(fetchTicketoffset(response.data.totalPages))
+   
 
       // dispatch(fetchTicket(page));
     } catch (error) {
@@ -209,7 +213,7 @@ export const getTicketPages = (page,offset) => {
     try {
      
 
-      const res = await axios.get( `http://localhost:8080/tickets/page?page=1&offset=10`, {
+      const res = await axios.get( `http://localhost:8080/tickets/page=${page}offset=10`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -251,8 +255,13 @@ export const fetchTicketpage = (page) => {
   };
 };
 
+
+
 export const fetchTicketoffset = (offset) => {
   return {
     type: FETCH_TICKET_OFFSET,offset
   };
 };
+
+
+
