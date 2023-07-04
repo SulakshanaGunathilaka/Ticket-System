@@ -102,22 +102,18 @@ function TicketPage(props) {
 
   }, []);
 
-  // console.log("pageeeeeeeeeee",tickets?.searchResults?.body.totalElement)
 
-  // useEffect(() => {
-  //   dispatch(viewTicketDescription(ticketId));
-  // }, []);
 
 
   const handleView = (data) => {
-    // dispatch(viewTicketDescription(ticketId));
+  
     setShowModal3(true)
     setSelectedTicket(data)
     console.log("View Ticket", data)
 
   };
 
-  // console.log("View Ticket",ticketById)
+
 
 
 
@@ -168,12 +164,10 @@ function TicketPage(props) {
     setLoading(true);
     try {
       const response = await getAllTickets(1, 5);
-      //await delay(2000);
+     
 
       setData(response.data.body.content);
-      // setTicketList(response.data.body);
-      // setTotalPages(tickets?.searchResults?.body?.totalPages);
-      // setCurrentPage(page);
+     
       setLoading(false);
     } catch (e) {
       CommonToasts.errorToast(e.message);
@@ -181,13 +175,7 @@ function TicketPage(props) {
     }
   }
 
-  // function updatePageNumbers() {
-  //   const pageNumberArray = [];
-  //   for (let i = 1; i <= tickets?.searchResults?.body?.totalPages; i++) {
-  //     pageNumberArray.push(i);
-  //   }
-  //   setPage(pageNumberArray);
-  // }
+ 
 
 
 
@@ -199,9 +187,7 @@ function TicketPage(props) {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(getTicketPages(page));
-  // }, [currentPage, fetchTicket]);
+
 
   console.log("pages", tickets.page);
 
@@ -249,14 +235,13 @@ console.log("ticketpage.........................................",tickets?.searc
       setLoading(true);
       try {
         const response = await UserService.getAllUsers(1, 5);
-        //await delay(2000);
+       
 
         console.log("Hellooo", response)
         setData(response.data.body.content);
         setUserList(response.data.body);
 
-        // setTotalPages(tickets?.searchResults?.body?.totalPages);
-        // setCurrentPage(1);
+      
         setLoading(false);
       } catch (e) {
         CommonToasts.errorToast(e.message);
@@ -265,21 +250,65 @@ console.log("ticketpage.........................................",tickets?.searc
     }
 
     getAllUsers();
-    // setCurrentPage(1);
-    // updatePageNumbers();
+
   }, []);
 
 
 
-  // function updatePageNumbers() {
-  //   const pageNumberArray = [];
-  //   for (let i = 1; i <=tickets?.searchResults?.body?.totalPage; i++) {
-  //     pageNumberArray.push(i);
-  //   }
-  //   setPage(pageNumberArray);
-  // }
+ 
+
 
   console.log("userId.........................", tickets?.searchResults?.body?.content)
+
+
+  const [closureComments, setClosureComments] = useState({
+    closureComments: '',
+ 
+  });
+  
+  
+  const EditFaq = (e) => {
+    try {
+      axios({
+        method: "put",
+        url: 'http://localhost:8080/faqItems',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ${user1.jwt}`,
+        },
+        data: {
+         
+          closureComments: closureComments.closureComments,
+          
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
+          setShowModal2(false);
+        
+          CommonToasts.basicToast("Successfully  Add Close comment");
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -318,8 +347,7 @@ console.log("ticketpage.........................................",tickets?.searc
                   className=" bg-gray-200 outline-none"
                   type="text"
                   placeholder="Search......"
-                  // value={searchQuery}
-                  // onChange={handleSearchInputChange}
+               
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
@@ -426,21 +454,39 @@ console.log("ticketpage.........................................",tickets?.searc
                       </span>
                     </a>
                   </div>
-                  <dl class="mt-6 flex gap-4 sm:gap-6">
+
+                  
+                  <dl class="mt-6 flex gap-4 sm:gap-6 ">
                     <div class="flex flex-col-reverse">
                       <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
                       <dd class="text-xs text-gray-500">Date</dd>
                     </div>
 
                   </dl>
-                  <div class="flex flex-row-reverse ml-10">
-                    <dl class="mt-6 flex gap-4 sm:gap-6">
-                      <div class="flex flex-col-reverse">
-                        <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
 
+                  <dl class="mt-2 flex gap-4 sm:gap-6 ">
+                    <div class="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600"> {ticket.closureComments}</dt>
+                      <dd class="text-xs text-gray-500">Date</dd>
+                    </div>
+
+                  </dl>
+
+
+                  
+                  <div class="flex ">
+                    
+                    <dl class="mt-6 flex gap-4 sm:gap-6">
+                    <div class="flex flex-col-reverse">
+                        <dt class="text-sm font-medium text-gray-600 mx-38"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
                       </div>
-                      <div class="flex flex-col-reverse">
-                        <a href="#" className="inline-block mt-4 ml-10">
+
+               
+                      <div class="inline-block  ">
+
+
+
+                        <a href="#" className="inline-block mt-4  justify-end">
                           <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
@@ -466,6 +512,8 @@ console.log("ticketpage.........................................",tickets?.searc
                       </div>
                     </dl>
                   </div>
+
+
 
 
 
