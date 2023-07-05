@@ -83,8 +83,11 @@ export default function TicketPage1() {
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
   const[tickets,setTickets]= useState([])
-  
-
+  const [ticketId, setTicketId] = useState([]);
+  const [id, setId] = useState('');
+  const [ createdDate, setCreatedDate] = useState('');
+  const [comment, setComment] = useState('');
+  const [ userName, setUserName] = useState('');
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -163,6 +166,91 @@ export default function TicketPage1() {
       setLoading(false);
     }
   };
+
+
+  // const CreatComment = (ticketId) => {
+  //   try {
+  //     axios({
+  //       method: "post",
+  //       url:`http://localhost:8080/tickets/${ticketId}/comments`,
+  //       headers: {
+  //         "Access-Control-Allow-Origin": "*",
+  //         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  //         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+  //         "Authorization": `Bearer ` +  user1.jwt,
+  //       },
+  //       data: {
+         
+  //         id: id,
+  //         comment: comment,
+  //         createdDate: createdDate,
+  //         userId: user1.user.userId,
+  //         userName:  userName,
+
+
+  //       },
+  //       mode: "cors",
+  //     }).then((res) => {
+  //       console.log("response", res);
+  //       if (res.status == 200) {
+        
+  //         CommonToasts.basicToast("Successfully Comment Added");
+      
+        
+         
+  //       }
+  //     }).catch((error) => {
+  //       CommonToasts.errorToast(error.message);
+  //       setLoading(false);
+  //     });
+  //   } catch (e) {
+  //     CommonToasts.errorToast(e.message);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const CreateComment = (ticketId) => {
+    try {
+      axios({
+        method: "post",
+        url: 'http://localhost:8080/tickets/' + ticketId + '/comments',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ` + user1.jwt,
+        },
+        data: {
+          id: id,
+          comment: comment,
+          createdDate: createdDate,
+          userId: user1.user.userId,
+          userName: userName,
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+          CommonToasts.basicToast("Successfully Comment Added");
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+  
+
+
+
+
+
+
+
+
+
 
 
 //   const performSearch = (searchQuery, status,userId,page,offset) => {
@@ -253,6 +341,56 @@ const GetTickets = async () => {
     const formattedDate = moment(createdDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
     return formattedDate;
   };
+
+
+
+  const ViewTicketDetails = (ticketId) => {
+
+    try {
+      const tickets = { id: ticketId };
+      axios({
+        method: "get",
+        url: 'http://localhost:8080/tickets/'+ ticketId,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ` +  user1.jwt,
+        },
+        data: null,
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+        
+       
+         
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+  
+const handleClickView = (ticketId) => {
+  ViewTicketDetails (ticketId)
+  setShowModal2(true);
+};
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -400,12 +538,12 @@ const GetTickets = async () => {
                 <div class="flex flex-row-reverse ml-10">
                   <dl class="mt-6 flex gap-4 sm:gap-6">
                     <div class="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
+                      {/* <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt> */}
 
                     </div>
-                    <div class="flex flex-col-reverse">
+                    {/* <div class="flex flex-col-reverse">
                       <a href="#" className="inline-block mt-4 ml-10">
-                        <button
+                         <button
                           type="button"
                           class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                           // onClick={() => handleDelete(ticket.id)}
@@ -427,11 +565,52 @@ const GetTickets = async () => {
                         </button>
                       </a>
 
-                    </div>
+                    </div> */}
+                    
                   </dl>
                 </div>
 
+                <div class="flex items-center justify-between mt-2">
+                  <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
 
+        <div class="flex items-center">
+        <button
+                          type="button"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                          // onClick={() => handleDelete(ticket.id)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                            type="button"
+                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                            onClick={() => handleClickView(ticket.id)}
+                         
+
+                          >
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+</svg>
+
+                          </button>
+
+      
+        </div>
+        
+    </div>
 
 
               </div>
@@ -579,7 +758,119 @@ const GetTickets = async () => {
       ) : null}
 
 
+{showModal2   ?  (
+        <>
 
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal2(false)}
+            ></div>
+            <div>
+          
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                    Add Comment
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal2(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                 
+
+                 
+
+
+
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    ID
+                    </label>
+                  
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)} />
+
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    Comment
+                    </label>
+                    <textarea
+                      id="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"onChange={(e) => setComment(e.target.value)} 
+                      placeholder="Description"
+                    
+                    ></textarea>
+
+                  </div>
+
+
+
+               
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    CreatedDate
+                    </label>
+                  
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"   onChange={(e) => setCreatedDate(e.target.value)} />
+
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    User Id
+                    </label>
+                  
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  value={user1.user.userId} onChange={(e) => setUserId(user1.user.userId)} />
+
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    User Name
+                    </label>
+                  
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"onChange={(e) => setUserName(e.target.value)}   />
+
+                  </div>
+<br/>
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    onClick={CreateComment}
+                  >
+                    Add
+                  </button>
+
+
+                </div>
+              </div>
+
+  
+            </div>
+          
+
+          </div>
+
+
+
+        </>
+      ) : null}
 
 
 
