@@ -83,11 +83,12 @@ export default function TicketPage1() {
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
   const[tickets,setTickets]= useState([])
-  const [ticketId, setTicketId] = useState([]);
+  // const [ticketId, setTicketId] = useState([]);
   const [id, setId] = useState('');
   const [ createdDate, setCreatedDate] = useState('');
   const [comment, setComment] = useState('');
   const [ userName, setUserName] = useState('');
+  
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -168,11 +169,55 @@ export default function TicketPage1() {
   };
 
 
-  const CreatComment = (ticketId) => {
+  // const CreatComment = (ticketId) => {
+  //   try {
+  //     axios({
+  //       method: "post",
+  //       url:`http://localhost:8080/tickets/${ticketId}/comments`,
+  //       headers: {
+  //         "Access-Control-Allow-Origin": "*",
+  //         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  //         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+  //         "Authorization": `Bearer ` +  user1.jwt,
+  //       },
+  //       data: {
+         
+  //         id: id,
+  //         comment: comment,
+  //         createdDate: createdDate,
+  //         userId: user1.user.userId,
+  //         userName:  userName,
+
+
+  //       },
+  //       mode: "cors",
+  //     }).then((res) => {
+  //       console.log("response", res);
+  //       if (res.status == 200) {
+        
+  //         CommonToasts.basicToast("Successfully Comment Added");
+      
+        
+         
+  //       }
+  //     }).catch((error) => {
+  //       CommonToasts.errorToast(error.message);
+  //       setLoading(false);
+  //     });
+  //   } catch (e) {
+  //     CommonToasts.errorToast(e.message);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const CreateComment = () => {
+    // const baseUrl = 'http://localhost:8080';
+    const ticketId = selectedTicket.id;
+    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/comments`;
     try {
       axios({
         method: "post",
-        url:`http://localhost:8080/tickets/${ticketId}/comments`,
+        url: `http://localhost:8080/tickets/${ticketId}/comments`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -212,59 +257,6 @@ export default function TicketPage1() {
   
   
 
-
-
-
-
-
-
-
-
-
-
-//   const performSearch = (searchQuery, status,userId,page,offset) => {
-    
-//     return async (dispatch, getState) => {
-//       try {
-       
-  
-//         const response = await axios.get(`http://localhost:8080/tickets/filter?page=1&offset=10`, {
-//           headers: {
-//             'Access-Control-Allow-Origin': '*',
-//             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-//             Authorization:
-//             `Bearer ` +
-//             user1.jwt,
-//           },
-//           params: {
-//             q: searchQuery,
-//             status: status,
-//             userId:userId,
-           
-          
-//           },
-//         });
-  
-//         console.log(response.data);
-  
-//         // Dispatch the response data to update the store
-//         dispatch({ type: SEARCH_SUCCESS, data: response.data });
-//         var tickets = response.data;
-//         dispatch(setTicketDetails(tickets));
-//         console.log("Search ticketssssssssssss",tickets)
-//         dispatch(fetchTicketpage(response.data.totalElements
-//           ));
-//         dispatch(fetchTicketoffset(response.data.totalPages))
-     
-  
-//         // dispatch(fetchTicket(page));
-//       } catch (error) {
-//         console.error(error);
-//         // Dispatch an error action if necessary
-//         dispatch({ type: ERROR, error: error.message });
-//       }
-//     };
-//   };
  
 const GetTickets = async () => {
     try {
@@ -346,10 +338,62 @@ const GetTickets = async () => {
 
 
   
-const handleClickView = (ticketId) => {
-  ViewTicketDetails (ticketId)
+const handleView = (data) => {
+  // ViewTicketDetails (data)
+  setSelectedTicket(data)
+  console.log("View Ticket", data)
   setShowModal2(true);
+
 };
+const handleView2 = (data) => {
+  // ViewTicketDetails (data)
+  setSelectedTicket(data)
+
+  setShowModal3(true)
+};
+
+const TicketDelete = (ticketId) => {
+  setLoading(true);
+
+  try {
+    axios({
+      method: "delete",
+      url: `http://localhost:8080/tickets/${ticketId}`,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        Authorization: `Bearer ${user1.jwt}`,
+      },
+      data: null,
+      mode: "cors",
+    })
+      .then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
+          // setFaqItems(res.data.body);
+          const updatedTickets =tickets.filter(
+            (tickets) => tickets.id !== ticketId
+          );
+         
+          setTickets(updatedTickets);
+   
+          CommonToasts.basicToast("Successfully Deleted");
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+  } catch (e) {
+    CommonToasts.errorToast(e.message);
+    setLoading(false);
+  }
+};
+
+
+
 
 
 
@@ -472,7 +516,7 @@ const handleClickView = (ticketId) => {
                 <div class="flex justify-between items-center">
                   <div class="flex flex-col">
 
-                    <button class=" text-gray-700 text-base font-bold " className="ellipsis"
+                    <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView2(ticket)}
                     //  onClick={() => handleView(ticket)}
                      >
                       {ticket.title}
@@ -500,6 +544,20 @@ const handleClickView = (ticketId) => {
                 <dl class="mt-6 flex gap-4 sm:gap-6">
                   <div class="flex flex-col-reverse">
                     <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
+                    <dd class="text-xs text-gray-500">Date</dd>
+                  </div>
+
+                </dl>
+                {ticket.comments.map((comment) => (
+  <div key={comment.id} class="mt-6">
+    <div class="text-sm font-medium text-gray-600">{comment.userName}</div>
+    <div class="text-xs text-gray-500">{formatCreatedDate(comment.createdDate)}</div>
+    <div class="mt-2 text-gray-700">{comment.comment}</div>
+  </div>
+))}
+                <dl class="mt-6 flex gap-4 sm:gap-6">
+                  <div class="flex flex-col-reverse">
+                    <dt class="text-sm font-medium text-gray-600">{}</dt>
                     <dd class="text-xs text-gray-500">Date</dd>
                   </div>
 
@@ -540,13 +598,22 @@ const handleClickView = (ticketId) => {
                 </div>
 
                 <div class="flex items-center justify-between mt-2">
-                  <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
+                  <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd> {ticket.status == "OPEN" ? (
+                        <span className=" text-green-600   text-sm font-semibold text-black-600">
+                        OPEN
+                        </span>
+                      ) : (
+                        <span className="  text-red-400   text-sm font-semibold text-black-600">
+                       CLOSED
+                        </span>
+                      )}</dt>
 
         <div class="flex items-center">
         <button
                           type="button"
                           class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                           // onClick={() => handleDelete(ticket.id)}
+                          onClick={() => TicketDelete(ticket.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -566,8 +633,8 @@ const handleClickView = (ticketId) => {
                         <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-                            onClick={() => handleClickView(ticket.id)}
-                         
+                            // onClick={() => handleClickView(ticket.id)}
+                            onClick={() => handleView(ticket)}
 
                           >
                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -774,7 +841,7 @@ const handleClickView = (ticketId) => {
                     ID
                     </label>
                   
-                    {/* <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)} /> */}
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket.id} onChange={(e) => setId(selectedTicket.id)} />
 
                   </div>
                   <div className="w-full">
@@ -793,14 +860,7 @@ const handleClickView = (ticketId) => {
 
 
                
-                  <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    CreatedDate
-                    </label>
                   
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"   onChange={(e) => setCreatedDate(e.target.value)} />
-
-                  </div>
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                     User Id
@@ -821,7 +881,7 @@ const handleClickView = (ticketId) => {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={  CreatComment}
+                    onClick={  CreateComment}
                   >
                     Add
                   </button>
@@ -841,7 +901,88 @@ const handleClickView = (ticketId) => {
         </>
       ) : null}
 
+{showModal3 ? (
+        <>
+          {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
+          <div className="fixed inset-0 z-10 overflow-y-auto " >
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal3(false)}
+            ></div>
+            <div>
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <div class="font-bold text-xl mb-2">View Ticket</div>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal3(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
 
+
+
+                  <p class="text-gray-700 text-base font-bold "   >
+
+
+
+                  </p>
+                  <div class="px-6 py-4">
+                    <h1>Description</h1>
+                    <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.description}
+                    </p>
+                  </div>
+                  <div class="px-6 py-4">
+                  <h1>Status</h1>
+                    <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.status}
+                    </p>
+                  </div>
+                  <div class="px-6 py-4">
+                  <h1>Title</h1>
+                    <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.title}
+                    </p>
+                  </div>
+
+
+                </div>
+
+
+                <br />
+
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="max-w-sm rounded overflow-hidden shadow-lg ">
+
+
+          </div>
+
+
+
+          {/* ))}  */}
+
+        </>
+      ) : null}
 
      
 

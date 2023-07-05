@@ -132,10 +132,10 @@ function TicketPage(props) {
   const dispatch = useDispatch();
 
 
-  const handleDelete = (ticketId) => {
-    dispatch(deleteTicket(ticketId));
-    window.location.reload();
-  };
+  // const handleDelete = (ticketId) => {
+  //   dispatch(deleteTicket(ticketId));
+  //   window.location.reload();
+  // };
 
   const addTicket = (userId, type, description,title) => {
     dispatch(addTickets(userId, type, description,title));
@@ -508,7 +508,7 @@ console.log("Test Ticket..................",tickets?.searchResults?.body)
                           <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                            onClick={() => handleDelete(ticket.id)}
+                            // onClick={() => handleDelete(ticket.id)}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
