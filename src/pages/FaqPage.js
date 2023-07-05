@@ -243,38 +243,7 @@ const EditFaq = (e) => {
 const [currentPage, setCurrentPage] = useState(1);
 const [totalPages, setTotalPages] = useState(1);
 
-// const getFaq = () => {
-//   axios({
-//     method: 'get',
-//     url: `http://localhost:8080/faqItems/page?page=${currentPage}&offset=10`,
-//     headers: {
-//       'Access-Control-Allow-Origin': '*',
-//       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-//       Authorization: `Bearer ${user1.jwt}`,
-//     },
-//     mode: 'cors',
-//   })
-//     .then((res) => {
-//       console.log('response', res);
-//       if (res.status === 200) {
-//         setFaqItems(res.data.content);
-//         setTotalPages(res.data.totalPages);
-//       }
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// };
 
-// const handleNextPage = () => {
-//   if (currentPage < totalPages) {
-//     setCurrentPage(currentPage + 1);
-//   }
-// };
-
-// useEffect(() => {
-//   getFaq();
-// }, [currentPage]);
 
 const getFaq = (page) => {
   axios({

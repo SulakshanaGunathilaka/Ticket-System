@@ -55,6 +55,7 @@ export default function EmployeePage() {
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
+  const [showModal3, setShowModal3] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
   const [user, setUser] = useState(null);
@@ -193,6 +194,7 @@ export default function EmployeePage() {
 
 
 
+
   const ViewUser = (userId) => {
     // const UserID = props.userID
     console.log(userId);
@@ -211,15 +213,17 @@ export default function EmployeePage() {
       mode: "cors",
     }).then((res) => {
       console.log("response", res);
-      var users = res.data.body;
-      // console.log("lkhsfjhskf", users)
-      setUserDetails(users);
-      // localStorage.setItem("Singleuser", JSON.stringify(users))
+      // var users = res.data.body;
+      setedituserDetails(res.data.body); 
+      // setShowModal2(true);
+   
+      // setUserDetails(users);
+    
     });
   };
 
   const [open, setOpen] = useState(0);
-  // const [userDetails, setUserDetails] = useState("");
+ 
 
   console.log("test",user1)
 
@@ -333,6 +337,7 @@ export default function EmployeePage() {
       },
 
     };
+  
     console.log(state);
     axios({
       method: "put",
@@ -349,22 +354,129 @@ export default function EmployeePage() {
       console.log("response", res);
       // console.log("final " + state);
       setState(res.data.body);
+      ViewUser(userId);
     });
 
 
   };
 
 
+  //Edit user new//
 
-
-  
-
-
-
-
-
-  
+  const [edituserDetails, setedituserDetails] = useState({
+    id: '',
+    firstName: '',
+ 
+    lastName: '',
     
+    primaryContactNo: '',
+    secondaryContactNo:'',
+
+    userStatus: '',
+
+    address: {
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      province: '',
+    },
+
+    bankDetails: {
+      accountNo:'',
+      bankName:'',
+      bankBranch: '',
+      bankAccountType: '',
+    },
+
+    department: {
+      name: '',
+      agency:'',
+    },
+
+  
+
+    designation: {
+      designationName: '',
+      designationLevel: '',
+    },
+  });
+  
+  
+
+
+
+ 
+  
+
+
+  const EditUser = (userId) => {
+    try {
+      axios({
+        method: "put",
+        url: `http://localhost:8080/users/${userId}`,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ${user1.jwt}`,
+        },
+        data: edituserDetails,
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
+          setShowModal2(false);
+          setShowModal3(true);
+          CommonToasts.basicToast("Successfully Edited");
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  const handleClickView2 = (userId) => {
+    ViewUser(userId);
+    setShowModal3(true);
+  };
+
   
 
   const handleClickView = (userId) => {
@@ -376,6 +488,11 @@ export default function EmployeePage() {
   //   finalSubmit(userId);
   //   setShowModal2(true);
   // };
+  const handleClickUpdate = (userId) => {
+    finalSubmit(userId);
+    setShowModal2(true);
+    ViewUser(userId);
+  };
 
 
   const UserStatus = (userId) => {
@@ -411,10 +528,10 @@ export default function EmployeePage() {
     });
   };
 
-  const handleClickUpdate = (userId) => {
-    finalSubmit(userId);
-    setShowModal2(true);
-  };
+  // const handleClickUpdate = (userId) => {
+  //   ViewUser (userId)
+  //   setShowModal2(true);
+  // };
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -423,37 +540,7 @@ export default function EmployeePage() {
   };
 
 
-  // const getEmployeepage = (page) => {
-  //   axios({
-  //     method: 'get',
-  //     url: `http://localhost:8080/users/page?page=${page}&offset=10`,
-  //     headers: {
-  //       'Access-Control-Allow-Origin': '*',
-  //       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-  //       Authorization: `Bearer ${user1.jwt}`,
-  //     },
-  //     mode: 'cors',
-  //   })
-  //     .then((res) => {
-  //       console.log('response', res);
-  //       if (res.status === 200) {
-  //         setData(res.data.body.content);
-  //         setUserList(res.data.body);
-  //         setTotalPages(res.data.totalPages);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-  
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
-  
-  // useEffect(() => {
-  //   getEmployeepage(currentPage);
-  // }, [currentPage]);
+
   
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
   
@@ -588,7 +675,7 @@ export default function EmployeePage() {
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
                     <td className="text-center">
-                      {/* {" "}
+                      {" "}
                       {user.userStatus == "ACTIVE" ? (
                         <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
                           ACTIVE
@@ -602,9 +689,9 @@ export default function EmployeePage() {
                            DEACTIVATED
                         </span>):(<span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
                         DORMANT
-                        </span>)} */}
+                        </span>)}
                         
-                        {user.userStatus}
+                        {/* {user.userStatus} */}
                     </td>
                     <td className="text-center">
                       {/* {console.log("admin"+ user1.roles.name)} */}
@@ -685,6 +772,19 @@ export default function EmployeePage() {
                       </button>
 
                     </td>
+                    <td>
+                      <button
+                        type="button"
+                        class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                        onClick={() => handleClickView2(user.id)}
+                      >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+</svg>
+
+                      </button>
+
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -712,27 +812,7 @@ export default function EmployeePage() {
       </nav>
 
 
-{/* <button onClick={() => getEmployeepage(currentPage + 1)}>Next Page</button> */}
 
-            {/* <nav className='block'>
-        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-          {pageNumbers.map((number) => (
-            <li key={number}>
-              <a
-                onClick={() => handlePageChange(number)}
-                href='#'
-                className={
-                  currentPage === number
-                    ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                    : 'bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                }
-              >
-                {number}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav> */}
 
           </div>
 
@@ -861,7 +941,7 @@ export default function EmployeePage() {
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">First Name</h3>
                           <p className="text-gray-600">
-                            {userDetails.firstName}
+                            {edituserDetails.firstName}
                           </p>
                         </div>
                       </div>
@@ -870,7 +950,7 @@ export default function EmployeePage() {
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">Last Name</h3>
                           <p className="text-gray-600">
-                            {userDetails.lastName}
+                            {edituserDetails.lastName}
                           </p>
                         </div>
                       </div>
@@ -878,7 +958,7 @@ export default function EmployeePage() {
                     <div className="w-full p-4 shadow-md lg:max-w-lg">
                       <div className="space-y-2">
                         <h3 className="text-lg font-semibold">Email</h3>
-                        <p className="text-gray-600">{userDetails.email}</p>
+                        <p className="text-gray-600">{edituserDetails.email}</p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -888,7 +968,7 @@ export default function EmployeePage() {
                             Primary Contact
                           </h3>
                           <p className="text-gray-600">
-                            {userDetails.primaryContactNo}
+                            {edituserDetails.primaryContactNo}
                           </p>
                         </div>
                       </div>
@@ -899,7 +979,7 @@ export default function EmployeePage() {
                             Secondary Contact
                           </h3>
                           <p className="text-gray-600">
-                            {userDetails.secondaryContactNo}
+                            {edituserDetails.secondaryContactNo}
                           </p>
                         </div>
                       </div>
@@ -910,7 +990,7 @@ export default function EmployeePage() {
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">User Status</h3>
                           <p className="text-gray-600">
-                            {userDetails.userStatus}
+                            {edituserDetails.userStatus}
                           </p>
                         </div>
                       </div>
@@ -918,7 +998,7 @@ export default function EmployeePage() {
                       <div className="w-full p-4 shadow-md lg:max-w-lg">
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">Gender</h3>
-                          <p className="text-gray-600">{userDetails.gender}</p>
+                          <p className="text-gray-600">{edituserDetails.gender}</p>
                         </div>
                       </div>
                     </div>
@@ -928,7 +1008,7 @@ export default function EmployeePage() {
                       <div className="w-full p-4 shadow-md lg:max-w-lg">
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">NIC</h3>
-                          <p className="text-gray-600">{userDetails.nicNumber}</p>
+                          <p className="text-gray-600">{edituserDetails.nicNumber}</p>
                         </div>
                       </div>
 
@@ -936,7 +1016,7 @@ export default function EmployeePage() {
                         <div className="space-y-2">
                           <h3 className="text-lg font-semibold">Date Of Birth</h3>
                           <p className="text-gray-600">
-                            {userDetails.dateOfBirth}
+                            {edituserDetails.dateOfBirth}
                           </p>
                         </div>
                        
@@ -967,7 +1047,7 @@ export default function EmployeePage() {
       ) : null}
 
 
-{showModal2 ? (
+ {showModal2 ? (
         <>
           <div className="fixed inset-0 z-10 overflow-y-auto">
             <div
@@ -984,22 +1064,7 @@ export default function EmployeePage() {
                 Basic Information
               </AccordionHeader>
               <AccordionBody>
-                {/* <button>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                    />
-                  </svg>
-                </button> */}
+             
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="First Name" />
@@ -1012,7 +1077,9 @@ export default function EmployeePage() {
                       placeholder="First Name"
                       {...register("firstName", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.firstName?.message}</p> */}
+
+
+                    
                   </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Last Name" />
@@ -1025,10 +1092,10 @@ export default function EmployeePage() {
                       placeholder="Last Name"
                       {...register("lastName", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.lastName?.message}</p> */}
+                  
                   </div>
-                    {/* <p className="text-red-400 text-xs"> {errors.otherNames?.message}</p> */}
-                  {/* </div> */}
+                 
+               
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
@@ -1042,7 +1109,7 @@ export default function EmployeePage() {
                       placeholder="userStatus"
                       {...register("userStatus", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.lastName?.message}</p> */}
+                  
                   </div>
                
                 </div>
@@ -1059,7 +1126,7 @@ export default function EmployeePage() {
                       placeholder="Primary Contact"
                       {...register("primaryContactNo", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.primaryContactNo?.message}</p> */}
+                  
                   </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Secoundary Contact" />
@@ -1072,7 +1139,7 @@ export default function EmployeePage() {
                       placeholder="Secoundary Contact"
                       {...register("secondaryContactNo", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p> */}
+                   
                   </div>
                 </div>
             
@@ -1095,7 +1162,7 @@ export default function EmployeePage() {
                       placeholder="Address Line1"
                       {...register("addressLine1", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.addressLine1?.message}</p> */}
+                 
                   </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Address Line2" />
@@ -1108,7 +1175,7 @@ export default function EmployeePage() {
                       placeholder="Address Line2"
                       {...register("addressLine2", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.addressLine2?.message}</p> */}
+                  
                   </div>
                 </div>
                 <div className="flex flex-col mb-2">
@@ -1122,7 +1189,7 @@ export default function EmployeePage() {
                     placeholder="City"
                     {...register("city", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.city?.message}</p> */}
+                 
                 </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Province" />
@@ -1135,11 +1202,9 @@ export default function EmployeePage() {
                     placeholder="Province"
                     {...register("province", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.province?.message}</p> */}
+                 
                 </div>
-                {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">
-                SAVE
-              </button> */}
+              
               </AccordionBody>
             </Accordion>
             <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
@@ -1158,7 +1223,7 @@ export default function EmployeePage() {
                     placeholder="Account Number"
                     {...register("accountNo", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p> */}
+                  
                 </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Bank Name" />
@@ -1171,7 +1236,7 @@ export default function EmployeePage() {
                     placeholder="Bank Name"
                     {...register("bankName", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.bankName?.message}</p> */}
+                 
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -1186,7 +1251,7 @@ export default function EmployeePage() {
                       placeholder="Bank Branch"
                       {...register("bankBranch", { required: "This is required" })}
                     />
-                    {/* <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p> */}
+                    
                   </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Account Type" />
@@ -1201,12 +1266,10 @@ export default function EmployeePage() {
                     />
 
 
-                    {/* <p className="text-red-400 text-xs"> {errors.accountType?.message}</p> */}
+                   
                   </div>
                 </div>
-                {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">
-                SAVE
-              </button> */}
+              
               </AccordionBody>
             </Accordion>
             <Accordion open={open === 4} icon={<Icon id={4} open={open} />}>
@@ -1225,7 +1288,7 @@ export default function EmployeePage() {
                     placeholder="Designation Name"
                     {...register("designationName", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.designationName?.message}</p> */}
+                 
                 </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Designation Level" />
@@ -1238,12 +1301,10 @@ export default function EmployeePage() {
                     placeholder="Designation Level"
                     {...register("designationLevel", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p> */}
+                 
                 </div>
 
-                {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg" >
-                SAVE
-              </button> */}
+             
           
               </AccordionBody>
             </Accordion>
@@ -1263,7 +1324,7 @@ export default function EmployeePage() {
                     placeholder="departmentname"
                     {...register("departmentname", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.employmentStatus?.message}</p> */}
+                 
                 </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Agency" />
@@ -1276,29 +1337,15 @@ export default function EmployeePage() {
                     placeholder="agency"
                     {...register("agency", { required: "This is required" })}
                   />
-                  {/* <p className="text-red-400 text-xs"> {errors.start?.message}</p> */}
+                
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {/* <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Duration" />
-                    <FormInputField
-                      value={state.duration}
-                      inputHandle={inputHandle}
-                      type="text"
-                      name="duration"
-                      id="duration"
-                      placeholder="duration"
-                      {...register("duration", { required: "This is required" })}
-                    /> */}
-                    {/* <p className="text-red-400 text-xs">{errors.duration?.message}</p> */}
-                  {/* </div> */}
+                
                 </div>
-                {/* <button class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg">
-                SAVE
-              </button> */}
+               
                   <button
-                  onClick={finalSubmit}
+                  // onClick={finalSubmit}
                   className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
 
 
@@ -1307,60 +1354,7 @@ export default function EmployeePage() {
                 </button>
               </AccordionBody>
             </Accordion>
-            {/* <Accordion open={open === 6} icon={<Icon id={6} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(6)}>
-                Roles
-              </AccordionHeader>
-              <AccordionBody>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Roles name" />
-                  <FormInputField
-                    value={state.rolesname}
-                    inputHandle={inputHandle}
-                    type="text"
-                    name="rolesname"
-                    id="rolesname"
-                    placeholder="rolesname"
-                    {...register("rolesname", { required: "This is required" })}
-                  /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.value?.message}</p> */}
-                {/* </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Privilages name" />
-                  <FormInputField
-                    value={state.privilegesname}
-                    inputHandle={inputHandle}
-                    type="text"
-                    name="privilegesname"
-                    id="privilegesname"
-                    placeholder="privilegesname"
-                    {...register("privilegesname", { required: "This is required" })}
-                  /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.type?.message}</p> */}
-                {/* </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Roles" />
-                  <FormInputField
-                    value={state.roles}
-                    inputHandle={inputHandle}
-                    type="text"
-                    name="roles"
-                    id="roles"
-                    placeholder="roles"
-                    {...register("roles", { required: "This is required" })}
-                  /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.type?.message}</p> */}
-                {/* </div> */}
-                {/* <button
-                  onClick={finalSubmit}
-                  className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
-
-
-                >
-                  Submit
-                </button>
-              </AccordionBody> */}
-            {/* </Accordion> */}
+          
 
           </Fragment>
         </form>
@@ -1375,9 +1369,587 @@ export default function EmployeePage() {
 
 
         </>
+      ) : null} 
+
+
+
+{/* Test modal */}
+
+{/* {showModal2 ? (
+        <>
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal2(false)}
+            ></div>
+            <div>
+          
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                    Edit Question
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal2(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <Fragment>
+            <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
+              <AccordionHeader onClick={() => handleOpen(1)}>
+                Basic Information
+              </AccordionHeader>
+              <AccordionBody>
+             
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="First Name" />
+                    <FormInputField
+                      // value={state.firstName}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.firstName}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          question: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="firstName"
+                      id="firstName"
+                     
+                    />
+
+
+                    
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Last Name" />
+                    <FormInputField
+                      // value={state.lastName}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.lastName}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          lastName: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="lastName"
+                      id="lastName"
+                      placeholder="Last Name"
+                      {...register("lastName", { required: "This is required" })}
+                    />
+                  
+                  </div>
+                 
+               
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="User Status" />
+                    <FormInputField
+                      // value={state.userStatus}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.userStatus}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          userStatus: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="userStatus"
+                      id="userStatus"
+                      placeholder="userStatus"
+                      {...register("userStatus", { required: "This is required" })}
+                    />
+                  
+                  </div>
+               
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Primary Contact" />
+                    <FormInputField
+                      // value={state.primaryContactNo}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.primaryContactNo}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          primaryContactNo: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="primaryContactNo"
+                      id="primaryContactNo"
+                      placeholder="Primary Contact"
+                      {...register("primaryContactNo", { required: "This is required" })}
+                    />
+                  
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Secoundary Contact" />
+                    <FormInputField
+                      // value={state.secondaryContactNo}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.secondaryContactNo}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          secondaryContactNo: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="secondaryContactNo"
+                      id="secondaryContactNo"
+                      placeholder="Secoundary Contact"
+                      {...register("secondaryContactNo", { required: "This is required" })}
+                    />
+                   
+                  </div>
+                </div>
+            
+              </AccordionBody>
+            </Accordion>
+            <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
+              <AccordionHeader onClick={() => handleOpen(2)}>
+                Address
+              </AccordionHeader>
+              <AccordionBody>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Address Line1" />
+                    <FormInputField
+                      // value={state.addressLine1}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.address.addressLine1}
+                      
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          addressLine1: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="addressLine1"
+                      id="addressLine1"
+                      placeholder="Address Line1"
+                      {...register("addressLine1", { required: "This is required" })}
+                    />
+                 
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Address Line2" />
+                    <FormInputField
+                      // value={state.addressLine2}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.address.addressLine2}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          addressLine2: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="addressLine2"
+                      id="addressLine2"
+                      placeholder="Address Line2"
+                      {...register("addressLine2", { required: "This is required" })}
+                    />
+                  
+                  </div>
+                </div>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="City" />
+                  <FormInputField
+                    // value={state.city}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.city}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        city: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="city"
+                    id="city"
+                    placeholder="City"
+                    {...register("city", { required: "This is required" })}
+                  />
+                 
+                </div>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Province" />
+                  <FormInputField
+                    // value={state.province}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.province}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        province: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="province"
+                    id="province"
+                    placeholder="Province"
+                    {...register("province", { required: "This is required" })}
+                  />
+                 
+                </div>
+              
+              </AccordionBody>
+            </Accordion>
+            <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
+              <AccordionHeader onClick={() => handleOpen(3)}>
+                Bank Details
+              </AccordionHeader>
+              <AccordionBody>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Account Number" />
+                  <FormInputField
+                    // value={state.accountNo}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.accountNo}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        accountNo: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="accountNo"
+                    id="accountNo"
+                    placeholder="Account Number"
+                    {...register("accountNo", { required: "This is required" })}
+                  />
+                  
+                </div>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Bank Name" />
+                  <FormInputField
+                    // value={state.bankName}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.bankName}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        bankName: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="bankName"
+                    id="bankName"
+                    placeholder="Bank Name"
+                    {...register("bankName", { required: "This is required" })}
+                  />
+                 
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Bank Branch" />
+                    <FormInputField
+                      // value={state.bankBranch}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.bankName}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          bankName: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="bankBranch"
+                      id="bankBranch"
+                      placeholder="Bank Branch"
+                      {...register("bankBranch", { required: "This is required" })}
+                    />
+                    
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <FormInputText formInputText="Account Type" />
+                    <FormInputField
+                      // value={state.bankAccountType}
+                      // inputHandle={inputHandle}
+                      value={edituserDetails.bankAccountType}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          bankAccountType: e.target.value,
+                        })
+                      }
+                      type="text"
+                      name="bankAccountType"
+                      id="bankAccountType"
+                      placeholder="Account Type"
+                      {...register("bankAccountType", { required: "This is required" })}
+                    />
+
+
+                   
+                  </div>
+                </div>
+              
+              </AccordionBody>
+            </Accordion>
+            <Accordion open={open === 4} icon={<Icon id={4} open={open} />}>
+              <AccordionHeader onClick={() => handleOpen(4)}>
+                Designation
+              </AccordionHeader>
+              <AccordionBody>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Designation Name" />
+                  <FormInputField
+                    // value={state.designationName}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.designationName}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        designationName: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="designationName"
+                    id="designationName"
+                    placeholder="Designation Name"
+                    {...register("designationName", { required: "This is required" })}
+                  />
+                 
+                </div>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Designation Level" />
+                  <FormInputField
+                    // value={state.designationLevel}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.designationLevel}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        designationLevel: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="designationLevel"
+                    id="designationLevel"
+                    placeholder="Designation Level"
+                    {...register("designationLevel", { required: "This is required" })}
+                  />
+                 
+                </div>
+
+             
+          
+              </AccordionBody>
+            </Accordion>
+            <Accordion open={open === 5} icon={<Icon id={5} open={open} />}>
+              <AccordionHeader onClick={() => handleOpen(5)}>
+                Department
+              </AccordionHeader>
+              <AccordionBody>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Department name" />
+                  <FormInputField
+                    // value={state.departmentname}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.departmentname}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                        departmentname: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="departmentname"
+                    id="departmentname"
+                    placeholder="departmentname"
+                    {...register("departmentname", { required: "This is required" })}
+                  />
+                 
+                </div>
+                <div className="flex flex-col mb-2">
+                  <FormInputText formInputText="Agency" />
+                  <FormInputField
+                    // value={state.agency}
+                    // inputHandle={inputHandle}
+                    value={edituserDetails.agency}
+                    onChange={(e) =>
+                      setedituserDetails({
+                        ...edituserDetails,
+                       agency: e.target.value,
+                      })
+                    }
+                    type="text"
+                    name="agency"
+                    id="agency"
+                    placeholder="agency"
+                    {...register("agency", { required: "This is required" })}
+                  />
+                
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                
+                </div>
+               
+                  <button
+                  onClick={finalSubmit}
+                  className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
+
+
+                >
+                  Submit
+                </button>
+              </AccordionBody>
+            </Accordion>
+          
+
+          </Fragment>
+
+                 
+
+
+
+            
+
+                </div>
+              </div>
+
+  
+            </div>
+          
+
+          </div>
+
+                    
+
+
+        </>
+      ) : null} */}
+
+      
+{showModal3   ?  (
+        <>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal3(false)}
+            ></div>
+            <div>
+          
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                    Edit Question
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal3(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                 
+
+                 
+
+
+
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    Question
+                    </label>
+                  
+                    <input
+                type="text"
+                id="question"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={edituserDetails.firstName}
+                onChange={(e) =>
+                  setedituserDetails({
+                    ...edituserDetails,
+                    firstName: e.target.value,
+                  })
+                }
+              
+              />
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Answer
+                    </label>
+                    
+                    <textarea
+                type="text"
+                id="question"
+                className="w-full p-2 border border-gray-300 rounded-md"
+              
+              />
+
+                  </div>
+
+                  <br />
+
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    onClick={EditUser}
+                  >
+                    Add
+                  </button>
+
+
+                </div>
+              </div>
+
+  
+            </div>
+          
+
+          </div>
+
+
+
+        </>
       ) : null}
-
-
     
     </>
   );
