@@ -83,11 +83,12 @@ export default function TicketPage1() {
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
   const[tickets,setTickets]= useState([])
-  const [ticketId, setTicketId] = useState([]);
+  // const [ticketId, setTicketId] = useState([]);
   const [id, setId] = useState('');
   const [ createdDate, setCreatedDate] = useState('');
   const [comment, setComment] = useState('');
   const [ userName, setUserName] = useState('');
+  
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -209,11 +210,14 @@ export default function TicketPage1() {
   //   }
   // };
 
-  const CreateComment = (ticketId) => {
+  const CreateComment = () => {
+    // const baseUrl = 'http://localhost:8080';
+    const ticketId = selectedTicket.id;
+    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/comments`;
     try {
       axios({
         method: "post",
-        url: 'http://localhost:8080/tickets/' + ticketId + '/comments',
+        url: `http://localhost:8080/tickets/${ticketId}/comments`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -243,59 +247,6 @@ export default function TicketPage1() {
   };
   
 
-
-
-
-
-
-
-
-
-
-
-//   const performSearch = (searchQuery, status,userId,page,offset) => {
-    
-//     return async (dispatch, getState) => {
-//       try {
-       
-  
-//         const response = await axios.get(`http://localhost:8080/tickets/filter?page=1&offset=10`, {
-//           headers: {
-//             'Access-Control-Allow-Origin': '*',
-//             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-//             Authorization:
-//             `Bearer ` +
-//             user1.jwt,
-//           },
-//           params: {
-//             q: searchQuery,
-//             status: status,
-//             userId:userId,
-           
-          
-//           },
-//         });
-  
-//         console.log(response.data);
-  
-//         // Dispatch the response data to update the store
-//         dispatch({ type: SEARCH_SUCCESS, data: response.data });
-//         var tickets = response.data;
-//         dispatch(setTicketDetails(tickets));
-//         console.log("Search ticketssssssssssss",tickets)
-//         dispatch(fetchTicketpage(response.data.totalElements
-//           ));
-//         dispatch(fetchTicketoffset(response.data.totalPages))
-     
-  
-//         // dispatch(fetchTicket(page));
-//       } catch (error) {
-//         console.error(error);
-//         // Dispatch an error action if necessary
-//         dispatch({ type: ERROR, error: error.message });
-//       }
-//     };
-//   };
  
 const GetTickets = async () => {
     try {
@@ -377,10 +328,16 @@ const GetTickets = async () => {
 
 
   
-const handleClickView = (ticketId) => {
-  ViewTicketDetails (ticketId)
+const handleView = (data) => {
+  // ViewTicketDetails (data)
+  setSelectedTicket(data)
+  console.log("View Ticket", data)
   setShowModal2(true);
 };
+
+
+
+
 
 
 
@@ -597,8 +554,8 @@ const handleClickView = (ticketId) => {
                         <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-                            onClick={() => handleClickView(ticket.id)}
-                         
+                            // onClick={() => handleClickView(ticket.id)}
+                            onClick={() => handleView(ticket)}
 
                           >
                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -805,7 +762,7 @@ const handleClickView = (ticketId) => {
                     ID
                     </label>
                   
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)} />
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket.id} onChange={(e) => setId(selectedTicket.id)} />
 
                   </div>
                   <div className="w-full">
