@@ -66,7 +66,7 @@ export default function TicketPage1() {
   // const [totalPages, setOffset] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -392,8 +392,43 @@ const TicketDelete = (ticketId) => {
   }
 };
 
+const [currentPage, setCurrentPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
 
 
+
+const getTicketpage = (page) => {
+  axios({
+    method: 'get',
+    url: `http://localhost:8080/tickets/page?page=${page}&offset=10`,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      Authorization: `Bearer ${user1.jwt}`,
+    },
+    mode: 'cors',
+  })
+    .then((res) => {
+      console.log('response', res);
+      if (res.status === 200) {
+        setTickets(res.data.content);
+        setTotalPages(res.data.totalPages);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+};
+
+useEffect(() => {
+  getTicketpage(currentPage);
+}, [currentPage]);
+
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
 
@@ -657,27 +692,24 @@ const TicketDelete = (ticketId) => {
 
 
           <nav className='block'>
-            <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-              {/* {pageNumbers.map((number) => ( */}
-              <li >
-                <a
-                //   onClick={() => handlePageChange(number)}
-                  href='#'
-                  className=
-                  {
-                    // currentPage === number
-                    //   ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                    //   : 
-                    'bg-white border-gray-300 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                  }
-                >
-                  {/* {number} */}46
-                   
-                </a>
-              </li>
-              {/* ))}  */}
-            </ul>
-          </nav>
+        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
+          {pageNumbers.map((number) => (
+            <li key={number}>
+              <a
+                onClick={() => handlePageChange(number)}
+                href='#'
+                className={
+                  currentPage === number
+                    ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                }
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
         </div>
 
   
