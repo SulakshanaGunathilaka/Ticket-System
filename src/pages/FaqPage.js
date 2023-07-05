@@ -377,6 +377,12 @@ const handleInput = (event, characterLimit) => {
   
 	</div>
 </section>
+
+
+
+
+
+
 <nav className='block'>
         <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
           {pageNumbers.map((number) => (
@@ -396,6 +402,9 @@ const handleInput = (event, characterLimit) => {
           ))}
         </ul>
       </nav>
+
+
+
 
         
 {showModal ? (
@@ -606,8 +615,7 @@ const handleInput = (event, characterLimit) => {
         </>
       ) : null}
    
-   
-   
+
 
 
 

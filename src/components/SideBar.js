@@ -201,6 +201,28 @@ export default function SideBar() {
               </span>
             </Link>
           </li>
+          <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
+            <Link
+              end
+              to="/ticket"
+              className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg"  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6">
+                <path d="M3 6h18v12H3zm0 0v6h18v-6"></path>
+                <path d="M3 18h18"></path>
+                <path d="M12 3v6"></path>
+              </svg>
+
+              <span className="flex-1 ml-3 whitespace-nowrap">
+                Tickets1
+              </span>
+            </Link>
+          </li>
+
 
           <li className={splitLocation[1] === "FAQPage" ? "active" : ""}>
             <Link

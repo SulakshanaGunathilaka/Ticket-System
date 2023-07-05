@@ -36,7 +36,7 @@ import { RocketLaunchIcon } from "@heroicons/react/24/solid";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { addTickets, deleteTicket, getAllTickets, getTicketPages, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription, fetchTicket } from "../redux/actions/ticketAction";
+import { addTickets, deleteTicket, getAllTickets, getTicketPages, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription, fetchTicketpage } from "../redux/actions/ticketAction";
 import useDidMountEffect from "../common/didMountEffect";
 import UserService from "../services/UserService";
 
@@ -79,6 +79,7 @@ function TicketPage(props) {
   const [userId, setUserId] = useState('');
   const [userId1, setUserId1] = useState('');
   const [type, setType] = useState('');
+  const [title, setTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
@@ -87,6 +88,7 @@ function TicketPage(props) {
       userId: "",
       type: "",
       description: "",
+      title:"",
 
 
     }
@@ -97,27 +99,23 @@ function TicketPage(props) {
 
 
   useEffect(() => {
-    dispatch(performSearch(status, searchQuery, userId,
+    dispatch(performSearch(status, searchQuery, userId,page
     ));
 
   }, []);
 
-  // console.log("pageeeeeeeeeee",tickets?.searchResults?.body.totalElement)
 
-  // useEffect(() => {
-  //   dispatch(viewTicketDescription(ticketId));
-  // }, []);
 
 
   const handleView = (data) => {
-    // dispatch(viewTicketDescription(ticketId));
+  
     setShowModal3(true)
     setSelectedTicket(data)
     console.log("View Ticket", data)
 
   };
 
-  // console.log("View Ticket",ticketById)
+
 
 
 
@@ -139,8 +137,8 @@ function TicketPage(props) {
     window.location.reload();
   };
 
-  const addTicket = (userId, type, description) => {
-    dispatch(addTickets(userId, type, description));
+  const addTicket = (userId, type, description,title) => {
+    dispatch(addTickets(userId, type, description,title));
     window.location.reload();
 
   };
@@ -168,12 +166,10 @@ function TicketPage(props) {
     setLoading(true);
     try {
       const response = await getAllTickets(1, 5);
-      //await delay(2000);
+     
 
       setData(response.data.body.content);
-      // setTicketList(response.data.body);
-      // setTotalPages(tickets?.searchResults?.body?.totalPages);
-      // setCurrentPage(page);
+     
       setLoading(false);
     } catch (e) {
       CommonToasts.errorToast(e.message);
@@ -181,13 +177,7 @@ function TicketPage(props) {
     }
   }
 
-  // function updatePageNumbers() {
-  //   const pageNumberArray = [];
-  //   for (let i = 1; i <= tickets?.searchResults?.body?.totalPages; i++) {
-  //     pageNumberArray.push(i);
-  //   }
-  //   setPage(pageNumberArray);
-  // }
+ 
 
 
 
@@ -199,16 +189,14 @@ function TicketPage(props) {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(getTicketPages(page));
-  // }, [currentPage, fetchTicket]);
-
-  console.log("pages", tickets.page);
 
 
-  const handleSearch = (searchQuery, status, userId
+  console.log("pages", tickets);
+
+
+  const handleSearch = (searchQuery, status, userId,page
   ) => {
-    dispatch(performSearch(searchQuery, status, userId
+    dispatch(performSearch(searchQuery, status, userId,page
     ));
   };
 
@@ -216,13 +204,21 @@ function TicketPage(props) {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    // dispatch(performSearch(page))
+    // dispatch(fetchTicketpage(page))
   };
 
   useEffect(() => {
     dispatch(getTicketPages(page, offset,currentPage));
   }, [currentPage, page, offset]);
 
-  const pageNumbers = Array.from({offset }, (_, index) => index + 1);
+  useDidMountEffect(() => {
+   dispatch(performSearch(currentPage))
+  }, [currentPage,performSearch]);
+
+
+
+  const pageNumbers = Array.from({length: tickets?.searchResults?.body?.totalPages}, (_, index) => index + 1);
 
   const handleSearchInputChangess = (searchQuery) => {
     dispatch(handleSearchInputChange(searchQuery));
@@ -233,12 +229,20 @@ function TicketPage(props) {
   const handleSearchUserIdd = (userId) => {
     dispatch(handleSearchUserId(userId));
   };
+  const handleSearchpage = (page) => {
+    dispatch(fetchTicketpage(page));
+  };
+
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
 console.log("ticketpage.........................................",tickets?.searchResults?.body)
+
+
+console.log("Test Ticket..................",tickets?.searchResults?.body)
+// console.log("Test Ticket..................",tickets?.searchResults?.body.totalElements)
 
 
 
@@ -249,14 +253,13 @@ console.log("ticketpage.........................................",tickets?.searc
       setLoading(true);
       try {
         const response = await UserService.getAllUsers(1, 5);
-        //await delay(2000);
+       
 
         console.log("Hellooo", response)
         setData(response.data.body.content);
         setUserList(response.data.body);
 
-        // setTotalPages(tickets?.searchResults?.body?.totalPages);
-        // setCurrentPage(1);
+      
         setLoading(false);
       } catch (e) {
         CommonToasts.errorToast(e.message);
@@ -265,21 +268,65 @@ console.log("ticketpage.........................................",tickets?.searc
     }
 
     getAllUsers();
-    // setCurrentPage(1);
-    // updatePageNumbers();
+
   }, []);
 
 
 
-  // function updatePageNumbers() {
-  //   const pageNumberArray = [];
-  //   for (let i = 1; i <=tickets?.searchResults?.body?.totalPage; i++) {
-  //     pageNumberArray.push(i);
-  //   }
-  //   setPage(pageNumberArray);
-  // }
+ 
+
 
   console.log("userId.........................", tickets?.searchResults?.body?.content)
+
+
+  const [closureComments, setClosureComments] = useState({
+    closureComments: '',
+ 
+  });
+  
+  
+  const EditFaq = (e) => {
+    try {
+      axios({
+        method: "put",
+        url: 'http://localhost:8080/faqItems',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ${user1.jwt}`,
+        },
+        data: {
+         
+          closureComments: closureComments.closureComments,
+          
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
+          setShowModal2(false);
+        
+          CommonToasts.basicToast("Successfully  Add Close comment");
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -318,8 +365,7 @@ console.log("ticketpage.........................................",tickets?.searc
                   className=" bg-gray-200 outline-none"
                   type="text"
                   placeholder="Search......"
-                  // value={searchQuery}
-                  // onChange={handleSearchInputChange}
+               
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
@@ -404,7 +450,7 @@ console.log("ticketpage.........................................",tickets?.searc
                     <div class="flex flex-col">
 
                       <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView(ticket)}>
-                        {ticket.description}
+                        {ticket.title}
                       </button>
                       <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
@@ -426,21 +472,39 @@ console.log("ticketpage.........................................",tickets?.searc
                       </span>
                     </a>
                   </div>
-                  <dl class="mt-6 flex gap-4 sm:gap-6">
+
+                  
+                  <dl class="mt-6 flex gap-4 sm:gap-6 ">
                     <div class="flex flex-col-reverse">
                       <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
                       <dd class="text-xs text-gray-500">Date</dd>
                     </div>
 
                   </dl>
-                  <div class="flex flex-row-reverse ml-10">
-                    <dl class="mt-6 flex gap-4 sm:gap-6">
-                      <div class="flex flex-col-reverse">
-                        <dt class="text-sm font-medium text-gray-600"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
 
+                  <dl class="mt-2 flex gap-4 sm:gap-6 ">
+                    <div class="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600"> {ticket.closureComments}</dt>
+                      <dd class="text-xs text-gray-500">Date</dd>
+                    </div>
+
+                  </dl>
+
+
+                  
+                  <div class="flex ">
+                    
+                    <dl class="mt-6 flex gap-4 sm:gap-6">
+                    <div class="flex flex-col-reverse">
+                        <dt class="text-sm font-medium text-gray-600 mx-38"><dd class="text-xs text-gray-500">Ticket Status</dd>{ticket.status}</dt>
                       </div>
-                      <div class="flex flex-col-reverse">
-                        <a href="#" className="inline-block mt-4 ml-10">
+
+               
+                      <div class="inline-block  ">
+
+
+
+                        <a href="#" className="inline-block mt-4  justify-end">
                           <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
@@ -470,6 +534,8 @@ console.log("ticketpage.........................................",tickets?.searc
 
 
 
+
+
                 </div>
               </div>
 
@@ -494,7 +560,7 @@ console.log("ticketpage.........................................",tickets?.searc
                   }
                 >
                   {number}
-                   1
+                   
                 </a>
               </li>
               ))} 
@@ -624,6 +690,12 @@ console.log("ticketpage.........................................",tickets?.searc
 
                   </div>
 
+                  <div className=' w-full '>
+                    <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">Title</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setTitle(e.target.value)} />
+
+                  </div>
+
                   <div className="w-full">
                     <label htmlFor="type" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Type
@@ -661,7 +733,7 @@ console.log("ticketpage.........................................",tickets?.searc
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={() => addTicket(userId1, type, description)}
+                    onClick={() => addTicket(userId1, type, description,title)}
                   >
                     Add
                   </button>
@@ -733,6 +805,12 @@ console.log("ticketpage.........................................",tickets?.searc
                   <h1>Status</h1>
                     <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.status}
+                    </p>
+                  </div>
+                  <div class="px-6 py-4">
+                  <h1>Title</h1>
+                    <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.title}
                     </p>
                   </div>
 
@@ -817,8 +895,8 @@ console.log("ticketpage.........................................",tickets?.searc
   bottom: 0;
   z-index: 10;
   overflow-y: auto;
-  width: 500px;
-  height: 300px;
+  width: 800px;
+  height: 500px;
   margin: auto;
   background-color: white;
   border: 1px solid #ccc;
