@@ -168,69 +168,36 @@ export default function TicketPage1() {
   };
 
 
-  // const CreatComment = (ticketId) => {
-  //   try {
-  //     axios({
-  //       method: "post",
-  //       url:`http://localhost:8080/tickets/${ticketId}/comments`,
-  //       headers: {
-  //         "Access-Control-Allow-Origin": "*",
-  //         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-  //         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-  //         "Authorization": `Bearer ` +  user1.jwt,
-  //       },
-  //       data: {
-         
-  //         id: id,
-  //         comment: comment,
-  //         createdDate: createdDate,
-  //         userId: user1.user.userId,
-  //         userName:  userName,
-
-
-  //       },
-  //       mode: "cors",
-  //     }).then((res) => {
-  //       console.log("response", res);
-  //       if (res.status == 200) {
-        
-  //         CommonToasts.basicToast("Successfully Comment Added");
-      
-        
-         
-  //       }
-  //     }).catch((error) => {
-  //       CommonToasts.errorToast(error.message);
-  //       setLoading(false);
-  //     });
-  //   } catch (e) {
-  //     CommonToasts.errorToast(e.message);
-  //     setLoading(false);
-  //   }
-  // };
-
-  const CreateComment = (ticketId) => {
+  const CreatComment = (ticketId) => {
     try {
       axios({
         method: "post",
-        url: 'http://localhost:8080/tickets/' + ticketId + '/comments',
+        url:`http://localhost:8080/tickets/${ticketId}/comments`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          "Authorization": `Bearer ` + user1.jwt,
+          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` +  user1.jwt,
         },
         data: {
+         
           id: id,
           comment: comment,
           createdDate: createdDate,
           userId: user1.user.userId,
-          userName: userName,
+          userName:  userName,
+
+
         },
         mode: "cors",
       }).then((res) => {
         console.log("response", res);
         if (res.status == 200) {
+        
           CommonToasts.basicToast("Successfully Comment Added");
+      
+        
+         
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -241,6 +208,8 @@ export default function TicketPage1() {
       setLoading(false);
     }
   };
+
+  
   
 
 
@@ -805,7 +774,7 @@ const handleClickView = (ticketId) => {
                     ID
                     </label>
                   
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)} />
+                    {/* <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setId(e.target.value)} /> */}
 
                   </div>
                   <div className="w-full">
@@ -852,7 +821,7 @@ const handleClickView = (ticketId) => {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={CreateComment}
+                    onClick={  CreatComment}
                   >
                     Add
                   </button>
