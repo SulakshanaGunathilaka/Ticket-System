@@ -180,7 +180,7 @@ export default function SideBar() {
             </Link>
           </li> */}
 
-            <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
+            {/* <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
             <Link
               end
               to="/leave"
@@ -200,7 +200,7 @@ export default function SideBar() {
                 Tickets
               </span>
             </Link>
-          </li>
+          </li> */}
           <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
             <Link
               end
@@ -218,7 +218,7 @@ export default function SideBar() {
               </svg>
 
               <span className="flex-1 ml-3 whitespace-nowrap">
-                Tickets1
+                Tickets
               </span>
             </Link>
           </li>

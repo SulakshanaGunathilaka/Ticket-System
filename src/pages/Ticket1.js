@@ -638,9 +638,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                
 
                 <div class="flex items-center justify-between ">
-                  <dt class="text-sm font-medium text-gray-600 "><dd class="text-xs text-gray-500">Ticket Status</dd>
-                  <div class="mt-2">
-                   {ticket.status === "OPEN" ? (
+                  <dt class="text-sm font-medium text-gray-600 "><dd class="text-xs text-gray-500">Ticket Status</dd> {ticket.status === "OPEN" ? (
   <span className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
     OPEN
   </span>
@@ -649,17 +647,14 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
     IN_PROGRESS
   </span>
 ) : ticket.status === "ACCEPTED" ? (
-  <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full ">
+  <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
     ACCEPTED
   </span>
 ) : (
-  <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full  ">
+  <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
     CLOSED
   </span>
-)}
-</div>
-</dt>
-
+)}</dt>
 
         <div class="flex items-center">
         <button
