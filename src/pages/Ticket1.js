@@ -71,6 +71,7 @@ export default function TicketPage1() {
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
+  const [showModal4, setShowModal4] = useState(false);
   const [showModal5, setShowModal5] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
@@ -83,20 +84,24 @@ export default function TicketPage1() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
   const [refreshFlag, setRefreshFlag] = useState(false)
-  const[tickets,setTickets]= useState([])
+  const [tickets, setTickets] = useState([])
   // const [ticketId, setTicketId] = useState([]);
   const [id, setId] = useState('');
-  const [ createdDate, setCreatedDate] = useState('');
+  const [createdDate, setCreatedDate] = useState('');
   const [comment, setComment] = useState('');
-  const [ userName, setUserName] = useState('');
-  
+  const [userName, setUserName] = useState('');
+  const [sendEmail, setsendEmail] = useState('');
+  const [recipient, setrecipient] = useState('');
+
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       userId: "",
       type: "",
       description: "",
-      title:"",
+      title: "",
+      sendEmail: true,
+      recipient: "sulakshanag@mexxar.com",
 
 
     }
@@ -133,6 +138,8 @@ export default function TicketPage1() {
   }, []);
 
   const CreatTicket = (e) => {
+    const sendEmail = true;
+    const recipient = "sulakshanag@mexxar.com";
     try {
       axios({
         method: "post",
@@ -141,23 +148,27 @@ export default function TicketPage1() {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
           userId: user1.user.userId,
           type: type,
           description: description,
-          title:title,
+          title: title,
+        },
+        params: {
+          sendEmail: sendEmail,
+          recipient: recipient,
         },
         mode: "cors",
       }).then((res) => {
         console.log("response", res);
         if (res.status == 200) {
-        
+
           CommonToasts.basicToast("Successfully Ticket Added");
           setShowModal1(false);
-        
-         
+
+
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -182,7 +193,7 @@ export default function TicketPage1() {
   //         "Authorization": `Bearer ` +  user1.jwt,
   //       },
   //       data: {
-         
+
   //         id: id,
   //         comment: comment,
   //         createdDate: createdDate,
@@ -195,11 +206,11 @@ export default function TicketPage1() {
   //     }).then((res) => {
   //       console.log("response", res);
   //       if (res.status == 200) {
-        
+
   //         CommonToasts.basicToast("Successfully Comment Added");
-      
-        
-         
+
+
+
   //       }
   //     }).catch((error) => {
   //       CommonToasts.errorToast(error.message);
@@ -223,27 +234,32 @@ export default function TicketPage1() {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
-         
+
           id: id,
           comment: comment,
           createdDate: createdDate,
           userId: user1.user.userId,
-          userName:  userName,
+          userName: userName,
 
 
+        },
+        params: {
+          q: searchQuery,
+          status: status,
+          userId: userId,
         },
         mode: "cors",
       }).then((res) => {
         console.log("response", res);
         if (res.status == 200) {
-        
+
           CommonToasts.basicToast("Successfully Comment Added");
-      
-        
-         
+
+
+
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -255,11 +271,56 @@ export default function TicketPage1() {
     }
   };
 
-  
-  
+  const CloseComment = () => {
+    // const baseUrl = 'http://localhost:8080';
+    const ticketId = selectedTicket.id;
+    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/comments`;
+    try {
+      axios({
+        method: "post",
+        url: `http://localhost:8080/tickets/${ticketId}/close`,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
+        },
+        data: {
 
- 
-const GetTickets = async () => {
+          // id: id,
+          comment: comment,
+          // createdDate: createdDate,
+          // userId: user1.user.userId,
+          // userName:  userName,
+
+
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+
+          CommonToasts.basicToast("Successfully Comment Added");
+
+
+
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+  const GetTickets = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/tickets/filter`, {
         headers: {
@@ -269,8 +330,8 @@ const GetTickets = async () => {
         },
         params: {
           q: searchQuery,
-          status:status,
-          userId:userId,
+          status: status,
+          userId: userId,
         },
       });
 
@@ -284,8 +345,8 @@ const GetTickets = async () => {
   useEffect(() => {
 
     GetTickets();
-  
-  
+
+
   }, []);
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -312,20 +373,20 @@ const GetTickets = async () => {
       const tickets = { id: ticketId };
       axios({
         method: "get",
-        url: 'http://localhost:8080/tickets/'+ ticketId,
+        url: 'http://localhost:8080/tickets/' + ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: null,
         mode: "cors",
       }).then((res) => {
         console.log("response", res);
         if (res.status == 200) {
-        
-       
-         
+
+
+
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -338,114 +399,120 @@ const GetTickets = async () => {
   };
 
 
-  
-const handleView = (data) => {
-  // ViewTicketDetails (data)
-  setSelectedTicket(data)
-  console.log("View Ticket", data)
-  setShowModal2(true);
 
-};
-const handleView2 = (data) => {
-  // ViewTicketDetails (data)
-  setSelectedTicket(data)
+  const handleView = (data) => {
+    // ViewTicketDetails (data)
+    setSelectedTicket(data)
+    console.log("View Ticket", data)
+    setShowModal2(true);
 
-  setShowModal3(true)
-};
+  };
+  const handleView6 = (data) => {
+    // ViewTicketDetails (data)
+    setSelectedTicket(data)
 
+    setShowModal4(true)
+  };
+  const handleView2 = (data) => {
+    // ViewTicketDetails (data)
+    setSelectedTicket(data)
 
-const handleView4 = (data) => {
-  // ViewTicketDetails (data)
-  setSelectedTicket(data)
-
-  setShowModal5(true)
-};
+    setShowModal3(true)
+  };
 
 
+  const handleView4 = (data) => {
+    // ViewTicketDetails (data)
+    setSelectedTicket(data)
 
-
-
-const TicketDelete = (ticketId) => {
-  setLoading(true);
-
+    setShowModal5(true)
+  };
 
 
 
 
-  try {
+
+  const TicketDelete = (ticketId) => {
+    setLoading(true);
+
+
+
+
+
+    try {
+      axios({
+        method: "delete",
+        url: `http://localhost:8080/tickets/${ticketId}`,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          Authorization: `Bearer ${user1.jwt}`,
+        },
+        data: null,
+        mode: "cors",
+      })
+        .then((res) => {
+          console.log("response", res);
+          if (res.status === 200) {
+            // setFaqItems(res.data.body);
+            const updatedTickets = tickets.filter(
+              (tickets) => tickets.id !== ticketId
+            );
+
+            setTickets(updatedTickets);
+
+            CommonToasts.basicToast("Successfully Deleted");
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          CommonToasts.errorToast(error.message);
+          setLoading(false);
+        });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+
+
+  const getTicketpage = (page) => {
     axios({
-      method: "delete",
-      url: `http://localhost:8080/tickets/${ticketId}`,
+      method: 'get',
+      url: `http://localhost:8080/tickets/page?page=${page}&offset=10`,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
         Authorization: `Bearer ${user1.jwt}`,
       },
-      data: null,
-      mode: "cors",
+      mode: 'cors',
     })
       .then((res) => {
-        console.log("response", res);
+        console.log('response', res);
         if (res.status === 200) {
-          // setFaqItems(res.data.body);
-          const updatedTickets =tickets.filter(
-            (tickets) => tickets.id !== ticketId
-          );
-         
-          setTickets(updatedTickets);
-   
-          CommonToasts.basicToast("Successfully Deleted");
+          setTickets(res.data.content);
+          setTotalPages(res.data.totalPages);
         }
-        setLoading(false);
       })
       .catch((error) => {
-        CommonToasts.errorToast(error.message);
-        setLoading(false);
+        console.error(error);
       });
-  } catch (e) {
-    CommonToasts.errorToast(e.message);
-    setLoading(false);
-  }
-};
+  };
 
-const [currentPage, setCurrentPage] = useState(1);
-const [totalPages, setTotalPages] = useState(1);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
+  useEffect(() => {
+    getTicketpage(currentPage);
+  }, [currentPage]);
 
-
-const getTicketpage = (page) => {
-  axios({
-    method: 'get',
-    url: `http://localhost:8080/tickets/page?page=${page}&offset=10`,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      Authorization: `Bearer ${user1.jwt}`,
-    },
-    mode: 'cors',
-  })
-    .then((res) => {
-      console.log('response', res);
-      if (res.status === 200) {
-        setTickets(res.data.content);
-        setTotalPages(res.data.totalPages);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const handlePageChange = (page) => {
-  setCurrentPage(page);
-};
-
-useEffect(() => {
-  getTicketpage(currentPage);
-}, [currentPage]);
-
-const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
 
@@ -456,7 +523,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
 
-       
+
 
 
 
@@ -477,19 +544,19 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
               <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
 
-              <input
-        className="bg-gray-200  outline-none"
-        type="text"
-        placeholder="Search......"
-        value={searchQuery}
-        onChange={handleSearchInputChange}
-        onKeyDown={handleKeyDown}
-      />
+                <input
+                  className="bg-gray-200  outline-none"
+                  type="text"
+                  placeholder="Search......"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onKeyDown={handleKeyDown}
+                />
               </div>
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
                 <button
-                onClick={GetTickets}>
+                  onClick={GetTickets}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
@@ -501,7 +568,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
                 onChange={(e) => setStatus(e.target.value)}
-            //    value={status}
+              //    value={status}
               >
                 <option value="">Status</option>
                 <option value="">All</option>
@@ -517,18 +584,18 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                 id="type"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
-                 onChange={(e) => setUserId(e.target.value)}
+                onChange={(e) => setUserId(e.target.value)}
               // value={tickets?.user?.id}
               >
                 <option value="">User Id</option>
-                {userList?.map((user) => ( 
+                {userList?.map((user) => (
                   <option
-                   key={user.id} value={user.id}
-                   >
-               {user.id}
+                    key={user.id} value={user.id}
+                  >
+                    {user.id}
                   </option>
-               ))} 
-           
+                ))}
+
               </select>
 
 
@@ -538,7 +605,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                   className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
-                   onClick={() => setShowModal1(true)}
+                  onClick={() => setShowModal1(true)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -558,186 +625,198 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
           <div className="flex flex-wrap overflow-auto h-3/4  ">
 
 
-          
 
-          {tickets.map((ticket, index) => (
-            
+
+            {tickets.map((ticket, index) => (
+
               <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
-              <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
-              <div class="px-6 py-4">
-                <div class="flex justify-between items-center">
-                  <div class="flex flex-col">
+                <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
+                <div class="px-6 py-4">
+                  <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
 
-                    <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView2(ticket)}
-                    //  onClick={() => handleView(ticket)}
-                     >
-                      {ticket.title}
+                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView2(ticket)}
+                      //  onClick={() => handleView(ticket)}
+                      >
+                        {ticket.title}
+                      </button>
+                      <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
+
+                      {ticket.type == "SOFTWARE" ? (
+                        <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
+                          SOFTWARE
+                        </span>
+                      ) : (
+                        <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
+                          HARDWARE
+                        </span>
+                      )}
+                    </div>
+
+                    <a href="#" class="inline-block pb-12">
+
+                      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
+                        {ticket.id}
+                      </span>
+                    </a>
+                  </div>
+                  <dl class="mt-4 flex gap-4 sm:gap-6">
+                    <div class="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
+                      <dd class="text-sm text-gray-500">Date</dd>
+                    </div>
+
+                  </dl>
+
+                  <dd class="text-sm text-gray-500 mt-4 font-bold ">
+
+                    <button
+
+                      type="button"
+                      class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+
+                      onClick={() => handleView4(ticket)}
+
+                    >
+                      <div class="flex ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                        </svg>
+
+
+                      </div>
+
+
+
                     </button>
-                    <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
-                    {ticket.type == "SOFTWARE" ? (
-                      <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
-                        SOFTWARE
+
+                  </dd>
+
+
+                  <dl class="mt-6 flex gap-4 sm:gap-6">
+                    <div class="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600">{ }</dt>
+
+                    </div>
+
+                  </dl>
+
+
+                  <div class="flex items-center justify-between ">
+                    <dt class="text-sm font-medium text-gray-600 "><dd class="text-xs text-gray-500">Ticket Status</dd> {ticket.status === "OPEN" ? (
+                      <span className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                        OPEN
+                      </span>
+                    ) : ticket.status === "IN_PROGRESS" ? (
+                      <span className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                        IN_PROGRESS
+                      </span>
+                    ) : ticket.status === "ACCEPTED" ? (
+                      <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
+                        ACCEPTED
                       </span>
                     ) : (
-                      <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
-                        HARDWARE
+                      <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
+                        CLOSED
                       </span>
-                    )}
-                  </div>
+                    )}</dt>
 
-                  <a href="#" class="inline-block pb-12">
+                    <div class="flex items-center">
+                      <button
+                        type="button"
+                        class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                    <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
-                      {ticket.id}
-                    </span>
-                  </a>
-                </div>
-                <dl class="mt-4 flex gap-4 sm:gap-6">
-                  <div class="flex flex-col-reverse">
-                    <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
-                    <dd class="text-sm text-gray-500">Date</dd>
-                  </div>
-
-                </dl>
-
-              <dd class="text-sm text-gray-500 mt-4 font-bold "> 
-           
-              <button
-              
-                            type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-                           
-                            onClick={() => handleView4(ticket)}
-
-                          >
-                               <div class="flex ">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
-                         
-  <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-</svg>
-
-
-</div>
-
-
-
-                          </button>
-                          
-              
-               </dd>
-             
-
-                <dl class="mt-6 flex gap-4 sm:gap-6">
-                  <div class="flex flex-col-reverse">
-                    <dt class="text-sm font-medium text-gray-600">{}</dt>
-                  
-                  </div>
-
-                </dl>
-               
-
-                <div class="flex items-center justify-between ">
-                  <dt class="text-sm font-medium text-gray-600 "><dd class="text-xs text-gray-500">Ticket Status</dd> {ticket.status === "OPEN" ? (
-  <span className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
-    OPEN
-  </span>
-) : ticket.status === "IN_PROGRESS" ? (
-  <span className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
-    IN_PROGRESS
-  </span>
-) : ticket.status === "ACCEPTED" ? (
-  <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
-    ACCEPTED
-  </span>
-) : (
-  <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
-    CLOSED
-  </span>
-)}</dt>
-
-        <div class="flex items-center">
-        <button
-                          type="button"
-                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
-                        
-                          onClick={() => TicketDelete(ticket.id)}
+                        onClick={() => TicketDelete(ticket.id)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                            type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-                           
-                            onClick={() => handleView(ticket)}
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                          >
-                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-</svg>
+                        onClick={() => handleView(ticket)}
 
-                          </button>
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
 
-      
-        </div>
-        
-    </div>
+                      </button>
+                      <button
+                        type="button"
+                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+
+                        onClick={() => handleView6(ticket)}
+
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
+
+                      </button>
 
 
+                    </div>
+
+                  </div>
+
+
+                </div>
               </div>
-            </div>
 
 
 
 
-))}
+            ))}
           </div>
 
 
           <nav className='block'>
-        <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-          {pageNumbers.map((number) => (
-            <li key={number}>
-              <a
-                onClick={() => handlePageChange(number)}
-                href='#'
-                className={
-                  currentPage === number
-                    ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                    : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                }
-              >
-                {number}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+            <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
+              {pageNumbers.map((number) => (
+                <li key={number}>
+                  <a
+                    onClick={() => handlePageChange(number)}
+                    href='#'
+                    className={
+                      currentPage === number
+                        ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                        : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    }
+                  >
+                    {number}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
-  
-    
-      {/* <button onClick={() => getTikctetpage(currentPage + 1)}>Next Page</button> */}
+
+
+        {/* <button onClick={() => getTikctetpage(currentPage + 1)}>Next Page</button> */}
 
         {/* } */}
-        
+
 
       </div>
-   
-    
+
+
 
 
       {showModal1 ? (
@@ -777,13 +856,13 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
                   <div className=' w-full '>
                     <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">User name</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)}/>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.firstName} onChange={(e) => setUserId(user1.user.userId)} />
 
                   </div>
 
                   <div className=' w-full '>
                     <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">Title</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  onChange={(e) => setTitle(e.target.value)} />
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setTitle(e.target.value)} />
 
                   </div>
 
@@ -801,7 +880,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                       <option value="HARDWARE">HARDWARE</option>
                     </select>
                   </div>
-                  
+
 
 
 
@@ -845,7 +924,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
       ) : null}
 
 
-{showModal2   ?  (
+      {showModal2 ? (
         <>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -854,12 +933,12 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
               onClick={() => setShowModal2(false)}
             ></div>
             <div>
-          
+
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
-                    Add Comment
+                      Add Comment
                     </h5>
                     <button
                       type="button"
@@ -881,58 +960,58 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                     </button>
                   </div>
 
-                 
 
-                 
+
+
 
 
 
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    ID
+                      ID
                     </label>
-                  
+
                     <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket.id} onChange={(e) => setId(selectedTicket.id)} />
 
                   </div>
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    Comment
+                      Comment
                     </label>
                     <textarea
                       id="description"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"onChange={(e) => setComment(e.target.value)} 
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setComment(e.target.value)}
                       placeholder="Description"
-                    
+
                     ></textarea>
 
                   </div>
 
 
 
-               
-                  
+
+
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    User Id
+                      User Id
                     </label>
-                  
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  value={user1.user.userId} onChange={(e) => setUserId(user1.user.userId)} />
+
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={user1.user.userId} onChange={(e) => setUserId(user1.user.userId)} />
 
                   </div>
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    User Name
+                      User Name
                     </label>
-                  
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"onChange={(e) => setUserName(e.target.value)}   />
+
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setUserName(e.target.value)} />
 
                   </div>
-<br/>
+                  <br />
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={  CreateComment}
+                    onClick={CreateComment}
                   >
                     Add
                   </button>
@@ -941,9 +1020,9 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                 </div>
               </div>
 
-  
+
             </div>
-          
+
 
           </div>
 
@@ -952,7 +1031,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
         </>
       ) : null}
 
-{showModal3 ? (
+      {showModal3 ? (
         <>
           {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
           <div className="fixed inset-0 z-10 overflow-y-auto " >
@@ -999,19 +1078,19 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                     </p>
                   </div>
                   <div class="px-6 py-4">
-                  <h1>Status</h1>
+                    <h1>Status</h1>
                     <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.status}
                     </p>
                   </div>
                   <div class="px-6 py-4">
-                  <h1>Title</h1>
+                    <h1>Title</h1>
                     <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.title}
                     </p>
                   </div>
 
-  
+
                 </div>
 
 
@@ -1035,9 +1114,94 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
         </>
       ) : null}
 
-     
+{showModal4 ? (
+        <>
 
-{showModal5 ? (
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal4(false)}
+            ></div>
+            <div>
+
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                      Ticket close
+                    </h5>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal4(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+
+
+
+
+
+
+                 
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Comment
+                    </label>
+                    <textarea
+                      id="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setComment(e.target.value)}
+                      placeholder="Description"
+
+                    ></textarea>
+
+                  </div>
+
+
+
+
+
+               
+                  <br />
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    onClick={CloseComment}
+                  >
+                    Add
+                  </button>
+
+
+                </div>
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+
+        </>
+      ) : null}
+
+
+
+      {showModal5 ? (
         <>
           {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
           <div className="fixed inset-0 z-10 overflow-y-auto " >
@@ -1069,7 +1233,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
                       </svg>
                     </button>
                   </div>
-              
+
 
 
 
@@ -1078,31 +1242,31 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
                   </p>
-                  
+
 
                   {selectedTicket.comments.map((comment) => (
-                    
-              
-                <div class="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-    <div class="flex items-center justify-between">
-        <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
-        <a class="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 " tabindex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
-    </div>
 
-    <div class="mt-2">
-      
-        <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
-    </div>
 
-    <div class="flex items-center justify-between mt-4">
-        <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline" tabindex="0" role="link">{comment.id}</a>
+                    <div class="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
+                        <a class="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 " tabindex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
+                      </div>
 
-      
-    </div>
-</div>
-  
+                      <div class="mt-2">
 
-))}
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
+                      </div>
+
+                      <div class="flex items-center justify-between mt-4">
+                        <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline" tabindex="0" role="link">{comment.id}</a>
+
+
+                      </div>
+                    </div>
+
+
+                  ))}
                 </div>
 
 
