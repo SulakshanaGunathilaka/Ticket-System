@@ -40,7 +40,9 @@ function App() {
    const SidebarLayout = () => (
     <>
     <SideBar />
+   
       <StatusBar/>
+
       <div className='ml-64 pt-12 w-[80%] h-[85%]'>
       <Outlet />
         </div> 

@@ -599,7 +599,7 @@ export default function EmployeePage() {
 
 
 
-          <div className=" absolute mt-4 h-[82%] w-[82%] bg-white rounded-lg border border-gray-200 shadow-md">
+          <div className=" absolute mt-4 h-[82%] w-[82%] bg-white rounded-lg border-2 border-gray-200 shadow-md">
 
             <div class="space-y-10">
 
@@ -771,7 +771,7 @@ export default function EmployeePage() {
                       </button>
 
                     </td>
-                    {/* <td>
+                    <td>
                       <button
                         type="button"
                         class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
@@ -783,7 +783,7 @@ export default function EmployeePage() {
 
                       </button>
 
-                    </td> */}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -799,8 +799,8 @@ export default function EmployeePage() {
                       href='#'
                       className={
                         currentPage === number
-                          ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                          : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                          ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                          : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
                       }
                     >
                       {number}
@@ -1344,7 +1344,7 @@ export default function EmployeePage() {
                           </div>
 
                           <button
-                            // onClick={finalSubmit}
+                            onClick={finalSubmit}
                             className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
 
 
@@ -1372,482 +1372,7 @@ export default function EmployeePage() {
 
 
 
-      {/* Test modal */}
-
-      {/* {showModal2 ? (
-        <>
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div
-              className="fixed inset-0 w-full h-full bg-black opacity-40"
-              onClick={() => setShowModal2(false)}
-            ></div>
-            <div>
-          
-              <div className="flex items-center min-h-screen px-4 py-8">
-                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
-                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h5 className="text-4xl font-bold text-blue-400">
-                    Edit Question
-                    </h5>
-                    <button
-                      type="button"
-                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => setShowModal2(false)}
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
-
-                  <Fragment>
-            <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(1)}>
-                Basic Information
-              </AccordionHeader>
-              <AccordionBody>
-             
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="First Name" />
-                    <FormInputField
-                      // value={state.firstName}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.firstName}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          question: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                     
-                    />
-
-
-                    
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Last Name" />
-                    <FormInputField
-                      // value={state.lastName}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.lastName}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          lastName: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      placeholder="Last Name"
-                      {...register("lastName", { required: "This is required" })}
-                    />
-                  
-                  </div>
-                 
-               
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="User Status" />
-                    <FormInputField
-                      // value={state.userStatus}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.userStatus}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          userStatus: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="userStatus"
-                      id="userStatus"
-                      placeholder="userStatus"
-                      {...register("userStatus", { required: "This is required" })}
-                    />
-                  
-                  </div>
-               
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Primary Contact" />
-                    <FormInputField
-                      // value={state.primaryContactNo}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.primaryContactNo}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          primaryContactNo: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="primaryContactNo"
-                      id="primaryContactNo"
-                      placeholder="Primary Contact"
-                      {...register("primaryContactNo", { required: "This is required" })}
-                    />
-                  
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Secoundary Contact" />
-                    <FormInputField
-                      // value={state.secondaryContactNo}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.secondaryContactNo}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          secondaryContactNo: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="secondaryContactNo"
-                      id="secondaryContactNo"
-                      placeholder="Secoundary Contact"
-                      {...register("secondaryContactNo", { required: "This is required" })}
-                    />
-                   
-                  </div>
-                </div>
-            
-              </AccordionBody>
-            </Accordion>
-            <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(2)}>
-                Address
-              </AccordionHeader>
-              <AccordionBody>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Address Line1" />
-                    <FormInputField
-                      // value={state.addressLine1}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.address.addressLine1}
-                      
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          addressLine1: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="addressLine1"
-                      id="addressLine1"
-                      placeholder="Address Line1"
-                      {...register("addressLine1", { required: "This is required" })}
-                    />
-                 
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Address Line2" />
-                    <FormInputField
-                      // value={state.addressLine2}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.address.addressLine2}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          addressLine2: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="addressLine2"
-                      id="addressLine2"
-                      placeholder="Address Line2"
-                      {...register("addressLine2", { required: "This is required" })}
-                    />
-                  
-                  </div>
-                </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="City" />
-                  <FormInputField
-                    // value={state.city}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.city}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        city: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="city"
-                    id="city"
-                    placeholder="City"
-                    {...register("city", { required: "This is required" })}
-                  />
-                 
-                </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Province" />
-                  <FormInputField
-                    // value={state.province}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.province}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        province: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="province"
-                    id="province"
-                    placeholder="Province"
-                    {...register("province", { required: "This is required" })}
-                  />
-                 
-                </div>
-              
-              </AccordionBody>
-            </Accordion>
-            <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(3)}>
-                Bank Details
-              </AccordionHeader>
-              <AccordionBody>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Account Number" />
-                  <FormInputField
-                    // value={state.accountNo}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.accountNo}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        accountNo: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="accountNo"
-                    id="accountNo"
-                    placeholder="Account Number"
-                    {...register("accountNo", { required: "This is required" })}
-                  />
-                  
-                </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Bank Name" />
-                  <FormInputField
-                    // value={state.bankName}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.bankName}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        bankName: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="bankName"
-                    id="bankName"
-                    placeholder="Bank Name"
-                    {...register("bankName", { required: "This is required" })}
-                  />
-                 
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Bank Branch" />
-                    <FormInputField
-                      // value={state.bankBranch}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.bankName}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          bankName: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="bankBranch"
-                      id="bankBranch"
-                      placeholder="Bank Branch"
-                      {...register("bankBranch", { required: "This is required" })}
-                    />
-                    
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Account Type" />
-                    <FormInputField
-                      // value={state.bankAccountType}
-                      // inputHandle={inputHandle}
-                      value={edituserDetails.bankAccountType}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          bankAccountType: e.target.value,
-                        })
-                      }
-                      type="text"
-                      name="bankAccountType"
-                      id="bankAccountType"
-                      placeholder="Account Type"
-                      {...register("bankAccountType", { required: "This is required" })}
-                    />
-
-
-                   
-                  </div>
-                </div>
-              
-              </AccordionBody>
-            </Accordion>
-            <Accordion open={open === 4} icon={<Icon id={4} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(4)}>
-                Designation
-              </AccordionHeader>
-              <AccordionBody>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Designation Name" />
-                  <FormInputField
-                    // value={state.designationName}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.designationName}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        designationName: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="designationName"
-                    id="designationName"
-                    placeholder="Designation Name"
-                    {...register("designationName", { required: "This is required" })}
-                  />
-                 
-                </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Designation Level" />
-                  <FormInputField
-                    // value={state.designationLevel}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.designationLevel}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        designationLevel: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="designationLevel"
-                    id="designationLevel"
-                    placeholder="Designation Level"
-                    {...register("designationLevel", { required: "This is required" })}
-                  />
-                 
-                </div>
-
-             
-          
-              </AccordionBody>
-            </Accordion>
-            <Accordion open={open === 5} icon={<Icon id={5} open={open} />}>
-              <AccordionHeader onClick={() => handleOpen(5)}>
-                Department
-              </AccordionHeader>
-              <AccordionBody>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Department name" />
-                  <FormInputField
-                    // value={state.departmentname}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.departmentname}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                        departmentname: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="departmentname"
-                    id="departmentname"
-                    placeholder="departmentname"
-                    {...register("departmentname", { required: "This is required" })}
-                  />
-                 
-                </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Agency" />
-                  <FormInputField
-                    // value={state.agency}
-                    // inputHandle={inputHandle}
-                    value={edituserDetails.agency}
-                    onChange={(e) =>
-                      setedituserDetails({
-                        ...edituserDetails,
-                       agency: e.target.value,
-                      })
-                    }
-                    type="text"
-                    name="agency"
-                    id="agency"
-                    placeholder="agency"
-                    {...register("agency", { required: "This is required" })}
-                  />
-                
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                
-                </div>
-               
-                  <button
-                  onClick={finalSubmit}
-                  className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
-
-
-                >
-                  Submit
-                </button>
-              </AccordionBody>
-            </Accordion>
-          
-
-          </Fragment>
-
-                 
-
-
-
-            
-
-                </div>
-              </div>
-
-  
-            </div>
-          
-
-          </div>
-
-                    
-
-
-        </>
-      ) : null} */}
+   
 
 
       {showModal3 ? (
@@ -1864,7 +1389,7 @@ export default function EmployeePage() {
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
-                      Edit Question
+                      Edit User
                     </h5>
                     <button
                       type="button"
@@ -1893,11 +1418,18 @@ export default function EmployeePage() {
 
 
                   <div className="w-full">
+                 
+                    <details className="w-full border rounded-lg" open="">
+        
+				<summary className="px-2 py-2 focus:outline-none focus-visible:ri">Basic Information</summary>
+      
+        <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                      Question
+                      First Name 
                     </label>
 
-                    <input
+        <input
                       type="text"
                       id="question"
                       className="w-full p-2 border border-gray-300 rounded-md"
@@ -1911,19 +1443,201 @@ export default function EmployeePage() {
 
                     />
                   </div>
-                  <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                      Answer
+                  <div className="flex flex-col mb-2">
+                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                   Last Name 
                     </label>
 
-                    <textarea
+        <input
                       type="text"
                       id="question"
                       className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.lastName}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>
+
+                  
+                </div>
+
+                <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                  User Status
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.userStatus}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
 
                     />
 
+                     
+        <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    Primary Contact
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.primaryContactNo}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
                   </div>
+                  <div className="flex flex-col mb-2">
+                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                   Secondary Contact
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.secondaryContactNo}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>
+
+                  
+                </div>
+       
+      </details>
+		
+
+
+      <details className="w-full border rounded-lg mt-2" open="">
+        
+				<summary className="px-2 py-2 focus:outline-none focus-visible:ri">Address</summary>
+      
+        <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    AddressLine1
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.address.addressLine1}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>
+                  <div className="flex flex-col mb-2">
+                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                   AddressLine2
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.address.addressLine2}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>
+
+                  
+                </div>
+
+                <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                  City
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.address.city}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                Province
+                    </label>
+
+        <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={edituserDetails.address.province}
+                      onChange={(e) =>
+                        setedituserDetails({
+                          ...edituserDetails,
+                          firstName: e.target.value,
+                        })
+                      }
+
+                    />
+
+                     
+    
+       
+      </details>
+		
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                  </div>
+             
 
                   <br />
 

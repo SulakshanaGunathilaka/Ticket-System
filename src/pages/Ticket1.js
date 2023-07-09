@@ -38,7 +38,8 @@ import moment from "moment";
 import useDidMountEffect from "../common/didMountEffect";
 import UserService from "../services/UserService";
 import Ticket from "./Ticket";
-
+import { Tooltip } from 'react-tippy';
+import 'react-tippy/dist/tippy.css';
 
 
 
@@ -543,7 +544,7 @@ export default function TicketPage1() {
             <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
 
               <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
-
+      
                 <input
                   className="bg-gray-200  outline-none"
                   type="text"
@@ -552,9 +553,11 @@ export default function TicketPage1() {
                   onChange={handleSearchInputChange}
                   onKeyDown={handleKeyDown}
                 />
+          
               </div>
-
+             
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
+              <Tooltip title="Search" position="bottom" trigger="mouseenter">
                 <button
                   onClick={GetTickets}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
@@ -562,6 +565,7 @@ export default function TicketPage1() {
                   </svg>
 
                 </button>
+                </Tooltip>
               </div>
               <select
                 id="type"
@@ -600,18 +604,20 @@ export default function TicketPage1() {
 
 
               <div class="flex justify-between">
-
+            
                 <button
                   className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
                   onClick={() => setShowModal1(true)}
                 >
+                    <Tooltip title="Add Ticket" position="bottom" trigger="mouseenter "    className= "right-16 top-3">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                   </svg>
+                  </Tooltip>
                 </button>
-
+        
 
               </div>
             </div>
@@ -629,8 +635,8 @@ export default function TicketPage1() {
 
             {tickets.map((ticket, index) => (
 
-              <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
-                <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-300 via-blue-100 to-blue-600"></span>
+              <div class=" relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
+                <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-sky-300 via-blue-100 to-sky-500"></span>
                 <div class="px-6 py-4">
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
@@ -655,7 +661,7 @@ export default function TicketPage1() {
 
                     <a href="#" class="inline-block pb-12">
 
-                      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-200 rounded-full">
+                      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-sky-300 via-sky-200 to-blue-200 rounded-full">
                         {ticket.id}
                       </span>
                     </a>
@@ -668,21 +674,22 @@ export default function TicketPage1() {
 
                   </dl>
 
-                  <dd class="text-sm text-gray-500 mt-4 font-bold ">
-
+                   <dd class="text-sm text-gray-500 mt-4 font-bold ">
+                   <Tooltip title="View Comment" position="bottom" trigger="mouseenter">
                     <button
 
                       type="button"
-                      class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                      class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
 
                       onClick={() => handleView4(ticket)}
 
                     >
-                      <div class="flex ">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+                      <div class="flex  ">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black ">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+</svg>
 
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                        </svg>
+                        
 
 
                       </div>
@@ -690,9 +697,10 @@ export default function TicketPage1() {
 
 
                     </button>
+                    </Tooltip>
 
+                  </dd> 
 
-                  </dd>
 
 
                   <dl class="mt-6 flex gap-4 sm:gap-6">
@@ -724,6 +732,7 @@ export default function TicketPage1() {
                     )}</dt>
 
                     <div class="flex items-center">
+                    <Tooltip title="Delete" position="bottom" trigger="mouseenter">
                       <button
                         type="button"
                         class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
@@ -745,6 +754,8 @@ export default function TicketPage1() {
                           />
                         </svg>
                       </button>
+                      </Tooltip>
+                      <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
                       <button
                         type="button"
                         class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
@@ -757,6 +768,8 @@ export default function TicketPage1() {
                         </svg>
 
                       </button>
+                      </Tooltip>
+                      <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
                       <button
                         type="button"
                         class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
@@ -764,15 +777,17 @@ export default function TicketPage1() {
                         onClick={() => handleView6(ticket)}
 
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+
+<path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+</svg>
+
 
                       </button>
 
-
+                      </Tooltip>
                     </div>
-
+                
                   </div>
 
 
@@ -795,8 +810,8 @@ export default function TicketPage1() {
                     href='#'
                     className={
                       currentPage === number
-                        ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                        : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                        ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                        : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
                     }
                   >
                     {number}

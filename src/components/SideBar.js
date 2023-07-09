@@ -23,7 +23,7 @@ export default function SideBar() {
       className="absolute w-64 h-screen flex flex-col "
       aria-label="Sidebar"
     >
-      <div className="flex flex-col ml-6 mr-8 mt-12 mb-6 h-full py-4 px-4 bg-white-600 rounded-lg shadow-md shadow-gray-500">
+      <div className="flex flex-col ml-6 mr-8 mt-10 mb-10 h-full border-2 border-sky-400 py-4 px-4 bg-white-600 rounded-lg shadow-md shadow-sky-400 ">
         <div className="flex items-center pl-2.5 mb-5 ">
           {/** <img src={require('../images/logo-small2.png')} className="mr-1 p-2 h-6 sm:h-10 bg-black" alt="CCMS Logo" /> **/}
           <span className="self-center text-xl font-semibold whitespace-nowrap text-black ">
@@ -36,7 +36,7 @@ export default function SideBar() {
               <Link
                 end
                 to="/home"
-                className="flex items-center p-2 text-base font-normal text-black rounded-lg  hover:bg-gray-300"
+                className="flex items-center p-2 text-base font-normal text-black rounded-lg   hover:bg-sky-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ export default function SideBar() {
               <Link
                 end
                 to="/employees"
-                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-sky-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@ export default function SideBar() {
               <Link
                 end
                 to="/create"
-                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-sky-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ export default function SideBar() {
               <Link
                 end
                 to="/editUser"
-                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+                className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white  hover:bg-sky-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +205,7 @@ export default function SideBar() {
             <Link
               end
               to="/ticket"
-              className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+              className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white  hover:bg-sky-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg"  fill="none"
                   viewBox="0 0 24 24"
@@ -228,7 +228,7 @@ export default function SideBar() {
             <Link
               end
               to="/fullcalendar"
-              className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white hover:bg-gray-300"
+              className="flex items-center p-2 text-base font-normal text-black  rounded-lg dark:text-white  hover:bg-sky-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />

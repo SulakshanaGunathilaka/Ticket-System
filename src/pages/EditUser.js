@@ -176,9 +176,9 @@ export default function EditUser() {
   return (
     <div className=" bg-grey h-fit w-full ">
       <TitleText titleText="Edit User" />
-      <div className=" absolute p-8 mt-4 h-[82%] w-[75%] bg-white rounded-lg border border-gray-200 shadow-md">
+      <div className=" absolute mt-4 h-[82%] w-[82%] bg-white rounded-lg border-2 border-gray-200 shadow-md">
 
-        <form onSubmit={handleSubmit(finalSubmit)}>
+        <form  className="p-6" onSubmit={handleSubmit(finalSubmit)}>
           <Fragment>
             <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
               <AccordionHeader onClick={() => handleOpen(1)}>
