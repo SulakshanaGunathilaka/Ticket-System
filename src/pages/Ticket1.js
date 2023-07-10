@@ -515,18 +515,6 @@ export default function TicketPage1() {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <>
       <div className=" bg-grey h-fit w-full ">
