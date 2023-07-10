@@ -201,6 +201,7 @@ export default function SideBar() {
               </span>
             </Link>
           </li> */}
+            {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE" ?(
           <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
             <Link
               end
@@ -222,8 +223,9 @@ export default function SideBar() {
               </span>
             </Link>
           </li>
+           ) : null}
 
-
+{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE" ?(
           <li className={splitLocation[1] === "FAQPage" ? "active" : ""}>
             <Link
               end
@@ -238,6 +240,7 @@ export default function SideBar() {
               <span className="flex-1 ml-3 whitespace-nowrap">FAQPage</span>
             </Link>
           </li>
+            ) : null}
         </ul>
       </div>
     </aside>
