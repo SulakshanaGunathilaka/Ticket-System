@@ -5,6 +5,12 @@ import axios from "axios";
 import AuthService from "../services/AuthenticationService";
 import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
+import { Tooltip } from 'react-tippy';
+import 'react-tippy/dist/tippy.css';
+import TitleText from '../components/TitleText';
+
+
+
 const FAQPage = () => {
    
   const [showModal, setShowModal] = useState(false);
@@ -297,21 +303,27 @@ const handleInput = (event, characterLimit) => {
 
 
   return (
- 
-
+   
     <div className=" bg-grey h-fit w-full "> 
+         <TitleText titleText="FAQ Page" />
+    <div className=" absolute  h-[82%] w-[82%] bg-white rounded-lg border-2 border-gray-200 shadow-md mt-6">
+
 <section className="dark:bg-gray-800 dark:text-gray-100">
 	<div className="container flex flex-col justify-center px-4 py-8 mx-auto md:p-8">
-		<h2 className="text-2xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
+		<h3 className="text-xl font-semibold sm:text-3xl">Frequently Asked Questions</h3>
     <div class="flex items-center justify-between mt-4 gap-x-4 shrink-0">
     <p className="mt-4 mb-8 dark:text-gray-400">If you've got any questions about Sketch for team, read on below for answers to some of the most common ones
     we 've already been asked.</p>
 
+    <Tooltip title="Add FAQ" position="bottom" trigger="mouseenter">
         <button class= "p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"onClick={() => setShowModal(true)}>
+   
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                   </svg>
+                 
         </button>
+        </Tooltip>
     </div>
 		<div className="space-y-4 overflow-y-auto max-h-128  "style={{ maxHeight: '500px' }}>
     {faqItems?.map((faqItem,index) => ( 
@@ -323,11 +335,13 @@ const handleInput = (event, characterLimit) => {
 				<p className="px-4 py-6 pt-0 ml-4  dark:text-gray-400">{faqItem.answer} </p>
         <div class="bg-gray-200">
         <div class="inline-block  px-4 py-2">
+        <Tooltip title="Delete" position="bottom" trigger="mouseenter">
         <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
                             onClick={() => FaqDelete(faqItem.id)}
                           >
+                             
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -342,24 +356,29 @@ const handleInput = (event, characterLimit) => {
                                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                               />
                             </svg>
+                           
                           </button>
-
+ </Tooltip>
                              </div>
                            <div class="inline-block   ">
+                           <Tooltip title="Edit FAQ" position="bottom" trigger="mouseenter">
                            <button
                             type="button"
                             class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-                            // onClick={() => ViewFaq(faqItem.id)}
+                          
                             onClick={() => handleClickView(faqItem.id)}
 
 
                           >
+                                 
                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
 </svg>
 
-                          </button>
 
+                          </button>
+                          </Tooltip>
+                     
 
 
         </div>
@@ -392,8 +411,8 @@ const handleInput = (event, characterLimit) => {
                 href='#'
                 className={
                   currentPage === number
-                    ? 'bg-blue border-gray-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                    : 'bg-white border-gray-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
                 }
               >
                 {number}
@@ -628,7 +647,7 @@ const handleInput = (event, characterLimit) => {
  
   </div>
   
-
+  </div>
 
 
 
