@@ -14,7 +14,7 @@ export default function StatusBar() {
 
 
     return (
-        <div className='absolute right-10 top-4'>
+        <div className='absolute right-6 top-4'>
 
             <div className="p-2 max-w-sm bg-white rounded-lg border-2 border-sky-400 shadow-md flex flex-col">
                 <div className='flex flex-row justify-center content-center items-center ml-1 '>

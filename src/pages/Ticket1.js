@@ -468,12 +468,14 @@ export default function TicketPage1() {
     setShowModal2(true);
 
   };
+  
   const handleView6 = (data) => {
     // ViewTicketDetails (data)
     setSelectedTicket(data)
 
     setShowModal4(true)
   };
+
   const handleView2 = (data) => {
     // ViewTicketDetails (data)
     setSelectedTicket(data)
@@ -497,7 +499,8 @@ export default function TicketPage1() {
     setLoading(true);
 
 
-
+ 
+    
 
 
     try {
@@ -576,6 +579,15 @@ export default function TicketPage1() {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
 
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className=" bg-grey h-fit w-full ">
@@ -589,12 +601,12 @@ export default function TicketPage1() {
           <div class="space-y-10">
 
 
-            <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
+            <div class="flex items-center p-3 space-x-6  bg-sky-300  shadow-lg hover:shadow-xl">
 
-              <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
+              <div class="md:flex bg-white p-2 w-96 space-x-4 rounded-lg">
       
                 <input
-                  className="bg-gray-200  outline-none"
+                  className="bg-white  outline-none"
                   type="text"
                   placeholder="Search......"
                   value={searchQuery}
@@ -617,7 +629,7 @@ export default function TicketPage1() {
               </div>
               <select
                 id="type"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
                 onChange={(e) => setStatus(e.target.value)}
               //    value={status}
@@ -634,7 +646,7 @@ export default function TicketPage1() {
 
               <select
                 id="type"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
                 onChange={(e) => setUserId(e.target.value)}
               // value={tickets?.user?.id}
@@ -689,8 +701,9 @@ export default function TicketPage1() {
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
 
-                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView2(ticket)}
-                      //  onClick={() => handleView(ticket)}
+                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" 
+                      onClick={() => handleView2(ticket)}
+                    
                       >
                         {ticket.title}
                       </button>

@@ -333,7 +333,7 @@ const handleInput = (event, characterLimit) => {
 				<summary className="px-4 py-6 focus:outline-none focus-visible:ri">{faqItem.question}</summary>
       
 				<p className="px-4 py-6 pt-0 ml-4  dark:text-gray-400">{faqItem.answer} </p>
-        <div class="bg-gray-200">
+        <div class=" bg-sky-300">
         <div class="inline-block  px-4 py-2">
         <Tooltip title="Delete" position="bottom" trigger="mouseenter">
         <button
