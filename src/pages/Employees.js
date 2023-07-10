@@ -62,6 +62,7 @@ export default function EmployeePage() {
 
   const [data, setData] = useState(null);
   const [userDetails, setUserDetails] = useState("");
+  const [selectedTicket, setSelectedTicket] = useState('');
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -408,11 +409,11 @@ export default function EmployeePage() {
 
 
 
-  const EditUser = (userId) => {
+  const EditUser = () => {
     try {
       axios({
         method: "put",
-        url: `http://localhost:8080/users/${userId}`,
+        url: `http://localhost:8080/users/${edituserDetails.id}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -576,10 +577,15 @@ export default function EmployeePage() {
 
 
 
+  const handleView = (data) => {
+    // ViewTicketDetails (data)
+    setedituserDetails(data)
+
+    setShowModal3(true)
+  };
 
 
-
-
+  console.log("test update Ticket", edituserDetails)
 
 
 
@@ -722,7 +728,7 @@ export default function EmployeePage() {
                         <button
                           type="button"
                           class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                          onClick={() => handleClickUpdate(user.id)}
+                          onClick={() => handleView(user)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -1372,7 +1378,7 @@ export default function EmployeePage() {
 
 
 
-   
+
 
 
       {showModal3 ? (
@@ -1418,226 +1424,429 @@ export default function EmployeePage() {
 
 
                   <div className="w-full">
-                 
+
                     <details className="w-full border rounded-lg" open="">
-        
-				<summary className="px-2 py-2 focus:outline-none focus-visible:ri">Basic Information</summary>
-      
-        <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                      First Name 
-                    </label>
 
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.firstName}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
+                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Basic Information</summary>
 
-                    />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            First Name
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.firstName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Last Name
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.lastName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                        User Status
+                      </label>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={edituserDetails.userStatus}
+                        onChange={(e) =>
+                          setedituserDetails({
+                            ...edituserDetails,
+                            firstName: e.target.value,
+                          })
+                        }
+
+                      />
+
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Primary Contact
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.primaryContactNo}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Secondary Contact
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.secondaryContactNo}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+                    </details>
+
+
+
+                    <details className="w-full border rounded-lg mt-2" open="">
+
+                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Address</summary>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            AddressLine1
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.address.addressLine1}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            AddressLine2
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            value={edituserDetails.address.addressLine2}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                        City
+                      </label>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={edituserDetails.address.city}
+                        onChange={(e) =>
+                          setedituserDetails({
+                            ...edituserDetails,
+                            firstName: e.target.value,
+                          })
+                        }
+
+                      />
+                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                        Province
+                      </label>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={edituserDetails.address.province}
+                        onChange={(e) =>
+                          setedituserDetails({
+                            ...edituserDetails,
+                            firstName: e.target.value,
+                          })
+                        }
+
+                      />
+
+
+
+
+                    </details>
+
+                    <details className="w-full border rounded-lg" open="">
+
+                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Bank Details</summary>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Account Number
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.firstName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                account: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Bank Name
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.lastName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                        Bank Branch
+                      </label>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        // value={edituserDetails.userStatus}
+                        onChange={(e) =>
+                          setedituserDetails({
+                            ...edituserDetails,
+                            firstName: e.target.value,
+                          })
+                        }
+
+                      />
+
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Account Type
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.primaryContactNo}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+
+                      </div>
+
+                    </details>
+
+                    <details className="w-full border rounded-lg" open="">
+
+                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Designation</summary>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Designation Name
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.firstName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                account: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Designation Level
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.lastName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+
+
+                    </details>
+
+                    <details className="w-full border rounded-lg" open="">
+
+                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Department</summary>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Department Name
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.firstName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                account: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+                        <div className="flex flex-col mb-2">
+                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                            Agency
+                          </label>
+
+                          <input
+                            type="text"
+                            id="question"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // value={edituserDetails.lastName}
+                            onChange={(e) =>
+                              setedituserDetails({
+                                ...edituserDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+
+                          />
+                        </div>
+
+
+                      </div>
+
+
+
+                    </details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   </div>
-                  <div className="flex flex-col mb-2">
-                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                   Last Name 
-                    </label>
 
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.lastName}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>
-
-                  
-                </div>
-
-                <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                  User Status
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.userStatus}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-
-                     
-        <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    Primary Contact
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.primaryContactNo}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                   Secondary Contact
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.secondaryContactNo}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>
-
-                  
-                </div>
-       
-      </details>
-		
-
-
-      <details className="w-full border rounded-lg mt-2" open="">
-        
-				<summary className="px-2 py-2 focus:outline-none focus-visible:ri">Address</summary>
-      
-        <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col mb-2">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                    AddressLine1
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.address.addressLine1}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                   <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                   AddressLine2
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.address.addressLine2}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>
-
-                  
-                </div>
-
-                <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                  City
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.address.city}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                Province
-                    </label>
-
-        <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={edituserDetails.address.province}
-                      onChange={(e) =>
-                        setedituserDetails({
-                          ...edituserDetails,
-                          firstName: e.target.value,
-                        })
-                      }
-
-                    />
-
-                     
-    
-       
-      </details>
-		
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-                  </div>
-             
 
                   <br />
 
