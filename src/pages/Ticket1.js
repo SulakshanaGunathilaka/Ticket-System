@@ -152,7 +152,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "sulakshanag@mexxar.com";
+    const recipient = "dhananjalih@mexxar.com";
     try {
       axios({
         method: "post",
@@ -619,7 +619,7 @@ export default function TicketPage1() {
 
             <div class="flex items-center p-3 space-x-6  bg-sky-300  shadow-lg hover:shadow-xl">
 
-              <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
+              <div class="md:flex bg-white  p-2 w-96 space-x-4 rounded-lg">
 
                 <input
                   className="bg-white  outline-none"

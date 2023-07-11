@@ -23,6 +23,7 @@ import FAQPage from './pages/FaqPage';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import TicketPage1 from './pages/Ticket1';
+import Useprofile from './pages/Useprofile';
 
 
 
@@ -83,6 +84,7 @@ function App() {
             <Route path='/leave' element={<TicketPage />} />
             <Route path='/ticket' element={<TicketPage1 />} />
             <Route path='/fullcalendar' element={<FAQPage/>} />
+            <Route path='/userprofile' element={<Useprofile/>} />
             
          
           </Route>
