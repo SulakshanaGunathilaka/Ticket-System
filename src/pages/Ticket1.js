@@ -84,6 +84,18 @@ export default function TicketPage1() {
   const [title, setTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
+
+  const [selectedTicket2, setSelectedTicket2] = useState({
+    status: '',
+    description: '',
+    title: '',
+    userId: '',
+    ticketId: ''
+
+
+
+  });
+
   const [refreshFlag, setRefreshFlag] = useState(false)
   const [tickets, setTickets] = useState([])
   // const [ticketId, setTicketId] = useState([]);
@@ -140,7 +152,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "sulakshanag@mexxar.com";
+    const recipient = "dhananjalih@mexxar.com";
     try {
       axios({
         method: "post",
@@ -180,6 +192,68 @@ export default function TicketPage1() {
       setLoading(false);
     }
   };
+
+
+
+
+
+
+
+  const EditTicket = (e) => {
+    const ticketId = selectedTicket2.id;
+
+    try {
+      axios({
+        method: "put",
+        url: 'http://localhost:8080/tickets',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
+        },
+        data: {
+          userId: selectedTicket2.user.id,
+          description: selectedTicket2.description,
+          status: selectedTicket2.status,
+          ticketId: selectedTicket2.id,
+          title: selectedTicket2.title,
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+
+          CommonToasts.basicToast("Successfully Ticket Added");
+          setShowModal1(false);
+          console.log(res)
+
+
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // const CreatComment = (ticketId) => {
@@ -408,15 +482,17 @@ export default function TicketPage1() {
     setShowModal2(true);
 
   };
+  
   const handleView6 = (data) => {
     // ViewTicketDetails (data)
     setSelectedTicket(data)
 
     setShowModal4(true)
   };
+
   const handleView2 = (data) => {
     // ViewTicketDetails (data)
-    setSelectedTicket(data)
+    setSelectedTicket2(data)
 
     setShowModal3(true)
   };
@@ -437,7 +513,8 @@ export default function TicketPage1() {
     setLoading(true);
 
 
-
+ 
+    
 
 
     try {
@@ -515,8 +592,7 @@ export default function TicketPage1() {
 
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-
-
+  console.log("test update tic", selectedTicket2)
 
 
 
@@ -541,35 +617,35 @@ export default function TicketPage1() {
           <div class="space-y-10">
 
 
-            <div class="flex items-center p-3 space-x-6  bg-white rounded-xl shadow-lg hover:shadow-xl">
+            <div class="flex items-center p-3 space-x-6  bg-sky-300  shadow-lg hover:shadow-xl">
 
-              <div class="md:flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
-      
+              <div class="md:flex bg-white  p-2 w-96 space-x-4 rounded-lg">
+
                 <input
-                  className="bg-gray-200  outline-none"
+                  className="bg-white  outline-none"
                   type="text"
                   placeholder="Search......"
                   value={searchQuery}
                   onChange={handleSearchInputChange}
                   onKeyDown={handleKeyDown}
                 />
-          
-              </div>
-             
-              <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
-              <Tooltip title="Search" position="bottom" trigger="mouseenter">
-                <button
-                  onClick={GetTickets}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
 
-                </button>
+              </div>
+
+              <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
+                <Tooltip title="Search" position="bottom" trigger="mouseenter">
+                  <button
+                    onClick={GetTickets}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="md:w-6 h-6 mt-1 mx-1 ">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+
+                  </button>
                 </Tooltip>
               </div>
               <select
                 id="type"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
                 onChange={(e) => setStatus(e.target.value)}
               //    value={status}
@@ -586,7 +662,7 @@ export default function TicketPage1() {
 
               <select
                 id="type"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
                 onChange={(e) => setUserId(e.target.value)}
               // value={tickets?.user?.id}
@@ -604,20 +680,20 @@ export default function TicketPage1() {
 
 
               <div class="flex justify-between">
-            
+
                 <button
                   className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
                   type="button"
 
                   onClick={() => setShowModal1(true)}
                 >
-                    <Tooltip title="Add Ticket" position="bottom" trigger="mouseenter "    className= "right-16 top-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                  </svg>
+                  <Tooltip title="Add Ticket" position="bottom" trigger="mouseenter " className="right-16 top-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                    </svg>
                   </Tooltip>
                 </button>
-        
+
 
               </div>
             </div>
@@ -641,8 +717,9 @@ export default function TicketPage1() {
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
 
-                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" onClick={() => handleView2(ticket)}
-                      //  onClick={() => handleView(ticket)}
+                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" 
+                      onClick={() => handleView2(ticket)}
+                    
                       >
                         {ticket.title}
                       </button>
@@ -674,32 +751,32 @@ export default function TicketPage1() {
 
                   </dl>
 
-                   <dd class="text-sm text-gray-500 mt-4 font-bold ">
-                   <Tooltip title="View Comment" position="bottom" trigger="mouseenter">
-                    <button
+                  <dd class="text-sm text-gray-500 mt-4 font-bold ">
+                    <Tooltip title="View Comment" position="bottom" trigger="mouseenter">
+                      <button
 
-                      type="button"
-                      class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
+                        type="button"
+                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
 
-                      onClick={() => handleView4(ticket)}
+                        onClick={() => handleView4(ticket)}
 
-                    >
-                      <div class="flex  ">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black ">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-</svg>
-
-                        
-
-
-                      </div>
+                      >
+                        <div class="flex  ">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black ">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                          </svg>
 
 
 
-                    </button>
+
+                        </div>
+
+
+
+                      </button>
                     </Tooltip>
 
-                  </dd> 
+                  </dd>
 
 
 
@@ -732,62 +809,62 @@ export default function TicketPage1() {
                     )}</dt>
 
                     <div class="flex items-center">
-                    <Tooltip title="Delete" position="bottom" trigger="mouseenter">
-                      <button
-                        type="button"
-                        class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                      <Tooltip title="Delete" position="bottom" trigger="mouseenter">
+                        <button
+                          type="button"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                        onClick={() => TicketDelete(ticket.id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-4 h-4"
+                          onClick={() => TicketDelete(ticket.id)}
                         >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                          />
-                        </svg>
-                      </button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                            />
+                          </svg>
+                        </button>
                       </Tooltip>
                       <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
-                      <button
-                        type="button"
-                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                        <button
+                          type="button"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                        onClick={() => handleView(ticket)}
+                          onClick={() => handleView(ticket)}
 
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                          </svg>
 
-                      </button>
+                        </button>
                       </Tooltip>
                       <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
-                      <button
-                        type="button"
-                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                        <button
+                          type="button"
+                          class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                        onClick={() => handleView6(ticket)}
+                          onClick={() => handleView6(ticket)}
 
-                      >
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
 
-<path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-</svg>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                          </svg>
 
 
-                      </button>
+                        </button>
 
                       </Tooltip>
                     </div>
-                
+
                   </div>
 
 
@@ -1087,22 +1164,112 @@ export default function TicketPage1() {
 
                   </p>
                   <div class="px-6 py-4">
-                    <h1>Description</h1>
-                    <p class="text-gray-700 text-base" className="break">
-                      {selectedTicket.description}
-                    </p>
-                  </div>
+                    <h1>User Id</h1>
+                    {/* <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.title}
+                    </p> */}
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) =>
+                      setSelectedTicket2({
+                        ...selectedTicket2,
+                        userId: e.target.value,
+                      })
+                    } /></div>
                   <div class="px-6 py-4">
+                    <h1>Ticket Id</h1>
+                    {/* <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.title}
+                    </p> */}
+                    <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      // value={selectedTicket2?.id}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          ticketId: e.target.value,
+                        })
+                      }
+
+                    /></div>
+
+
+                  <div class="px-6 py-4">
+                    <h1>Description</h1>
+                    {/* <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.description}
+                    </p> */}
+                    <textarea
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      // value={selectedTicket2.description}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          description: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>
+                  <div class="px-6">
                     <h1>Status</h1>
-                    <p class="text-gray-700 text-base" className="break">
+                    {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.status}
-                    </p>
+                    </p> */}
+                    <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      // value={selectedTicket2.status}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          status: e.target.value,
+                        })
+                      }
+
+                    />
                   </div>
                   <div class="px-6 py-4">
                     <h1>Title</h1>
-                    <p class="text-gray-700 text-base" className="break">
+                    {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.title}
-                    </p>
+                    </p> */}
+                    <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      // value={selectedTicket2.title}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          title: e.target.value,
+                        })
+                      }
+
+                    />
+                    <div class="mt-4">
+                      <button
+                        type="button"
+                        className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                        onClick={EditTicket}
+                      >
+                        Add
+                      </button>
+
+
+                    </div>
+                    {/* <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    // onClick={EditFaq}
+                  >
+                    Add
+                  </button> */}
+
+
                   </div>
 
 
@@ -1129,7 +1296,7 @@ export default function TicketPage1() {
         </>
       ) : null}
 
-{showModal4 ? (
+      {showModal4 ? (
         <>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -1171,7 +1338,7 @@ export default function TicketPage1() {
 
 
 
-                 
+
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Comment
@@ -1189,7 +1356,7 @@ export default function TicketPage1() {
 
 
 
-               
+
                   <br />
                   <button
                     type="button"

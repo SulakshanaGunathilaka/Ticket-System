@@ -53,7 +53,7 @@ export default function HomePage() {
             <TitleText titleText="Dashboard" />
      
             {/* {CommonSpinners.pageSpinner("Fetching Details")} */}
-            <body class="flex bg-sky-100 min-h-100 mt-4 " style={{
+            <body class="flex bg-sky-300 min-h-100 mt-4 " style={{
     height: '690px',
     width: '1358px',
     overflow: 'auto'
@@ -127,7 +127,7 @@ export default function HomePage() {
           
       
           </div>
-          <div class="overflow-y-auto" style={{ maxHeight: '300px' }} >
+          <div class="overflow-y-auto" style={{ maxHeight: '400px' }} >
             <ul class="p-6 space-y-6">
               <li class="flex items-center">
                 <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
@@ -172,7 +172,12 @@ export default function HomePage() {
         </div>
       
 		
-			
+        <div class="flex flex-col row-span-3 bg-white shadow rounded-lg"style={{ maxHeight: '500px' }}>
+          <div class="px-6 py-5 font-semibold border-b border-gray-100">Tickets in progress</div>
+          <div class="p-4 flex-grow">
+            <div class="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>
+          </div>
+        </div>
 
           
         
