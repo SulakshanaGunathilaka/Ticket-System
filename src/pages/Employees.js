@@ -616,14 +616,14 @@ export default function EmployeePage() {
 
 
 
-              <div class="flex items-center p-3 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl">
+              <div class="flex items-center p-3 space-x-6 bg-sky-300  shadow-lg hover:shadow-xl">
 
-                <div class="flex bg-gray-200 p-2 w-96 space-x-4 rounded-lg">
+                <div class="flex bg-white p-2 w-96 space-x-4 rounded-lg">
 
 
 
                   <input
-                    className="bg-gray-200  outline-none"
+                    className="bg-white  outline-none"
                     type="text"
                     placeholder="Search......"
                     value={searchQuery}
@@ -645,7 +645,7 @@ export default function EmployeePage() {
                 <div className="w-48">
                   <select
                     id="type"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <option value="">Select type</option>
@@ -700,7 +700,7 @@ export default function EmployeePage() {
                     </td>
                     <td className="text-center">
                       {/* {console.log("admin"+ user1.roles.name)} */}
-                      {user1.user.roles[0].name == "ADMIN" ? (
+                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
                         <button
                           type="button"
                           class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
@@ -721,10 +721,8 @@ export default function EmployeePage() {
                             />
                           </svg>
                         </button>
-                      ) : null
-
-                      }
-                      {user1.user.roles[0].name == "ADMIN" ? (
+                      ) : null}
+                      {/* {user1.user.roles[0].name == "ADMIN" ? (
                         <button
                           type="button"
                           class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
@@ -747,9 +745,10 @@ export default function EmployeePage() {
                         </button>
                       ) : null
 
-                      }
+                      } */}
                     </td>
                     <td>
+
                       <button
                         type="button"
                         class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
@@ -778,17 +777,18 @@ export default function EmployeePage() {
 
                     </td>
                     <td>
-                      <button
-                        type="button"
-                        class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                        onClick={() => handleClickView2(user.id)}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                        </svg>
+                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                        <button
+                          type="button"
+                          class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                          onClick={() => handleClickView2(user.id)}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                          </svg>
 
-                      </button>
-
+                        </button>
+                      ) : null}
                     </td>
                   </tr>
                 ))}
@@ -1054,7 +1054,7 @@ export default function EmployeePage() {
 
       {showModal2 ? (
         <>
-          <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="fixed inset-0 z-10 overflow-y-auto w-full">
             <div
               className="fixed inset-0 w-full h-full bg-black opacity-40"
               onClick={() => setShowModal2(false)}
@@ -1384,14 +1384,14 @@ export default function EmployeePage() {
       {showModal3 ? (
         <>
 
-          <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="fixed inset-0 z-10 w-100 overflow-y-auto ">
             <div
-              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              className="fixed inset-0 w-full h-full bg-black opacity-40 "
               onClick={() => setShowModal3(false)}
             ></div>
             <div>
 
-              <div className="flex items-center min-h-screen px-4 py-8">
+              <div className="flex items-center min-h-screen px-4 py-8 ">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
@@ -1422,14 +1422,13 @@ export default function EmployeePage() {
 
 
 
+                  <div className="w-full ">
 
-                  <div className="w-full">
-
-                    <details className="w-full border rounded-lg" open="">
+                    <details className="w-full border rounded-lg " open="">
 
                       <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Basic Information</summary>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4 ">
                         <div className="flex flex-col mb-2">
                           <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                             First Name
