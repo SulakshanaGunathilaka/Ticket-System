@@ -14,7 +14,7 @@ export default  function Useprofile() {
             className="flex flex-col bg-sky-300 max-h-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8">
             <div className="p-4 flex flex-row items-center justify-between bg-gray-">
                 <a href="#"
-                    className="text-lg font-semibold  tracking-widest uppercase rounded-lg focus:outline-none focus:shadow-outline">user
+                    className="text-lg font-semibold  tracking-widest uppercase rounded-lg focus:outline-none focus:shadow-outline text-black">user
                     profile</a>
                 <button className="md:hidden rounded-lg focus:outline-none focus:shadow-outline">
                     <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
@@ -47,8 +47,8 @@ export default  function Useprofile() {
     <img className="max-w-full max-h-full" src="https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=" alt=""/>
   </div>
 </div>
-                    <h1 className="text-gray-900 font-bold text-xl leading-8 my-1 mt-4">scjsdjdsfjdsjfdjhfh</h1>
-                    <h3 className="text-gray-600 font-lg text-sm leading-6">trhhthytytuytrrrrd</h3>
+                    <h1 className="text-gray-900 font-bold text-xl leading-8 my-1 mt-4">Dhananjali Herath</h1>
+                    <h3 className="text-gray-600 font-lg text-sm leading-6">Mexxar</h3>
                    
                     <ul
                         className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
@@ -122,7 +122,7 @@ export default  function Useprofile() {
                         </div>
                     </div>
                     <button
-                        className="block w-full text-white text-sm font-semibold  bg-sky-300 focus:outline-none focus:shadow-outline focus:bg-gray-800 hover:shadow-xs p-3 my-4">Show
+                        className="block w-full text-black text-sm font-semibold  bg-sky-300 focus:outline-none  p-3 my-4">Show
                         Full Information</button>
                 </div>
        
