@@ -1029,14 +1029,14 @@ export default function EmployeePage() {
                       </div>
                     </div>
                     <br />
-                    <Link to="/edituser">
+                    {/* <Link to="/edituser">
                       <button
                         type="button"
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
                         Update
                       </button>
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
 
@@ -1395,7 +1395,7 @@ export default function EmployeePage() {
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
-                      Edit User
+                      Update User
                     </h5>
                     <button
                       type="button"
@@ -1535,7 +1535,7 @@ export default function EmployeePage() {
 
                     </details>
 
-
+                    <br/>
 
                     <details className="w-full border rounded-lg mt-2" open="">
 
@@ -1623,6 +1623,7 @@ export default function EmployeePage() {
 
 
                     </details>
+                    <br/>
 
                     <details className="w-full border rounded-lg" open="">
 
@@ -1716,6 +1717,7 @@ export default function EmployeePage() {
                       </div>
 
                     </details>
+                    <br/>
 
                     <details className="w-full border rounded-lg" open="">
 
@@ -1767,7 +1769,7 @@ export default function EmployeePage() {
 
 
                     </details>
-
+                    <br/>
                     <details className="w-full border rounded-lg" open="">
 
                       <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Department</summary>
@@ -1818,32 +1820,6 @@ export default function EmployeePage() {
 
 
                     </details>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </div>
 
 
@@ -1854,7 +1830,7 @@ export default function EmployeePage() {
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
                     onClick={EditUser}
                   >
-                    Add
+                    Update
                   </button>
 
 
@@ -1871,6 +1847,88 @@ export default function EmployeePage() {
 
         </>
       ) : null}
+
+      
+<style js>{`
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.ellipsis {
+  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  width:250px;
+  font-weight: bold;
+  text-align: left;
+}
+.break {
+  overflow-wrap: break-word;
+  white-space: break;
+  overflow:hidden;
+  width:400px;
+  text-align: left;
+}
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  overflow-y: auto;
+  width: 800px;
+  height: 500px;
+  margin: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+}
+.modal-container1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  overflow-y: auto;
+  width: 800px;
+  height: 500px;
+  margin: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+  
+  
+        
+      `}</style>
 
     </>
   );
