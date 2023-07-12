@@ -60,7 +60,7 @@ export default function SideBar() {
             </div>
           </li>
 
-          {user1.user.roles[0].name == "ADMIN" ? (
+          {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
             <li className={splitLocation[1] === "employees" ? "active" : ""}>
               <Link
                 end
@@ -85,7 +85,7 @@ export default function SideBar() {
               </Link>
             </li>
           ) : null}
-          {user1.user.roles[0].name == "ADMIN" ? (
+         {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
             <li className={splitLocation[1] === "createuser" ? "active" : ""}>
               <Link
                 end
@@ -111,7 +111,7 @@ export default function SideBar() {
               </Link>
             </li>
           ) : null}
-          {user1.user.roles[0].name == "ADMIN" ? (
+        {/* {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
             <li className={splitLocation[1] === "edituser" ? "active" : ""}>
               <Link
                 end
@@ -136,7 +136,7 @@ export default function SideBar() {
                 <span className="flex-1 ml-3 whitespace-nowrap">Edit User</span>
               </Link>
             </li>
-          ) : null}
+          ) : null} */}
 {/* 
           <li className={splitLocation[1] === "leave" ? "active" : ""}>
             <Link
@@ -201,7 +201,7 @@ export default function SideBar() {
               </span>
             </Link>
           </li> */}
-            {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE" ?(
+            {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE"|| user1.user.roles[0].name == "IT_ADMIN" ?(
           <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
             <Link
               end
@@ -225,7 +225,7 @@ export default function SideBar() {
           </li>
            ) : null}
 
-{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE" ?(
+{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE"|| user1.user.roles[0].name == "IT_ADMIN" ?(
           <li className={splitLocation[1] === "FAQPage" ? "active" : ""}>
             <Link
               end
@@ -244,7 +244,7 @@ export default function SideBar() {
 
 
 
-{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE" ?(
+{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE"|| user1.user.roles[0].name == "IT_ADMIN" ?(
           <li className={splitLocation[1] === "User Profile" ? "active" : ""}>
             <Link
               end

@@ -216,7 +216,7 @@ export default function TicketPage1() {
           userId: selectedTicket2.user.id,
           description: selectedTicket2.description,
           status: selectedTicket2.status,
-          ticketId: selectedTicket2.id,
+          id: selectedTicket2.id,
           title: selectedTicket2.title,
         },
         mode: "cors",
@@ -227,7 +227,7 @@ export default function TicketPage1() {
           CommonToasts.basicToast("Successfully Ticket Added");
           setShowModal1(false);
           console.log(res)
-
+          // GetTickets()
 
         }
       }).catch((error) => {
@@ -442,13 +442,13 @@ export default function TicketPage1() {
 
 
 
-  const ViewTicketDetails = (ticketId) => {
+  const ViewTicketDetails = (id) => {
 
     try {
-      const tickets = { id: ticketId };
+      // const tickets = { id: ticketId };
       axios({
         method: "get",
-        url: 'http://localhost:8080/tickets/' + ticketId,
+        url: 'http://localhost:8080/tickets/' + id,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -460,7 +460,7 @@ export default function TicketPage1() {
         console.log("response", res);
         if (res.status == 200) {
 
-
+          setSelectedTicket2(res.data.body); 
 
         }
       }).catch((error) => {
@@ -490,9 +490,9 @@ export default function TicketPage1() {
     setShowModal4(true)
   };
 
-  const handleView2 = (data) => {
+  const handleView2 = (id) => {
     // ViewTicketDetails (data)
-    setSelectedTicket2(data)
+    ViewTicketDetails(id)
 
     setShowModal3(true)
   };
@@ -718,7 +718,7 @@ export default function TicketPage1() {
                     <div class="flex flex-col">
 
                       <button class=" text-gray-700 text-base font-bold " className="ellipsis" 
-                      onClick={() => handleView2(ticket)}
+                      onClick={() => handleView2(ticket.id)}
                     
                       >
                         {ticket.title}
@@ -809,6 +809,7 @@ export default function TicketPage1() {
                     )}</dt>
 
                     <div class="flex items-center">
+                    {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
                       <Tooltip title="Delete" position="bottom" trigger="mouseenter">
                         <button
                           type="button"
@@ -832,6 +833,7 @@ export default function TicketPage1() {
                           </svg>
                         </button>
                       </Tooltip>
+                          ) : null}
                       <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
                         <button
                           type="button"
@@ -846,6 +848,7 @@ export default function TicketPage1() {
 
                         </button>
                       </Tooltip>
+                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
                       <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
                         <button
                           type="button"
@@ -863,6 +866,7 @@ export default function TicketPage1() {
                         </button>
 
                       </Tooltip>
+                       ) : null}
                     </div>
 
                   </div>
@@ -1135,7 +1139,7 @@ export default function TicketPage1() {
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <div class="font-bold text-xl mb-2">View Ticket</div>
+                    <div class="font-bold text-xl mb-2">Update Ticket</div>
                     <button
                       type="button"
                       className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -1256,7 +1260,7 @@ export default function TicketPage1() {
                         className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
                         onClick={EditTicket}
                       >
-                        Add
+                        Update
                       </button>
 
 
