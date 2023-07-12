@@ -49,21 +49,21 @@ export default function HomePage() {
 
 
 
-<div className="bg-grey h-fit w-full">
+<div className="fixed bg-grey h-fit w-full">
             <TitleText titleText="Dashboard" />
      
             {/* {CommonSpinners.pageSpinner("Fetching Details")} */}
-            <body class="flex bg-sky-300 min-h-100 mt-4 " style={{
+            <body class="flex bg-white min-h-100 mt-4 " style={{
     height: '690px',
     width: '1358px',
     overflow: 'auto'
   }}>
 
-  <div class="flex-grow text-gray-800">
+  <div class=" fixed flex-grow text-gray-800">
   
-    <main class="p-6 sm:p-10 space-y-6 ">
+    <main class=" p-6 sm:p-10 space-y-6 ">
     
-      <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 overflow-y-auto">
+      <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 overflow-y-auto ">
         <div class="flex items-center p-8 bg-white shadow rounded-lg">
           <div class="inline-flex flex-shrink-0 items-center justify-center h-16 w-16 text-purple-600 bg-purple-100 rounded-full mr-6">
             <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -82,7 +82,7 @@ export default function HomePage() {
             </svg>
           </div>
           <div>
-            <span class="block text-2xl font-bold">6.8</span>
+            <span class="block text-2xl font-bold">68</span>
             <span class="block text-gray-500">Open Tickets</span>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function HomePage() {
           </div>
           <div>
             <span class="inline-block text-2xl font-bold">9</span>
-            <span class="inline-block text-xl text-gray-500 font-semibold">(14%)</span>
+            {/* <span class="inline-block text-xl text-gray-500 font-semibold">(14%)</span> */}
             <span class="block text-gray-500">Closed Tickets</span>
           </div>
         </div>
@@ -105,12 +105,12 @@ export default function HomePage() {
             </svg>
           </div>
           <div>
-            <span class="block text-2xl font-bold">83%</span>
+            <span class="block text-2xl font-bold">83</span>
             <span class="block text-gray-500">In Progress</span>
           </div>
         </div>
       </section>
-      <section class="grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6 ">
+      <section class=" grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6 ">
         <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg h-auto">
           <div class="px-6 py-5 font-semibold border-b border-gray-100">The number of applied and left tickets per month</div>
           <div class="p-4 flex-grow ">
