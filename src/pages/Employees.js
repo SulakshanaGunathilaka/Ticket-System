@@ -424,9 +424,9 @@ export default function EmployeePage() {
       }).then((res) => {
         console.log("response", res);
         if (res.status === 200) {
-          setShowModal2(false);
-          setShowModal3(true);
+         
           CommonToasts.basicToast("Successfully Edited");
+          // setUserList(res.data)
         }
       }).catch((error) => {
         CommonToasts.errorToast(error.message);
@@ -437,39 +437,6 @@ export default function EmployeePage() {
       setLoading(false);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   const handleClickView2 = (userId) => {
@@ -1461,7 +1428,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                lastName: e.target.value,
                               })
                             }
 
@@ -1483,7 +1450,7 @@ export default function EmployeePage() {
                         onChange={(e) =>
                           setedituserDetails({
                             ...edituserDetails,
-                            firstName: e.target.value,
+                            userStatus: e.target.value,
                           })
                         }
 
@@ -1504,7 +1471,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                primaryContactNo: e.target.value,
                               })
                             }
 
@@ -1523,7 +1490,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                secondaryContactNo: e.target.value,
                               })
                             }
 
@@ -1555,7 +1522,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                addressLine1: e.target.value,
                               })
                             }
 
@@ -1574,7 +1541,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                addressLine2: e.target.value,
                               })
                             }
 
@@ -1596,7 +1563,7 @@ export default function EmployeePage() {
                         onChange={(e) =>
                           setedituserDetails({
                             ...edituserDetails,
-                            firstName: e.target.value,
+                            city: e.target.value,
                           })
                         }
 
@@ -1613,7 +1580,7 @@ export default function EmployeePage() {
                         onChange={(e) =>
                           setedituserDetails({
                             ...edituserDetails,
-                            firstName: e.target.value,
+                            province: e.target.value,
                           })
                         }
 
@@ -1643,7 +1610,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                account: e.target.value,
+                                accountNo: e.target.value,
                               })
                             }
 
@@ -1662,7 +1629,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                bankName: e.target.value,
                               })
                             }
 
@@ -1684,7 +1651,7 @@ export default function EmployeePage() {
                         onChange={(e) =>
                           setedituserDetails({
                             ...edituserDetails,
-                            firstName: e.target.value,
+                            bankBranch: e.target.value,
                           })
                         }
 
@@ -1705,7 +1672,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                bankAccountType: e.target.value,
                               })
                             }
 
@@ -1737,7 +1704,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                account: e.target.value,
+                                designationName: e.target.value,
                               })
                             }
 
@@ -1756,7 +1723,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                designationLevel: e.target.value,
                               })
                             }
 
@@ -1788,7 +1755,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                account: e.target.value,
+                                name: e.target.value,
                               })
                             }
 
@@ -1807,7 +1774,7 @@ export default function EmployeePage() {
                             onChange={(e) =>
                               setedituserDetails({
                                 ...edituserDetails,
-                                firstName: e.target.value,
+                                agency: e.target.value,
                               })
                             }
 
@@ -1828,7 +1795,11 @@ export default function EmployeePage() {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={EditUser}
+                    // onClick={EditUser}
+                    onClick={() => {
+                      EditUser();
+                      setShowModal3(false);
+                    }}
                   >
                     Update
                   </button>

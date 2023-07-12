@@ -152,7 +152,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "dhananjalih@mexxar.com";
+    const recipient = "sulakshanag@mexxar.com";
     try {
       axios({
         method: "post",
@@ -179,7 +179,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Ticket Added");
-          setShowModal1(false);
+          // setShowModal1(false);
           GetTickets();
 
 
@@ -624,6 +624,8 @@ export default function TicketPage1() {
                 ))}
 
               </select>
+
+              
 
 
               <div class="flex justify-between">
@@ -1126,7 +1128,7 @@ export default function TicketPage1() {
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.title}
                     </p> */}
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket2?.user?.id} onChange={(e) =>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket2?.user?.firstName} onChange={(e) =>
                       setSelectedTicket2({
                         ...selectedTicket2,
                         userId: e.target.value,
