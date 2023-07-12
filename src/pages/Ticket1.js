@@ -200,7 +200,7 @@ export default function TicketPage1() {
 
 
   const EditTicket = (e) => {
-    const ticketId = selectedTicket2.id;
+  
 
     try {
       axios({
@@ -241,61 +241,6 @@ export default function TicketPage1() {
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // const CreatComment = (ticketId) => {
-  //   try {
-  //     axios({
-  //       method: "post",
-  //       url:`http://localhost:8080/tickets/${ticketId}/comments`,
-  //       headers: {
-  //         "Access-Control-Allow-Origin": "*",
-  //         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-  //         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-  //         "Authorization": `Bearer ` +  user1.jwt,
-  //       },
-  //       data: {
-
-  //         id: id,
-  //         comment: comment,
-  //         createdDate: createdDate,
-  //         userId: user1.user.userId,
-  //         userName:  userName,
-
-
-  //       },
-  //       mode: "cors",
-  //     }).then((res) => {
-  //       console.log("response", res);
-  //       if (res.status == 200) {
-
-  //         CommonToasts.basicToast("Successfully Comment Added");
-
-
-
-  //       }
-  //     }).catch((error) => {
-  //       CommonToasts.errorToast(error.message);
-  //       setLoading(false);
-  //     });
-  //   } catch (e) {
-  //     CommonToasts.errorToast(e.message);
-  //     setLoading(false);
-  //   }
-  // };
 
   const CreateComment = () => {
     // const baseUrl = 'http://localhost:8080';
