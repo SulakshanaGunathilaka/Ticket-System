@@ -27,12 +27,12 @@ code {
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: #2ca2d9;
-  border-radius: 5px;
-}
+  border-radius: 2px;
+} */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: #2ca2d9;
-}
+} */

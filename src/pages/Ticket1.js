@@ -152,7 +152,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "dhananjalih@mexxar.com";
+    const recipient = "sulakshanag@mexxar.com";
     try {
       axios({
         method: "post",
@@ -179,7 +179,8 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Ticket Added");
-          setShowModal1(false);
+          // setShowModal1(false);
+          GetTickets();
 
 
         }
@@ -200,7 +201,7 @@ export default function TicketPage1() {
 
 
   const EditTicket = (e) => {
-    const ticketId = selectedTicket2.id;
+
 
     try {
       axios({
@@ -227,7 +228,7 @@ export default function TicketPage1() {
           CommonToasts.basicToast("Successfully Ticket Added");
           setShowModal1(false);
           console.log(res)
-          // GetTickets()
+          GetTickets()
 
         }
       }).catch((error) => {
@@ -241,61 +242,6 @@ export default function TicketPage1() {
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // const CreatComment = (ticketId) => {
-  //   try {
-  //     axios({
-  //       method: "post",
-  //       url:`http://localhost:8080/tickets/${ticketId}/comments`,
-  //       headers: {
-  //         "Access-Control-Allow-Origin": "*",
-  //         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-  //         // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-  //         "Authorization": `Bearer ` +  user1.jwt,
-  //       },
-  //       data: {
-
-  //         id: id,
-  //         comment: comment,
-  //         createdDate: createdDate,
-  //         userId: user1.user.userId,
-  //         userName:  userName,
-
-
-  //       },
-  //       mode: "cors",
-  //     }).then((res) => {
-  //       console.log("response", res);
-  //       if (res.status == 200) {
-
-  //         CommonToasts.basicToast("Successfully Comment Added");
-
-
-
-  //       }
-  //     }).catch((error) => {
-  //       CommonToasts.errorToast(error.message);
-  //       setLoading(false);
-  //     });
-  //   } catch (e) {
-  //     CommonToasts.errorToast(e.message);
-  //     setLoading(false);
-  //   }
-  // };
 
   const CreateComment = () => {
     // const baseUrl = 'http://localhost:8080';
@@ -332,6 +278,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Comment Added");
+          GetTickets()
 
 
 
@@ -376,7 +323,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Comment Added");
-
+          GetTickets()
 
 
         }
@@ -460,7 +407,7 @@ export default function TicketPage1() {
         console.log("response", res);
         if (res.status == 200) {
 
-          setSelectedTicket2(res.data.body); 
+          setSelectedTicket2(res.data.body);
 
         }
       }).catch((error) => {
@@ -482,7 +429,7 @@ export default function TicketPage1() {
     setShowModal2(true);
 
   };
-  
+
   const handleView6 = (data) => {
     // ViewTicketDetails (data)
     setSelectedTicket(data)
@@ -513,8 +460,8 @@ export default function TicketPage1() {
     setLoading(true);
 
 
- 
-    
+
+
 
 
     try {
@@ -667,16 +614,18 @@ export default function TicketPage1() {
                 onChange={(e) => setUserId(e.target.value)}
               // value={tickets?.user?.id}
               >
-                <option value="">User Id</option>
+                <option value="">Select...</option>
                 {userList?.map((user) => (
                   <option
                     key={user.id} value={user.id}
                   >
-                    {user.id}
+                    {user.firstName} {user.lastName}
                   </option>
                 ))}
 
               </select>
+
+              
 
 
               <div class="flex justify-between">
@@ -717,9 +666,9 @@ export default function TicketPage1() {
                   <div class="flex justify-between items-center">
                     <div class="flex flex-col">
 
-                      <button class=" text-gray-700 text-base font-bold " className="ellipsis" 
-                      onClick={() => handleView2(ticket.id)}
-                    
+                      <button class=" text-gray-700 text-base font-bold " className="ellipsis"
+                        onClick={() => handleView2(ticket.id)}
+
                       >
                         {ticket.title}
                       </button>
@@ -809,31 +758,31 @@ export default function TicketPage1() {
                     )}</dt>
 
                     <div class="flex items-center">
-                    {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
-                      <Tooltip title="Delete" position="bottom" trigger="mouseenter">
-                        <button
-                          type="button"
-                          class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                        <Tooltip title="Delete" position="bottom" trigger="mouseenter">
+                          <button
+                            type="button"
+                            class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                          onClick={() => TicketDelete(ticket.id)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
+                            onClick={() => TicketDelete(ticket.id)}
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
-                        </button>
-                      </Tooltip>
-                          ) : null}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="w-4 h-4"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </button>
+                        </Tooltip>
+                      ) : null}
                       <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
                         <button
                           type="button"
@@ -848,25 +797,25 @@ export default function TicketPage1() {
 
                         </button>
                       </Tooltip>
-                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"? (
-                      <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
-                        <button
-                          type="button"
-                          class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                        <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
+                          <button
+                            type="button"
+                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                          onClick={() => handleView6(ticket)}
+                            onClick={() => handleView6(ticket)}
 
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
 
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                          </svg>
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                            </svg>
 
 
-                        </button>
+                          </button>
 
-                      </Tooltip>
-                       ) : null}
+                        </Tooltip>
+                      ) : null}
                     </div>
 
                   </div>
@@ -999,7 +948,11 @@ export default function TicketPage1() {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={CreatTicket}
+                    // onClick={CreatTicket}
+                    onClick={() => {
+                      CreatTicket();
+                      setShowModal1(false);
+                    }}
                   >
                     Add
                   </button>
@@ -1107,7 +1060,10 @@ export default function TicketPage1() {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={CreateComment}
+                    onClick={() => {
+                      CreateComment();
+                      setShowModal2(false);
+                    }}
                   >
                     Add
                   </button>
@@ -1172,7 +1128,7 @@ export default function TicketPage1() {
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.title}
                     </p> */}
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket2?.user?.id} onChange={(e) =>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={selectedTicket2?.user?.firstName} onChange={(e) =>
                       setSelectedTicket2({
                         ...selectedTicket2,
                         userId: e.target.value,
@@ -1222,7 +1178,26 @@ export default function TicketPage1() {
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.status}
                     </p> */}
-                    <input
+
+                    <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      // value={selectedTicket2.status}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          status: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="DEFAULT" >{selectedTicket2.status}</option>
+                      <option value="OPEN">OPEN</option>
+                      <option value="ACCEPTED">ACCEPTED</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="ACCEPTED">ACCEPTED</option>
+                    </select>
+                    {/* <input
                       type="text"
                       id="question"
                       className="w-full p-2 border border-gray-300 rounded-md"
@@ -1234,7 +1209,7 @@ export default function TicketPage1() {
                         })
                       }
 
-                    />
+                    /> */}
                   </div>
                   <div class="px-6 py-4">
                     <h1>Title</h1>
@@ -1258,7 +1233,11 @@ export default function TicketPage1() {
                       <button
                         type="button"
                         className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                        onClick={EditTicket}
+                        // onClick={EditTicket}
+                        onClick={() => {
+                          EditTicket();
+                          setShowModal3(false);
+                        }}
                       >
                         Update
                       </button>
@@ -1365,7 +1344,11 @@ export default function TicketPage1() {
                   <button
                     type="button"
                     className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    onClick={CloseComment}
+                    // onClick={CloseComment}
+                    onClick={() => {
+                      CloseComment();
+                      setShowModal4(false);
+                    }}
                   >
                     Add
                   </button>
