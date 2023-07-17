@@ -625,7 +625,7 @@ export default function TicketPage1() {
 
               </select>
 
-              
+
 
 
               <div class="flex justify-between">
