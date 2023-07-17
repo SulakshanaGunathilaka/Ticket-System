@@ -12,7 +12,7 @@ import AuthService from "../services/AuthenticationService";
 
 function CreateUser2() {
   const user1 = AuthService.getCurrentUser();
-  const formArray = [1, 2, 3, 4];
+  const formArray = [1, 2];
   const [formNo, setFormNo] = useState(formArray[0]);
   const [state, setState] = useState({
     email: "",
@@ -32,13 +32,13 @@ function CreateUser2() {
     city: "",
     province: "",
 
-    accountNo: "",
-    bankName: "",
-    bankBranch: "",
-    bankAccountType: "",
+    // accountNo: "",
+    // bankName: "",
+    // bankBranch: "",
+    // bankAccountType: "",
 
-    designationName: "",
-    designationLevel: "",
+    // designationName: "",
+    // designationLevel: "",
 
   });
 
@@ -78,15 +78,16 @@ function CreateUser2() {
       state.province
     ) {
       setFormNo(formNo + 1);
-    } else if (
-      formNo === 3 &&
-      state.accountNo &&
-      state.bankName &&
-      state.bankBranch &&
-      state.bankAccountType
-    ) {
-      setFormNo(formNo + 1);
-    }
+    } 
+    // else if (
+    //   formNo === 3 &&
+    //   state.accountNo &&
+    //   state.bankName &&
+    //   state.bankBranch &&
+    //   state.bankAccountType
+    // ) {
+    //   setFormNo(formNo + 1);
+    // }
     //  else if (
     //   formNo === 4 &&
     //   state.designationName &&
@@ -123,12 +124,12 @@ function CreateUser2() {
         province: state.province,
       },
 
-      bankDetails: {
-        accountNo: state.accountNo,
-        bankName: state.bankName,
-        bankBranch: state.bankBranch,
-        accountType: state.bankAccountType,
-      },
+      // bankDetails: {
+      //   accountNo: state.accountNo,
+      //   bankName: state.bankName,
+      //   bankBranch: state.bankBranch,
+      //   accountType: state.bankAccountType,
+      // },
 
       // designation: {
       //   designationName: state.designationName,
@@ -155,8 +156,11 @@ function CreateUser2() {
     });
 
     if (
-      state.designationName &&
-      state.designationLevel
+      state.addressLine1 &&
+      state.addressLine2 &&
+      state.city &&
+      state.province
+
     ) {
       toast.success("Form submit success");
     } else {
@@ -182,8 +186,8 @@ function CreateUser2() {
             <>
               <div
                 className={`w-[35px] my-3 text-white rounded-full ${formNo - 1 === i ||
-                    formNo - 1 === i + 1 ||
-                    formNo - 1 === i + 2 ||
+                    // formNo - 1 === i + 1 ||
+                    // formNo - 1 === i + 2 ||
                     formNo === formArray.length
                     ? "bg-sky-400"
                     : "bg-sky-200"
@@ -193,7 +197,7 @@ function CreateUser2() {
               </div>
               {i !== formArray.length - 1 && (
                 <div
-                  className={`w-[85px] h-[2px] ${formNo === i + 3 || formNo === formArray.length
+                  className={`w-[85px] h-[2px] ${formNo === i + 2 || formNo === formArray.length
                       ? "bg-sky-500"
                       : "bg-sky-400"
                     }`}
@@ -442,7 +446,7 @@ function CreateUser2() {
                     Previous
                   </button>
                   <button
-                    onClick={next}
+                    onClick={finalSubmit}
                     className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
                     type="submit"
                   >
@@ -453,7 +457,7 @@ function CreateUser2() {
             </div>
 
           )}
-          {formNo === 3 && (
+          {/* {formNo === 3 && (
 
             <div>
               <div className="block p-6  bg-white w-full">
@@ -467,9 +471,9 @@ function CreateUser2() {
                     id="accountNo"
                     placeholder="Account Number"
                     {...register("accountNo", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p> */}
-                </div>
+                {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Bank Name" />
                   <FormInputField
@@ -480,9 +484,9 @@ function CreateUser2() {
                     id="bankName"
                     placeholder="Bank Name"
                     {...register("bankName", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.bankName?.message}</p> */}
-                </div>
+                {/* </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
@@ -495,9 +499,9 @@ function CreateUser2() {
                       id="bankBranch"
                       placeholder="Bank Branch"
                       {...register("bankBranch", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p> */}
-                  </div>
+                  {/* </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Account Type" />
                     <FormInputField
@@ -508,11 +512,11 @@ function CreateUser2() {
                       id="bankAccountType"
                       placeholder="Account Type"
                       {...register("bankAccountType", { required: "This is required" })}
-                    />
+                    /> */}
 
 
                     {/* <p className="text-red-400 text-xs"> {errors.accountType?.message}</p> */}
-                  </div>
+                  {/* </div>
                 </div>
                 <div className="mt-4 gap-3 flex justify-center items-center">
                   <button
@@ -533,11 +537,11 @@ function CreateUser2() {
             </div>
 
           )}
-
+ */}
 
   
 
-          {formNo === 4 && (
+          {/* {formNo === 4 && (
             <div>
               <div className="block p-6  bg-white w-full h-full">
                 <div className="flex flex-col mb-2">
@@ -550,9 +554,9 @@ function CreateUser2() {
                     id="designationName"
                     placeholder="Designation"
                     {...register("designationName", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.designationName?.message}</p> */}
-                </div>
+                {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Designation Level" />
                   <FormInputField
@@ -563,9 +567,9 @@ function CreateUser2() {
                     id="designationLevel"
                     placeholder="Designation Level"
                     {...register("designationLevel", { required: "This is required" })}
-                  />
+                  /> */}
                   {/* <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p> */}
-                </div>
+                {/* </div>
 
                 <div className="mt-4 gap-3 flex justify-center items-center">
                   <button
@@ -586,7 +590,7 @@ function CreateUser2() {
               </div>
             </div>
 
-          )}
+          )} */}
           {/* <button
                     className="bg-gray-800 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="submit"

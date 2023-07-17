@@ -287,38 +287,38 @@ export default function EmployeePage() {
     });
   };
 
-  const finalSubmit = (userId) => {
+  const finalSubmit = (data) => {
     let submitValues = {
-      firstName: state.firstName,
+      firstName: data.firstName,
       // otherNames: state.otherNames,
-      lastName: state.lastName,
+      lastName: data.lastName,
       // email: state.email,
       // password: state.password,
       // nicNo: state.nicNo,
       // joinDate: state.joinDate,
-      primaryContactNo: state.primaryContactNo,
-      secondaryContactNo: state.secondaryContactNo,
+      primaryContactNo: data.primaryContactNo,
+      secondaryContactNo: data.secondaryContactNo,
       // gender: state.gender,
       // dateOfBirth: state.dateOfBirth,
-      userStatus: state.userStatus,
+      userStatus: data.userStatus,
 
       address: {
-        addressLine1: state.addressLine1,
-        addressLine2: state.addressLine2,
-        city: state.city,
-        province: state.province,
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        city: data.city,
+        province: data.province,
       },
 
       bankDetails: {
-        accountNo: state.accountNo,
-        bankName: state.bankName,
-        bankBranch: state.bankBranch,
-        bankAccountType: state.bankAccountType,
+        accountNo: data.accountNo,
+        bankName: data.bankName,
+        bankBranch: data.bankBranch,
+        bankAccountType: data.bankAccountType,
       },
 
       department: {
-        name: state.departmentname,
-        agency: state.agency,
+        name: data.name,
+        agency: data.agency,
       },
 
       // roles: {
@@ -332,30 +332,39 @@ export default function EmployeePage() {
       // },
 
       designation: {
-        designationName: state.designationName,
-        designationLevel: state.designationLevel,
+        designationName: data.designationName,
+        designationLevel: data.designationLevel,
       },
 
     };
 
-    console.log(state);
-    axios({
-      method: "put",
-      url: "http://localhost:8080/users/" + userId,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        Authorization: `Bearer ` + user1.jwt,
-      },
-      data: submitValues,
+    console.log(data);
+    try {
+      axios({
+        method: "put",
+        url: `http://localhost:8080/users/${edituserDetails.id}`,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Authorization": `Bearer ${user1.jwt}`,
+        },
+        data: submitValues,
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status === 200) {
 
-      mode: "cors",
-    }).then((res) => {
-      console.log("response", res);
-      // console.log("final " + state);
-      setState(res.data.body);
-      ViewUser(userId);
-    });
+          CommonToasts.basicToast("Successfully Edited");
+          // setUserList(res.data)
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
 
 
   };
@@ -394,7 +403,6 @@ export default function EmployeePage() {
     },
 
 
-
     designation: {
       designationName: '',
       designationLevel: '',
@@ -424,7 +432,7 @@ export default function EmployeePage() {
       }).then((res) => {
         console.log("response", res);
         if (res.status === 200) {
-         
+
           CommonToasts.basicToast("Successfully Edited");
           // setUserList(res.data)
         }
@@ -1391,425 +1399,181 @@ export default function EmployeePage() {
 
                   <div className="w-full ">
 
-                    <details className="w-full border rounded-lg " open="">
+                    <form className="border-0 rounded-lg shadow-lg relative max-w-[700px] px-3  w-full bg-white outline-none focus:outline-none " onSubmit={handleSubmit(finalSubmit)}
+                    >
 
-                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Basic Information</summary>
+                      <div className="flex  flex-col justify-between p-5 mb-3 ">
+                        <h3 className="text-3xl font-semibold">
 
-                      <div className="grid grid-cols-2 gap-4 ">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            First Name
-                          </label>
+                        </h3>
+                        <div className='flex space-x-3 mr-4 mt-10'  >
+                          <div className=' w-1/2 '>
+                            <label for="firstName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">First name</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="First Name" value={edituserDetails.firstName}  {...register("firstName", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.firstName?.message}</p>
+                          </div>
 
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.firstName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                firstName: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Last Name
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.lastName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                lastName: e.target.value,
-                              })
-                            }
-
-                          />
+                          <div className=' w-1/2 '>
+                            <label for="lastName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Last name</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="lastName" value={edituserDetails.lastName} {...register("lastName", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.lastName?.message}</p>
+                          </div>
                         </div>
 
+                        <div className=' w-1/2 '>
 
-                      </div>
-
-                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                        User Status
-                      </label>
-
-                      <input
-                        type="text"
-                        id="question"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        value={edituserDetails.userStatus}
-                        onChange={(e) =>
-                          setedituserDetails({
-                            ...edituserDetails,
-                            userStatus: e.target.value,
-                          })
-                        }
-
-                      />
-
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Primary Contact
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.primaryContactNo}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                primaryContactNo: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Secondary Contact
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.secondaryContactNo}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                secondaryContactNo: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-
-
-                      </div>
-
-                    </details>
-
-                    <br/>
-
-                    <details className="w-full border rounded-lg mt-2" open="">
-
-                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Address</summary>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            AddressLine1
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.address.addressLine1}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                addressLine1: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            AddressLine2
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={edituserDetails.address.addressLine2}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                addressLine2: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-
-
-                      </div>
-
-                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                        City
-                      </label>
-
-                      <input
-                        type="text"
-                        id="question"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        value={edituserDetails.address.city}
-                        onChange={(e) =>
-                          setedituserDetails({
-                            ...edituserDetails,
-                            city: e.target.value,
-                          })
-                        }
-
-                      />
-                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                        Province
-                      </label>
-
-                      <input
-                        type="text"
-                        id="question"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        value={edituserDetails.address.province}
-                        onChange={(e) =>
-                          setedituserDetails({
-                            ...edituserDetails,
-                            province: e.target.value,
-                          })
-                        }
-
-                      />
-
-
-
-
-                    </details>
-                    <br/>
-
-                    <details className="w-full border rounded-lg" open="">
-
-                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Bank Details</summary>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Account Number
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.firstName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                accountNo: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Bank Name
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.lastName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                bankName: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-
-
-                      </div>
-
-                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                        Bank Branch
-                      </label>
-
-                      <input
-                        type="text"
-                        id="question"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        // value={edituserDetails.userStatus}
-                        onChange={(e) =>
-                          setedituserDetails({
-                            ...edituserDetails,
-                            bankBranch: e.target.value,
-                          })
-                        }
-
-                      />
-
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Account Type
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.primaryContactNo}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                bankAccountType: e.target.value,
-                              })
-                            }
-
-                          />
                         </div>
 
 
 
-                      </div>
 
-                    </details>
-                    <br/>
+                        <div className='flex space-x-3 mr-4'  >
 
-                    <details className="w-full border rounded-lg" open="">
+                          <div className=' w-1/2 '>
+                            <label for="primaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Primary contact number</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="primaryContactNo" value={edituserDetails.primaryContactNo} {...register("primaryContactNo", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.primaryContactNo?.message}</p>
+                          </div>
 
-                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Designation</summary>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Designation Name
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.firstName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                designationName: e.target.value,
-                              })
-                            }
-
-                          />
+                          <div className=' w-1/2 '>
+                            <label for="secondaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> secoundary contact number</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="secondaryContactNo" value={edituserDetails.secondaryContactNo}{...register("secondaryContactNo", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p>
+                          </div>
                         </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Designation Level
-                          </label>
+                        <div className='flex space-x-3 mr-4'  >
 
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.lastName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                designationLevel: e.target.value,
-                              })
-                            }
+                          <div className=' w-1/2 '>
+                            <label for="userStatus" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> User status</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="userStatus" value={edituserDetails.userStatus}{...register("userStatus", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.userStatus?.message}</p>
+                          </div>
 
-                          />
+                          <div className=' w-1/2 '>
+                            <label for="addressLine1" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Address line1</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="addressLine1"value={edituserDetails?.address?.addressLine1}{...register("addressLine1", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.addressLine1?.message}</p>
+                          </div>
+                        </div>
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="addressLine2" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Address line2</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="addressLine2" value={edituserDetails?.address?.addressLine2}{...register("addressLine2", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.addressLine2?.message}</p>
+                          </div>
+
+                          <div className=' w-1/2 '>
+                            <label for="city" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">City</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="city" value={edituserDetails?.address?.city}{...register("city", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.city?.message}</p>
+                          </div>
+                        </div>
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="province" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Province</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="province" value={edituserDetails?.address?.province}{...register("province", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.province?.message}</p>
+                          </div>
+
+                          <div className=' w-1/2 '>
+                            <label for="accountNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">Account number</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="accountNo"{...register("accountNo", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p>
+                          </div>
+                        </div>
+
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="bankName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank name</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankName" {...register("bankName", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.bankName?.message}</p>
+                          </div>
+
+                          <div className=' w-1/2 '>
+                            <label for="bankBranch" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank branch</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankBranch"{...register("bankBranch", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p>
+                          </div>
+                        </div>
+
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="bankAccountType" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank account type</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankAccountType" {...register("bankAccountType", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.bankAccountType?.message}</p>
+                          </div>
+
+                          <div className=' w-1/2 '>
+                            <label for="name" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">Department Name</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="name"{...register("name", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.name?.message}</p>
+                          </div>
+                        </div>
+
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="agency" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Agency</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="agency" {...register("agency", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.agency?.message}</p>
+                          </div>
+
+                          <div className=' w-1/2 '>
+                            <label for="designationName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation name</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="designationName"{...register("designationName", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.designationName?.message}</p>
+                          </div>
+                        </div>
+
+                        <div className='flex space-x-3 mr-4'  >
+
+                          <div className=' w-1/2 '>
+                            <label for="designationLevel" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation level</label>
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="designationLevel" {...register("designationLevel", { required: "This is required" })} />
+                            <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p>
+                          </div>
+
+                          {/* <div className=' w-1/2 '>
+  <label for="secondaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation name</label>
+  <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="secondaryContactNo"{...register("secondaryContactNo", { required: "This is required" })} />
+  <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p>
+</div> */}
                         </div>
 
 
                       </div>
 
 
-
-                    </details>
-                    <br/>
-                    <details className="w-full border rounded-lg" open="">
-
-                      <summary className="px-2 py-2 focus:outline-none focus-visible:ri">Department</summary>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Department Name
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.firstName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                name: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                          <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                            Agency
-                          </label>
-
-                          <input
-                            type="text"
-                            id="question"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // value={edituserDetails.lastName}
-                            onChange={(e) =>
-                              setedituserDetails({
-                                ...edituserDetails,
-                                agency: e.target.value,
-                              })
-                            }
-
-                          />
-                        </div>
+                      <div className="relative p-6 flex-auto">
 
 
                       </div>
+                      {/*footer*/}
+                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                        {/* <button
+                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          type="button"
+                          onClick={() => setShowModal(false)}
+                        >
+                          Close
+                        </button> */}
+                        <button
+                          className="bg-gray-800 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          type="submit"
+                        // onClick={notify}
+                        >
+                          Save Changes
+                        </button>
+                        <ToastContainer />
+                      </div>
 
+                    </form>
 
-
-                    </details>
-                  </div>
-
-
-                  <br />
-
-                  <button
-                    type="button"
-                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    // onClick={EditUser}
-                    onClick={() => {
-                      EditUser();
-                      setShowModal3(false);
-                    }}
-                  >
-                    Update
-                  </button>
-
-
-                </div>
-              </div>
-
-
-            </div>
+                  </div></div></div></div>
 
 
           </div>
@@ -1819,8 +1583,8 @@ export default function EmployeePage() {
         </>
       ) : null}
 
-      
-<style js>{`
+
+      <style js>{`
 .tooltip {
   position: relative;
   display: inline-block;

@@ -76,6 +76,7 @@ export default function TicketPage1() {
   const [showModal5, setShowModal5] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
+  const [status1, setStatus1] = useState("");
   const [user, setUser] = useState(null);
   const [description, setDescription] = useState('');
   const [userId, setUserId] = useState('');
@@ -296,21 +297,22 @@ export default function TicketPage1() {
   const CloseComment = () => {
     // const baseUrl = 'http://localhost:8080';
     const ticketId = selectedTicket.id;
-    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/comments`;
+    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/`;
     try {
       axios({
-        method: "post",
-        url: `http://localhost:8080/tickets/${ticketId}/close`,
+        method: "put",
+        url: `http://localhost:8080/tickets/${ticketId}/status?status=${status1}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
           "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
 
           // id: id,
           comment: comment,
+          status1: status1
           // createdDate: createdDate,
           // userId: user1.user.userId,
           // userName:  userName,
@@ -1315,13 +1317,29 @@ export default function TicketPage1() {
                     </button>
                   </div>
 
+                  <br />
+                  <div className="w-full flex items-center">
+                    <label htmlFor="status" className="block mb-2 w-32 text-sm font-medium text-gray-900 dark:text-gray-300">
+                      Status
+                    </label>
+                    <select
+                      id="type"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 ml-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white justify-end"
+                      // onClick={handleSearchStatus}
+                      onChange={(e) => setStatus1(e.target.value)}
+                    // value={status}
+                    >
+                      {/* <option value="">Status</option> */}
+                      <option value="">All</option>
+                      <option value="OPEN">OPEN</option>
+                      <option value="ACCEPTED">ACCEPTED</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="CLOSED">CLOSED</option>
+                    </select>
+                  </div>
 
-
-
-
-
-
-
+                  <br />
                   <div className="w-full">
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Comment
