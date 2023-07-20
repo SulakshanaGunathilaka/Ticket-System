@@ -1399,7 +1399,7 @@ export default function EmployeePage() {
 
                   <div className="w-full ">
 
-                    <form  onSubmit={handleSubmit(finalSubmit)}
+                    <form onSubmit={handleSubmit(finalSubmit)}
                     >
 
                       <div className="flex  flex-col justify-between p-5 mb-3 ">
@@ -1453,7 +1453,7 @@ export default function EmployeePage() {
 
                           <div className=' w-1/2 '>
                             <label for="addressLine1" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Address line1</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="addressLine1"value={edituserDetails?.address?.addressLine1}{...register("addressLine1", { required: "This is required" })} />
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="addressLine1" value={edituserDetails?.address?.addressLine1}{...register("addressLine1", { required: "This is required" })} />
                             <p className="text-red-400 text-xs"> {errors.addressLine1?.message}</p>
                           </div>
                         </div>
