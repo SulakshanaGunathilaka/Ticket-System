@@ -1399,7 +1399,7 @@ export default function EmployeePage() {
 
                   <div className="w-full ">
 
-                    <form className="border-0 rounded-lg shadow-lg relative max-w-[700px] px-3  w-full bg-white outline-none focus:outline-none " onSubmit={handleSubmit(finalSubmit)}
+                    <form  onSubmit={handleSubmit(finalSubmit)}
                     >
 
                       <div className="flex  flex-col justify-between p-5 mb-3 ">
@@ -1432,6 +1432,8 @@ export default function EmployeePage() {
                           <div className=' w-1/2 '>
                             <label for="primaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Primary contact number</label>
                             <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="primaryContactNo" value={edituserDetails.primaryContactNo} {...register("primaryContactNo", { required: "This is required" })} />
+                            {/* <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">Primary contact number</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  value={edituserDetails.primaryContactNo} {...register("primaryContactNo", { required: "This is required" })} /> */}
                             <p className="text-red-400 text-xs"> {errors.primaryContactNo?.message}</p>
                           </div>
 
