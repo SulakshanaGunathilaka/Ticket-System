@@ -24,11 +24,13 @@ export default function HomePage() {
   const user1 = AuthService.getCurrentUser();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDate1, setSelectedDate1] = useState(null);
-  const [ticketHistorylinechart,  setTicketHistory] = useState([]);
-  const [userId,  setUserId] = useState([]);
-  const[userList,setUserList]=useState([]);
+  const [ticketHistorylinechart, setTicketHistory] = useState([]);
+  const [ticketHistoryclosed, setTicketHistoryClosed] = useState([]);
+
+  const [userId, setUserId] = useState([]);
+  const [userList, setUserList] = useState([]);
   // const[userList,setUserList]=
- 
+
   const [loading, setLoading] = useState(true);
   console.log("update", user1)
 
@@ -60,7 +62,7 @@ export default function HomePage() {
     try {
       axios({
         method: "get",
-         url: `http://localhost:8080/reports/tickets/created?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
+        url: `http://localhost:8080/reports/tickets/created?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -68,8 +70,8 @@ export default function HomePage() {
           "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
-          selectedDate1:selectedDate1,
-          selectedDate1:selectedDate1,
+          selectedDate1: selectedDate1,
+          selectedDate1: selectedDate1,
           // id: id,
           // comment: comment,
           // status1: status1
@@ -101,6 +103,54 @@ export default function HomePage() {
       setLoading(false);
     }
   };
+
+  const ticketHistoryClosed = () => {
+    // const userId = user1?.user?.userId;
+
+    try {
+      axios({
+        method: "get",
+        url: `http://localhost:8080/reports/tickets/closed?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
+        },
+        data: {
+          selectedDate1: selectedDate1,
+          selectedDate1: selectedDate1,
+          // id: id,
+          // comment: comment,
+          // status1: status1
+          // createdDate: createdDate,
+          // userId: user1.user.userId,
+          // userName:  userName,
+
+
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("response", res);
+        if (res.status == 200) {
+
+          // CommonToasts.basicToast("Successfully Comment Added");
+
+          setTicketHistoryClosed(res.data.body.items)
+
+          // GetTickets()
+
+
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    } catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+  };
   const handleDateChange = (date) => {
     if (date) {
       const isoFormattedDate = moment(date).format("YYYY/MM/DD");
@@ -118,30 +168,48 @@ export default function HomePage() {
     }
   };
 
-console.log("history Line chart",ticketHistorylinechart)
+  console.log("history Line chart", ticketHistorylinechart)
 
-// useEffect(() => {
-//   ticketHistory();
-// }, );
+  // useEffect(() => {
+  //   ticketHistory();
+  // }, );
 
   const data = {
-    labels:ticketHistorylinechart.map((data) => data.date), 
+    labels: ticketHistorylinechart.map((data) => data.date),
+    // datasets: 
     datasets: [
       {
-        label: "Ticket",
+        label: 'Open Ticket',
         data: ticketHistorylinechart.map((data) => data.value),
-        borderColor: "rgba(16, 185, 129, 1)",
-        backgroundColor: "rgba(16, 185, 129, 0.2)",
-        borderWidth: 1,
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Closed Ticket',
+        data: ticketHistoryclosed.map((data) => data.value),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
     ],
+    // [
+    //   {
+    //     label: "Ticket",
+    //     data: ticketHistorylinechart.map((data) => data.value),
+    //     borderColor: "rgba(16, 185, 129, 1)",
+    //     backgroundColor: "rgba(16, 185, 129, 0.2)",
+    //     borderWidth: 1,
+    //   },
+    // ],
   };
   const options1 = {
     responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Ticket History',
       },
     },
   };
@@ -402,59 +470,63 @@ console.log("history Line chart",ticketHistorylinechart)
                 <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg h-auto">
                   <div class="px-6 py-5 font-semibold border-b border-gray-100">Ticket History</div>
                   <div className="container">
-      <div className="datepicker-wrapper">
-        <DatePicker
-          selected={selectedDate ? moment(selectedDate, "YYYY-MM-DD").toDate() : null}
-          onChange={handleDateChange}
-          dateFormat="yyyy/MM/dd"
-          placeholderText="Select a date"
-        />
-      </div>
+                    <div className="datepicker-wrapper">
+                      <DatePicker
+                        selected={selectedDate ? moment(selectedDate, "YYYY-MM-DD").toDate() : null}
+                        onChange={handleDateChange}
+                        dateFormat="yyyy/MM/dd"
+                        placeholderText="Select a date"
+                      />
+                    </div>
 
-      <div className="datepicker-wrapper">
-        <DatePicker
-          selected={selectedDate1 ? moment(selectedDate1, "YYYY-MM-DD").toDate() : null}
-          onChange={handleDateChange1}
-          dateFormat="yyyy/MM/dd"
-          placeholderText="Select a date"
-        />
-      </div>
+                    <div className="datepicker-wrapper">
+                      <DatePicker
+                        selected={selectedDate1 ? moment(selectedDate1, "YYYY-MM-DD").toDate() : null}
+                        onChange={handleDateChange1}
+                        dateFormat="yyyy/MM/dd"
+                        placeholderText="Select a date"
+                      />
+                    </div>
 
-      <select
-        id="type"
-        className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-        onChange={(e) => setUserId(e.target.value)}
-      >
-        <option value="">Select...</option>
-        {userList?.map((user) => (
-          <option key={user.id} value={user.id}>
-            {user.firstName} {user.lastName}
-          </option>
-        ))}
-      </select>
+                    <select
+                      id="type"
+                      className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setUserId(e.target.value)}
+                    >
+                      <option value="">Select...</option>
+                      {userList?.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.firstName} {user.lastName}
+                        </option>
+                      ))}
+                    </select>
 
-      <button onClick={ticketHistory}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="md:w-6 h-6 mt-1 mx-1"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-          />
-        </svg>
-      </button>
-      </div>
+                    <button
+                      onClick={() => {
+                        ticketHistory();
+                        ticketHistoryClosed();
+                      }}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="md:w-6 h-6 mt-1 mx-1"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
 
-      <div className="p-4 flex-grow">
-        <Line data={data} options={options1} />
-      </div>
-    </div>
+                  <div className="p-4 flex-grow">
+                    <Line data={data} options={options1} />
+                  </div>
+                </div>
                 <div class=" row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>
                   <div class=" flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
                     <span>users by average open tickets</span>
