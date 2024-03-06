@@ -115,7 +115,7 @@ export default function TicketPage1() {
       description: "",
       title: "",
       sendEmail: true,
-      recipient: "sulakshanag@mexxar.com",
+      recipient: "",
 
 
     }
@@ -153,7 +153,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "sulakshanag@mexxar.com";
+    const recipient = "randikal@mexxar.com";
     try {
       axios({
         method: "post",
@@ -203,11 +203,11 @@ export default function TicketPage1() {
 
   const EditTicket = (e) => {
 
-
+    const ticketId =selectedTicket2.id;
     try {
       axios({
         method: "put",
-        url: 'http://localhost:8080/tickets',
+        url: `http://localhost:8080/tickets/${ticketId}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -217,8 +217,6 @@ export default function TicketPage1() {
         data: {
           userId: selectedTicket2.user.id,
           description: selectedTicket2.description,
-          status: selectedTicket2.status,
-          id: selectedTicket2.id,
           title: selectedTicket2.title,
         },
         mode: "cors",
@@ -226,7 +224,7 @@ export default function TicketPage1() {
         console.log("response", res);
         if (res.status == 200) {
 
-          CommonToasts.basicToast("Successfully Ticket Added");
+          CommonToasts.basicToast("Successfully Updated Ticket");
           setShowModal1(false);
           console.log(res)
           GetTickets()
@@ -1145,6 +1143,7 @@ export default function TicketPage1() {
                       type="text"
                       id="question"
                       className="w-full p-2 border border-gray-300 rounded-md"
+                      disabled="true"
                       value={selectedTicket2?.id}
                       onChange={(e) =>
                         setSelectedTicket2({
@@ -1177,47 +1176,20 @@ export default function TicketPage1() {
                   </div>
                   <div class="px-6">
                     <h1>Status</h1>
-                    {/* <p class="text-gray-700 text-base" className="break">
-                      {selectedTicket.status}
-                    </p> */}
-
-                    <select
-                      id="type"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      // value={selectedTicket2.status}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          status: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="DEFAULT" >{selectedTicket2.status}</option>
-                      <option value="OPEN">OPEN</option>
-                      <option value="ACCEPTED">ACCEPTED</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="COMPLETED">COMPLETED</option>
-                      <option value="ACCEPTED">ACCEPTED</option>
-                    </select>
-                    {/* <input
+                    <input
                       type="text"
-                      id="question"
+                      id="status"
                       className="w-full p-2 border border-gray-300 rounded-md"
-                      value={selectedTicket2.status}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          status: e.target.value,
-                        })
-                      }
+                      disabled="true"
+                      value={selectedTicket2?.status}
+                      
 
-                    /> */}
+                    />
                   </div>
+                  
                   <div class="px-6 py-4">
                     <h1>Title</h1>
-                    {/* <p class="text-gray-700 text-base" className="break">
-                      {selectedTicket.title}
-                    </p> */}
+                    
                     <input
                       type="text"
                       id="question"
@@ -1246,13 +1218,6 @@ export default function TicketPage1() {
 
 
                     </div>
-                    {/* <button
-                    type="button"
-                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                    // onClick={EditFaq}
-                  >
-                    Add
-                  </button> */}
 
 
                   </div>
