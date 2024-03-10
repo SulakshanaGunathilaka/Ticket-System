@@ -7,7 +7,10 @@ const GET_ALL_LEAVE_DETAILS_URL = BASE_URL + "/leaveApplication/";
 const GET_ALL_TICKETS_URL  = BASE_URL + "/tickets";
 
 const GET_TICKETS_WITH_FILTER_URL  = BASE_URL + "/tickets/filter?";
-const GET_TICKETS_BY_USER=BASE_URL+"tickets/user/";
+const GET_TICKETS_BY_USER=BASE_URL+"/tickets/user/";
+const CREATE_TICKET=BASE_URL+"/tickets/dto";
+const UPDATE_TICKET=BASE_URL+"/tickets/";
+const TICKET_BASE_URL = BASE_URL+"/tickets/";
 
 
 
@@ -19,7 +22,10 @@ const urls = {
     VIEW_USER,
     GET_ALL_TICKETS_URL,
     GET_TICKETS_WITH_FILTER_URL,
-    GET_TICKETS_BY_USER
+    GET_TICKETS_BY_USER,
+    CREATE_TICKET,
+    UPDATE_TICKET,
+    TICKET_BASE_URL
     
   }
 
