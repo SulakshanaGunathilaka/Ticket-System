@@ -3,12 +3,7 @@ import CommonSpinners from "../common/Spinners";
 import CommonToasts from "../common/Toasts";
 import TitleText from "../components/TitleText";
 import axios from "axios";
-import Badge from "react-badges";
-import SearchBar from "../components/SearchBar";
-import ModalLable from "../components/ModalLable";
 import AuthService from "../services/AuthenticationService";
-import { Link } from "react-router-dom";
-// import { useHistory } from 'react-router-dom';
 import { Fragment } from "react";
 // import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -40,6 +35,7 @@ import UserService from "../services/UserService";
 import Ticket from "./Ticket";
 import { Tooltip } from 'react-tippy';
 import 'react-tippy/dist/tippy.css';
+import urls from "../common/Urls";
 
 
 
@@ -123,6 +119,8 @@ export default function TicketPage1() {
   });
 
   const user1 = AuthService.getCurrentUser();
+
+  console.log("current user details : "+ user1.user.userId)
 
   useEffect(() => {
     console.log("initial load");
@@ -338,17 +336,43 @@ export default function TicketPage1() {
   };
 
 
+  const AllTicketBasedOnUser = async () => {
+    const userId = user1.user.userId;
+    let url;
+    let usersRole = user1.user.roles[0].name;
+    if (usersRole === 'EMPLOYEE'){
+      url = urls.GET_TICKETS_BY_USER+userId;
+    }else{
+      url = urls.GET_ALL_TICKETS_URL;
+    }
+    const response = await axios.get(url,{
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        "Authorization": `Bearer ` + user1.jwt,
+  }
+    });
+    console.log(response.data);
+    setTickets(response.data.body);
+
+  }
 
 
 
 
   const GetTickets = async () => {
+    const userId = user1.user.userId;
+    console.log("user id - "+ userId);
     try {
+
+      let usersRole = user1.user.roles[0].name;
+
+      if (usersRole != 'EMPLOYEE'){
       const response = await axios.get(`http://localhost:8080/tickets/filter`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          Authorization: `Bearer ${user1.jwt}`,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         params: {
           q: searchQuery,
@@ -359,6 +383,7 @@ export default function TicketPage1() {
 
       console.log(response.data);
       setTickets(response.data.body.content);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -366,7 +391,7 @@ export default function TicketPage1() {
 
   useEffect(() => {
 
-    GetTickets();
+    AllTicketBasedOnUser();
 
 
   }, []);
@@ -472,7 +497,7 @@ export default function TicketPage1() {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          Authorization: `Bearer ${user1.jwt}`,
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: null,
         mode: "cors",
@@ -507,20 +532,23 @@ export default function TicketPage1() {
 
 
   const getTicketpage = (page) => {
+    console.log("logged user : "+user1.user.userId);
+    const userId= user1.user.userId;
     axios({
       method: 'get',
-      url: `http://localhost:8080/tickets/page?page=${page}&offset=10`,
+      url:`http://localhost:8080/tickets/user/${userId}`,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        Authorization: `Bearer ${user1.jwt}`,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Authorization": `Bearer ` + user1.jwt,
       },
       mode: 'cors',
     })
       .then((res) => {
-        console.log('response', res);
+        console.log('response - get tickets by user', res);
         if (res.status === 200) {
-          setTickets(res.data.content);
+          setTickets(res.data.body);
           setTotalPages(res.data.totalPages);
         }
       })
