@@ -70,8 +70,8 @@ export default function HomePage() {
           "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
-          selectedDate1: selectedDate1,
-          selectedDate1: selectedDate1,
+          // selectedDate1: selectedDate1,
+          // selectedDate1: selectedDate1,
           // id: id,
           // comment: comment,
           // status1: status1
@@ -118,8 +118,8 @@ export default function HomePage() {
           "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
-          selectedDate1: selectedDate1,
-          selectedDate1: selectedDate1,
+          // selectedDate1: selectedDate1,
+          // selectedDate1: selectedDate1,
           // id: id,
           // comment: comment,
           // status1: status1
