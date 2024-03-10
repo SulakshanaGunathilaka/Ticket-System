@@ -155,7 +155,7 @@ export default function TicketPage1() {
     try {
       axios({
         method: "post",
-        url: 'http://localhost:8080/tickets/dto',
+        url: urls.CREATE_TICKET,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -193,19 +193,13 @@ export default function TicketPage1() {
     }
   };
 
-
-
-
-
-
-
   const EditTicket = (e) => {
 
     const ticketId =selectedTicket2.id;
     try {
       axios({
         method: "put",
-        url: `http://localhost:8080/tickets/${ticketId}`,
+        url: urls.TICKET_BASE_URL+ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -241,13 +235,11 @@ export default function TicketPage1() {
 
 
   const CreateComment = () => {
-    // const baseUrl = 'http://localhost:8080';
     const ticketId = selectedTicket.id;
-    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/comments`;
     try {
       axios({
         method: "post",
-        url: `http://localhost:8080/tickets/${ticketId}/comments`,
+        url: urls.TICKET_BASE_URL+ticketId+'/comments',
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -275,7 +267,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Comment Added");
-          GetTickets()
+          AllTicketBasedOnUser();
 
 
 
@@ -291,13 +283,11 @@ export default function TicketPage1() {
   };
 
   const CloseComment = () => {
-    // const baseUrl = 'http://localhost:8080';
     const ticketId = selectedTicket.id;
-    const commentsUrl = `http://localhost:8080/tickets/${ticketId}/`;
     try {
       axios({
         method: "put",
-        url: `http://localhost:8080/tickets/${ticketId}/status?status=${status1}`,
+        url: urls.TICKET_BASE_URL+ticketId+'/status?status='+status1,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -321,7 +311,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Comment Added");
-          GetTickets()
+          AllTicketBasedOnUser();
 
 
         }
@@ -345,6 +335,7 @@ export default function TicketPage1() {
     }else{
       url = urls.GET_ALL_TICKETS_URL;
     }
+    console.log('This is the url = '+url)
     const response = await axios.get(url,{
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -368,7 +359,7 @@ export default function TicketPage1() {
       let usersRole = user1.user.roles[0].name;
 
       if (usersRole != 'EMPLOYEE'){
-      const response = await axios.get(`http://localhost:8080/tickets/filter`, {
+      const response = await axios.get(urls.GET_TICKETS_WITH_FILTER_URL, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -420,7 +411,7 @@ export default function TicketPage1() {
       // const tickets = { id: ticketId };
       axios({
         method: "get",
-        url: 'http://localhost:8080/tickets/' + id,
+        url: urls.TICKET_BASE_URL + id,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -483,16 +474,10 @@ export default function TicketPage1() {
 
   const TicketDelete = (ticketId) => {
     setLoading(true);
-
-
-
-
-
-
     try {
       axios({
         method: "delete",
-        url: `http://localhost:8080/tickets/${ticketId}`,
+        url: urls.TICKET_BASE_URL+ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -536,7 +521,7 @@ export default function TicketPage1() {
     const userId= user1.user.userId;
     axios({
       method: 'get',
-      url:`http://localhost:8080/tickets/user/${userId}`,
+      url: urls.GET_TICKETS_BY_USER+userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -546,7 +531,6 @@ export default function TicketPage1() {
       mode: 'cors',
     })
       .then((res) => {
-        console.log('response - get tickets by user', res);
         if (res.status === 200) {
           setTickets(res.data.body);
           setTotalPages(res.data.totalPages);
@@ -568,15 +552,6 @@ export default function TicketPage1() {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   console.log("test update tic", selectedTicket2)
-
-
-
-
-
-
-
-
-
 
 
   return (
