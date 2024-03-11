@@ -609,7 +609,7 @@ export default function TicketPage1() {
                 <option value="CLOSED">CLOSED</option>
               </select>
 
-
+              {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
               <select
                 id="type"
                 className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
@@ -627,6 +627,7 @@ export default function TicketPage1() {
                 ))}
 
               </select>
+                  ):null}
 
 
 
