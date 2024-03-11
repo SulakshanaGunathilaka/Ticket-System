@@ -152,7 +152,7 @@ export default function TicketPage1() {
 
   const CreatTicket = (e) => {
     const sendEmail = true;
-    const recipient = "randikal@mexxar.com";
+    const recipient = user1.user.email;
     try {
       axios({
         method: "post",
