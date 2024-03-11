@@ -81,6 +81,7 @@ export default function TicketPage1() {
   const [title, setTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
+  const [selectedUserId,setSelectedUserId] =useState('');
 
   const [selectedTicket2, setSelectedTicket2] = useState({
     status: '',
@@ -179,7 +180,7 @@ export default function TicketPage1() {
 
           CommonToasts.basicToast("Successfully Ticket Added");
           // setShowModal1(false);
-          GetTickets();
+          AllTicketBasedOnUser();
 
 
         }
@@ -219,7 +220,7 @@ export default function TicketPage1() {
           CommonToasts.basicToast("Successfully Updated Ticket");
           setShowModal1(false);
           console.log(res)
-          GetTickets()
+          AllTicketBasedOnUser()
 
         }
       }).catch((error) => {
@@ -352,13 +353,18 @@ export default function TicketPage1() {
 
 
   const GetTickets = async () => {
-    const userId = user1.user.userId;
-    console.log("user id - "+ userId);
+    // const userId = user1.user.userId;
+    let userId;
+    let usersRole = user1.user.roles[0].name;
+    if (usersRole !== 'EMPLOYEE'){
+      userId = selectedUserId;
+    }else{
+      userId = user1.user.userId;
+    }
+
+    console.log("user id - "+ selectedUserId);
     try {
 
-      let usersRole = user1.user.roles[0].name;
-
-      if (usersRole != 'EMPLOYEE'){
       const response = await axios.get(urls.GET_TICKETS_WITH_FILTER_URL, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -374,7 +380,6 @@ export default function TicketPage1() {
 
       console.log(response.data);
       setTickets(response.data.body.content);
-      }
     } catch (error) {
       console.error(error);
     }
@@ -445,6 +450,11 @@ export default function TicketPage1() {
     setShowModal2(true);
 
   };
+
+  const handleViewForSetSelectedUser = (data) => {
+    setSelectedUserId(data);
+    console.log("selected User - "+ data);
+  }
 
   const handleView6 = (data) => {
     // ViewTicketDetails (data)
@@ -614,7 +624,7 @@ export default function TicketPage1() {
                 id="type"
                 className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 // onClick={handleSearchStatus}
-                onChange={(e) => setUserId(e.target.value)}
+                onChange={(e) => handleViewForSetSelectedUser(e.target.value)}
               // value={tickets?.user?.id}
               >
                 <option value="">Select...</option>
