@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import AuthService from "../services/AuthenticationService";
 import CommonToasts from "../common/Toasts";
 import urls from "../common/Urls";
+import { useNavigate } from 'react-router-dom';
 
 function CreateUser2() {
   const user1 = AuthService.getCurrentUser();
@@ -47,7 +48,7 @@ function CreateUser2() {
 
   const { register, handleSubmit, formState: { errors }, } = useForm({});
 
-
+  const navigate = useNavigate();
 
   const inputHandle = (e) => {
     setState({
@@ -157,6 +158,7 @@ function CreateUser2() {
 
       if (res.status == 200) {
         CommonToasts.basicToast("User Created Successfully");
+        navigate("/employees")
       }else {
         CommonToasts.errorToast("Error while creating user");
       }
