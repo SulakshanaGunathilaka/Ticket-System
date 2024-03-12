@@ -9,6 +9,8 @@ import TitleText from "../components/TitleText";
 import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import AuthService from "../services/AuthenticationService";
+import CommonToasts from "../common/Toasts";
+import urls from "../common/Urls";
 
 function CreateUser2() {
   const user1 = AuthService.getCurrentUser();
@@ -41,7 +43,7 @@ function CreateUser2() {
     // designationLevel: "",
 
   });
-
+  // const user1 = AuthService.getCurrentUser();
 
   const { register, handleSubmit, formState: { errors }, } = useForm({});
 
@@ -139,18 +141,26 @@ function CreateUser2() {
     };
     console.log(state);
     axios({
+
       method: "post",
-      url: "http://localhost:8080/users/dto",
+      url: urls.CREATE_USER,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        Authorization: `Bearer ` + user1.jwt,
+        "Authorization": `Bearer ` + user1.jwt,
       },
       data: submitValues,
 
       mode: "cors",
     }).then((res) => {
       console.log("response", res);
+
+      if (res.status == 200) {
+        CommonToasts.basicToast("User Created Successfully");
+      }else {
+        CommonToasts.errorToast("Error while creating user");
+      }
+
       // console.log("final " + state);
       setState(res.data.body);
     });
@@ -162,7 +172,7 @@ function CreateUser2() {
       state.province
 
     ) {
-      toast.success("Form submit success");
+      // toast.success("Form submit success");
     } else {
       toast.error("Please fillup all input field");
     }
