@@ -12,6 +12,8 @@ const CREATE_TICKET=BASE_URL+"/tickets/dto";
 const UPDATE_TICKET=BASE_URL+"/tickets/";
 const TICKET_BASE_URL = BASE_URL+"/tickets/";
 
+const CREATE_USER = BASE_URL+"/users/dto"
+
 
 
 
@@ -25,8 +27,8 @@ const urls = {
     GET_TICKETS_BY_USER,
     CREATE_TICKET,
     UPDATE_TICKET,
-    TICKET_BASE_URL
-    
+    TICKET_BASE_URL,
+    CREATE_USER
   }
 
   export default urls;
