@@ -179,7 +179,7 @@ export default function TicketPage1() {
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Ticket Added");
-          // setShowModal1(false);
+          setShowModal1(false);
           AllTicketBasedOnUser();
 
 
