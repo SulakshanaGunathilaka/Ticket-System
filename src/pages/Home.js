@@ -13,6 +13,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from "moment";
 import UserService from "../services/UserService";
+import urls from "../common/Urls";
 // import './DatePickerCustom.css'; 
 //var CanvasJSReact = require('@canvasjs/react-charts');
 
@@ -29,6 +30,7 @@ export default function HomePage() {
 
   const [userId, setUserId] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [dashboardDetail, setDashboardDetails] = useState([])
   // const[userList,setUserList]=
 
   const [loading, setLoading] = useState(true);
@@ -46,15 +48,67 @@ export default function HomePage() {
       indexLabel: "{label}: {y}%",
       startAngle: -90,
       dataPoints: [
-        { y: 20, label: "Completed" },
-        { y: 24, label: "Closed Tickets" },
-        { y: 20, label: "In Progress" },
-        { y: 14, label: "Open Tickets" },
-        { y: 12, label: "Accepted" },
+        { y: dashboardDetail.completedTicketCount , label: "Completed" },
+        { y: dashboardDetail.closedTicketCount, label: "Closed Tickets" },
+        { y: dashboardDetail.inProgressTicketCount, label: "In Progress" },
+        { y: dashboardDetail.openTicketCount, label: "Open Tickets" },
+        { y: dashboardDetail.acceptedTicketCount, label: "Accepted" },
 
       ]
     }]
   }
+
+  // get Dashboard details
+
+  const getDashboardDetails = () => {
+
+    try {
+      setLoading(true);
+      const userRole = user1.user.roles[0].name;
+      const userId = user1.user.userId;
+
+
+      let url;
+
+      if (userRole === "EMPLOYEE"){
+        url = urls.GET_USER_DASHBOARD+userId;
+      }else{
+        url = urls.GET_ADMIN_DASHBOARD;
+      }
+
+      axios({
+        method: "GET",
+        url: url,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
+        },
+        mode: "cors",
+      }).then((res) => {
+        console.log("Dashboard Response", res);
+        if (res.status == 200) {
+
+          // CommonToasts.basicToast("Successfully Comment Added");
+          console.log(res.data.body);
+          setDashboardDetails(res.data.body)
+
+          // GetTickets()
+          setLoading(false);
+
+        }
+      }).catch((error) => {
+        CommonToasts.errorToast(error.message);
+        setLoading(false);
+      });
+    }catch (e) {
+      CommonToasts.errorToast(e.message);
+      setLoading(false);
+    }
+
+  };
+
 
   const ticketHistory = () => {
     // const userId = user1?.user?.userId;
@@ -214,6 +268,10 @@ export default function HomePage() {
     },
   };
 
+  useEffect(()=>{
+    getDashboardDetails();
+  },[]);
+
   useEffect(() => {
     console.log("initial load");
 
@@ -291,7 +349,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">62</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.userCount }</span>
                     <span class="block text-gray-500">Users</span>
                   </div>
                 </div>
@@ -302,7 +360,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">68</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.openTicketCount }</span>
                     <span class="block text-gray-500">Open Tickets</span>
                   </div>
                 </div>
@@ -313,7 +371,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="inline-block text-2xl font-bold">9</span>
+                    <span class="inline-block text-2xl font-bold">{ dashboardDetail.closedTicketCount }</span>
                     {/* <span class="inline-block text-xl text-gray-500 font-semibold">(14%)</span> */}
                     <span class="block text-gray-500">Closed Tickets</span>
                   </div>
@@ -325,14 +383,14 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">83</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.inProgressTicketCount }</span>
                     <span class="block text-gray-500">In Progress</span>
                   </div>
                 </div>
               </section>
               <section class=" grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6 ">
                 <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg h-auto">
-                  <div class="px-6 py-5 font-semibold border-b border-gray-100">The number of applied and left tickets per month</div>
+                  {/*<div class="px-6 py-5 font-semibold border-b border-gray-100">The number of applied and left tickets per month</div>*/}
                   <div class="p-4 flex-grow ">
                     <CanvasJSChart options={options}
                     />
@@ -340,63 +398,63 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div class=" row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>
-                  <div class=" flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
-                    <span>users by average open tickets</span>
+                {/*<div class=" row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>*/}
+                {/*  <div class=" flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">*/}
+                {/*    <span>users by average open tickets</span>*/}
 
 
-                  </div>
-                  <div class="overflow-y-auto" style={{ maxHeight: '400px' }} >
-                    <ul class="p-6 space-y-6">
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                {/*  </div>*/}
+                {/*  <div class="overflow-y-auto" style={{ maxHeight: '400px' }} >*/}
+                {/*    <ul class="p-6 space-y-6">*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">1</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">1</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">2</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">2</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">3</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">3</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">4</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">4</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">5</span>
-                      </li>
-
-
-
-                    </ul>
-                  </div>
-                </div>
+                      {/*  </div>*/}
+                      {/*  <span class="text-gray-600">Dhananjali Herath</span>*/}
+                      {/*  <span class="ml-auto font-semibold">5</span>*/}
+                      {/*</li>*/}
 
 
-                <div class="flex flex-col row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>
-                  <div class="px-6 py-5 font-semibold border-b border-gray-100">Tickets in progress</div>
-                  <div class="p-4 flex-grow">
-                    <div class="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>
-                  </div>
-                </div>
+
+                {/*    </ul>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+
+
+                {/*<div class="flex flex-col row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>*/}
+                {/*  <div class="px-6 py-5 font-semibold border-b border-gray-100">Tickets in progress</div>*/}
+                {/*  <div class="p-4 flex-grow">*/}
+                {/*    <div class="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
 
 
 
@@ -427,7 +485,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">62</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.userCount }</span>
                     <span class="block text-gray-500">Users</span>
                   </div>
                 </div>
@@ -438,7 +496,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">68</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.openTicketCount }</span>
                     <span class="block text-gray-500">Open Tickets</span>
                   </div>
                 </div>
@@ -449,7 +507,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="inline-block text-2xl font-bold">9</span>
+                    <span class="inline-block text-2xl font-bold">{ dashboardDetail.closedTicketCount }</span>
                     {/* <span class="inline-block text-xl text-gray-500 font-semibold">(14%)</span> */}
                     <span class="block text-gray-500">Closed Tickets</span>
                   </div>
@@ -461,134 +519,134 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <span class="block text-2xl font-bold">83</span>
+                    <span class="block text-2xl font-bold">{ dashboardDetail.inProgressTicketCount }</span>
                     <span class="block text-gray-500">In Progress</span>
                   </div>
                 </div>
               </section>
-              <section class=" grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6 ">
-                <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg h-auto">
-                  <div class="px-6 py-5 font-semibold border-b border-gray-100">Ticket History</div>
-                  <div className="container">
-                    <div className="datepicker-wrapper">
-                      <DatePicker
-                        selected={selectedDate ? moment(selectedDate, "YYYY-MM-DD").toDate() : null}
-                        onChange={handleDateChange}
-                        dateFormat="yyyy/MM/dd"
-                        placeholderText="Select a date"
-                      />
-                    </div>
+              {/*<section class=" grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-6 ">*/}
+              {/*  <div class="flex flex-col md:col-span-2 md:row-span-2 bg-white shadow rounded-lg h-auto">*/}
+              {/*    <div class="px-6 py-5 font-semibold border-b border-gray-100">Ticket History</div>*/}
+              {/*    <div className="container">*/}
+                    {/*<div className="datepicker-wrapper">*/}
+                    {/*  <DatePicker*/}
+                    {/*    selected={selectedDate ? moment(selectedDate, "YYYY-MM-DD").toDate() : null}*/}
+                    {/*    onChange={handleDateChange}*/}
+                    {/*    dateFormat="yyyy/MM/dd"*/}
+                    {/*    placeholderText="Select a date"*/}
+                    {/*  />*/}
+                    {/*</div>*/}
 
-                    <div className="datepicker-wrapper">
-                      <DatePicker
-                        selected={selectedDate1 ? moment(selectedDate1, "YYYY-MM-DD").toDate() : null}
-                        onChange={handleDateChange1}
-                        dateFormat="yyyy/MM/dd"
-                        placeholderText="Select a date"
-                      />
-                    </div>
+                    {/*<div className="datepicker-wrapper">*/}
+                    {/*  <DatePicker*/}
+                    {/*    selected={selectedDate1 ? moment(selectedDate1, "YYYY-MM-DD").toDate() : null}*/}
+                    {/*    onChange={handleDateChange1}*/}
+                    {/*    dateFormat="yyyy/MM/dd"*/}
+                    {/*    placeholderText="Select a date"*/}
+                    {/*  />*/}
+                    {/*</div>*/}
 
-                    <select
-                      id="type"
-                      className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      onChange={(e) => setUserId(e.target.value)}
-                    >
-                      <option value="">Select...</option>
-                      {userList?.map((user) => (
-                        <option key={user.id} value={user.id}>
-                          {user.firstName} {user.lastName}
-                        </option>
-                      ))}
-                    </select>
+                    {/*<select*/}
+                    {/*  id="type"*/}
+                    {/*  className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"*/}
+                    {/*  onChange={(e) => setUserId(e.target.value)}*/}
+                    {/*>*/}
+                    {/*  <option value="">Select...</option>*/}
+                    {/*  {userList?.map((user) => (*/}
+                    {/*    <option key={user.id} value={user.id}>*/}
+                    {/*      {user.firstName} {user.lastName}*/}
+                    {/*    </option>*/}
+                    {/*  ))}*/}
+                    {/*</select>*/}
 
-                    <button
-                      onClick={() => {
-                        ticketHistory();
-                        ticketHistoryClosed();
-                      }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="md:w-6 h-6 mt-1 mx-1"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+                    {/*<button*/}
+                    {/*  onClick={() => {*/}
+                    {/*    ticketHistory();*/}
+                    {/*    ticketHistoryClosed();*/}
+                    {/*  }}>*/}
+                    {/*  <svg*/}
+                    {/*    xmlns="http://www.w3.org/2000/svg"*/}
+                    {/*    fill="none"*/}
+                    {/*    viewBox="0 0 24 24"*/}
+                    {/*    strokeWidth="1.5"*/}
+                    {/*    stroke="currentColor"*/}
+                    {/*    className="md:w-6 h-6 mt-1 mx-1"*/}
+                    {/*  >*/}
+                    {/*    <path*/}
+                    {/*      strokeLinecap="round"*/}
+                    {/*      strokeLinejoin="round"*/}
+                    {/*      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"*/}
+                    {/*    />*/}
+                    {/*  </svg>*/}
+                    {/*</button>*/}
+                  {/*</div>*/}
 
-                  <div className="p-4 flex-grow">
-                    <Line data={data} options={options1} />
-                  </div>
-                </div>
-                <div class=" row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>
-                  <div class=" flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
-                    <span>users by average open tickets</span>
-
-
-                  </div>
-                  <div class="overflow-y-auto" style={{ maxHeight: '400px' }} >
-                    <ul class="p-6 space-y-6">
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
-
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">1</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
-
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">2</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
-
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">3</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
-
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">4</span>
-                      </li>
-                      <li class="flex items-center">
-                        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">
-
-                        </div>
-                        <span class="text-gray-600">Dhananjali Herath</span>
-                        <span class="ml-auto font-semibold">5</span>
-                      </li>
+                  {/*<div className="p-4 flex-grow">*/}
+                  {/*  <Line data={data} options={options1} />*/}
+                  {/*</div>*/}
+                {/*</div>*/}
+                {/*<div class=" row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>*/}
+                {/*  <div class=" flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">*/}
+                {/*    <span>users by average open tickets</span>*/}
 
 
+                {/*  </div>*/}
+                {/*  <div class="overflow-y-auto" style={{ maxHeight: '400px' }} >*/}
+                {/*    <ul class="p-6 space-y-6">*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                    </ul>
-                  </div>
-                </div>
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">1</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">2</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
 
-                <div class="flex flex-col row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>
-                  <div class="px-6 py-5 font-semibold border-b border-gray-100">Tickets in progress</div>
-                  <div class="p-4 flex-grow">
-                    <div class="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>
-                  </div>
-                </div>
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">3</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
+
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">4</span>*/}
+                {/*      </li>*/}
+                {/*      <li class="flex items-center">*/}
+                {/*        <div class="h-10 w-10 mr-3 bg-gray-100 rounded-full overflow-hidden">*/}
+
+                {/*        </div>*/}
+                {/*        <span class="text-gray-600">Dhananjali Herath</span>*/}
+                {/*        <span class="ml-auto font-semibold">5</span>*/}
+                {/*      </li>*/}
 
 
 
+                {/*    </ul>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
 
-              </section>
+
+                {/*<div class="flex flex-col row-span-3 bg-white shadow rounded-lg" style={{ maxHeight: '500px' }}>*/}
+                {/*  <div class="px-6 py-5 font-semibold border-b border-gray-100">Tickets in progress</div>*/}
+                {/*  <div class="p-4 flex-grow">*/}
+                {/*    <div class="flex items-center justify-center h-full px-4 py-24 text-gray-400 text-3xl font-semibold bg-gray-100 border-2 border-gray-200 border-dashed rounded-md">Chart</div>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+
+
+
+
+              {/*</section>*/}
 
             </main>
           </div>

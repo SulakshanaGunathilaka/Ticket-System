@@ -12,7 +12,10 @@ const CREATE_TICKET=BASE_URL+"/tickets/dto";
 const UPDATE_TICKET=BASE_URL+"/tickets/";
 const TICKET_BASE_URL = BASE_URL+"/tickets/";
 
-const CREATE_USER = BASE_URL+"/users/dto"
+const CREATE_USER = BASE_URL+"/users/dto";
+
+const GET_ADMIN_DASHBOARD= BASE_URL+"/dashboard/admin";
+const GET_USER_DASHBOARD =BASE_URL+"/dashboard/user/";
 
 
 
@@ -28,7 +31,9 @@ const urls = {
     CREATE_TICKET,
     UPDATE_TICKET,
     TICKET_BASE_URL,
-    CREATE_USER
+    CREATE_USER,
+    GET_ADMIN_DASHBOARD,
+    GET_USER_DASHBOARD
   }
 
   export default urls;
