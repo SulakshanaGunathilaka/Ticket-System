@@ -1261,18 +1261,45 @@ export default function TicketPage1() {
 
                     />
                   </div>
-                  <div class="px-6">
-                    <h1>Status</h1>
-                    <input
-                      type="text"
-                      id="status"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      disabled="true"
-                      value={selectedTicket2?.status}
-                      
 
-                    />
-                  </div>
+
+                  {user1.user.roles[0].name === "ADMIN" ? (
+                      <div className="px-6 py-4">
+                        <h1>Status</h1>
+                        <select
+                            id="type"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            // onClick={handleSearchStatus}
+                            onChange={(e) => setSelectedTicket2({
+                              ...selectedTicket2,
+                              status: e.target.value,
+                            })}
+                            // value={status}
+                        >
+                          {/* <option value="">Status</option> */}
+                          <option value="">All</option>
+                          <option value="OPEN">OPEN</option>
+                          <option value="ACCEPTED">ACCEPTED</option>
+                          <option value="IN_PROGRESS">IN_PROGRESS</option>
+                          <option value="COMPLETED">COMPLETED</option>
+                          <option value="CLOSED">CLOSED</option>
+                        </select>
+                      </div>
+                  ):(
+                          <div class="px-6">
+                        <h1>Status</h1>
+                        <input
+                            type="text"
+                            id="status"
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                            disabled="true"
+                            value={selectedTicket2?.status}
+
+
+                        />
+                      </div>
+                  )
+                  }
                   
                   <div class="px-6 py-4">
                     <h1>Title</h1>
