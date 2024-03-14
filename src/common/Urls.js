@@ -17,6 +17,8 @@ const CREATE_USER = BASE_URL+"/users/dto";
 const GET_ADMIN_DASHBOARD= BASE_URL+"/dashboard/admin";
 const GET_USER_DASHBOARD =BASE_URL+"/dashboard/user/";
 
+const GET_CURRENT_USER = BASE_URL + "/users/"
+
 
 
 
@@ -33,7 +35,8 @@ const urls = {
     TICKET_BASE_URL,
     CREATE_USER,
     GET_ADMIN_DASHBOARD,
-    GET_USER_DASHBOARD
+    GET_USER_DASHBOARD,
+    GET_CURRENT_USER
   }
 
   export default urls;
