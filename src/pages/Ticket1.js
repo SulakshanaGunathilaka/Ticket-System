@@ -817,6 +817,10 @@ export default function TicketPage1() {
                       <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
                         ACCEPTED
                       </span>
+                    ): ticket.status === "COMPLETED" ? (
+                      <span className="text-pink-900 text-sm font-semibold text-black-600 bg-pink-200  px-2  rounded-full mt-2 ">
+                        COMPLETED
+                      </span>
                     ) : (
                       <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
                         CLOSED
@@ -1103,7 +1107,7 @@ export default function TicketPage1() {
 
 
                   <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-600">
                       ID
                     </label>
 
@@ -1111,7 +1115,7 @@ export default function TicketPage1() {
 
                   </div>
                   <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-600">
                       Comment
                     </label>
                     <textarea
@@ -1128,7 +1132,7 @@ export default function TicketPage1() {
 
 
                   <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-600">
                       User Id
                     </label>
 
@@ -1136,7 +1140,7 @@ export default function TicketPage1() {
 
                   </div>
                   <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-600">
                       User Name
                     </label>
 
@@ -1182,7 +1186,7 @@ export default function TicketPage1() {
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <div class="font-bold text-xl mb-2">Update Ticket</div>
+                    <div class="font-bold text-xl mb-2">Ticket</div>
                     <button
                       type="button"
                       className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -1211,7 +1215,7 @@ export default function TicketPage1() {
 
                   </p>
                   <div class="px-6 py-4">
-                    <h1>User Id</h1>
+                    <h1>User Name</h1>
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.title}
                     </p> */}
@@ -1242,7 +1246,28 @@ export default function TicketPage1() {
                     /></div>
 
 
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"?(
                   <div class="px-6 py-4">
+                    <h1>Description</h1>
+                    {/* <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.description}
+                    </p> */}
+                    <textarea
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      disabled="true"
+                      value={selectedTicket2.description}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          description: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>):(
+                    <div class="px-6 py-4">
                     <h1>Description</h1>
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.description}
@@ -1261,47 +1286,29 @@ export default function TicketPage1() {
 
                     />
                   </div>
-
-
-                  {user1.user.roles[0].name === "ADMIN" ? (
-                      <div className="px-6 py-4">
-                        <h1>Status</h1>
-                        <select
-                            id="type"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            // onClick={handleSearchStatus}
-                            onChange={(e) => setSelectedTicket2({
-                              ...selectedTicket2,
-                              status: e.target.value,
-                            })}
-                            // value={status}
-                        >
-                          {/* <option value="">Status</option> */}
-                          <option value="">All</option>
-                          <option value="OPEN">OPEN</option>
-                          <option value="ACCEPTED">ACCEPTED</option>
-                          <option value="IN_PROGRESS">IN_PROGRESS</option>
-                          <option value="COMPLETED">COMPLETED</option>
-                          <option value="CLOSED">CLOSED</option>
-                        </select>
-                      </div>
-                  ):(
-                          <div class="px-6">
-                        <h1>Status</h1>
-                        <input
-                            type="text"
-                            id="status"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            disabled="true"
-                            value={selectedTicket2?.status}
-
-
-                        />
-                      </div>
-                  )
-                  }
+                  )}
                   
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" ?(
                   <div class="px-6 py-4">
+                    <h1>Title</h1>
+                    
+                    <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      disabled="true"
+                      value={selectedTicket2.title}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          title: e.target.value,
+                        })
+                      }
+
+                    />
+
+                  </div>):(
+                    <div class="px-6 py-4">
                     <h1>Title</h1>
                     
                     <input
@@ -1335,6 +1342,7 @@ export default function TicketPage1() {
 
 
                   </div>
+                  )}
 
 
                 </div>
@@ -1374,7 +1382,7 @@ export default function TicketPage1() {
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h5 className="text-4xl font-bold text-blue-400">
-                      Ticket close
+                      Update Ticket Status
                     </h5>
                     <button
                       type="button"
@@ -1398,7 +1406,7 @@ export default function TicketPage1() {
 
                   <br />
                   <div className="w-full flex items-center">
-                    <label htmlFor="status" className="block mb-2 w-32 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="status" className="block mb-2 w-32 text-sm font-medium text-gray-900 dark:text-gray-600">
                       Status
                     </label>
                     <select
@@ -1420,7 +1428,7 @@ export default function TicketPage1() {
 
                   <br />
                   <div className="w-full">
-                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-600">
                       Comment
                     </label>
                     <textarea
