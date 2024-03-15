@@ -115,8 +115,7 @@ export default function TicketPage1() {
       description: "",
       title: "",
       sendEmail: true,
-      recipient: "",
-      type:""
+      recipient: ""
     }
 
   });
@@ -334,6 +333,10 @@ export default function TicketPage1() {
   const CloseEmployeeTicket = () => {
     const ticketId = selectedTicket.id;
     const status = "CLOSED";
+    const userId = user1.user.userId;
+    if(comment.trim().length === 0){
+      CommonToasts.errorToast("Comment is Mandatory When closing the ticket");
+    }else{
     try {
       axios({
         method: "put",
@@ -348,7 +351,7 @@ export default function TicketPage1() {
 
           // id: id,
           comment: comment,
-          status1: status
+          userId : userId
           // createdDate: createdDate,
           // userId: user1.user.userId,
           // userName:  userName,
@@ -372,6 +375,7 @@ export default function TicketPage1() {
     } catch (e) {
       CommonToasts.errorToast(e.message);
       setLoading(false);
+    }
     }
   };
 
