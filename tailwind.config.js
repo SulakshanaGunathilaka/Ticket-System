@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'dark': {'raw': '(prefers-color-scheme: light)'},
+        // => @media (prefers-color-scheme: dark) { ... }
+      }
+    },
   },
   plugins: [],
 }
