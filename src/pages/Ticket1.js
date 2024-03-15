@@ -301,7 +301,7 @@ export default function TicketPage1() {
         data: {
 
           // id: id,
-          comments: comment,
+          comment: comment,
           userId : userId
 
           // createdDate: createdDate,
