@@ -90,7 +90,8 @@ export default function TicketPage1() {
     description: '',
     title: '',
     userId: '',
-    ticketId: ''
+    ticketId: '',
+
 
 
 
@@ -115,8 +116,7 @@ export default function TicketPage1() {
       title: "",
       sendEmail: true,
       recipient: "",
-
-
+      type:""
     }
 
   });
@@ -213,6 +213,7 @@ export default function TicketPage1() {
           userId: selectedTicket2.user.id,
           description: selectedTicket2.description,
           title: selectedTicket2.title,
+          ticketType: selectedTicket2.type,
         },
         mode: "cors",
       }).then((res) => {
@@ -1222,7 +1223,7 @@ export default function TicketPage1() {
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <div class="font-bold text-xl mb-2">Ticket</div>
+                    <div class="font-bold text-xl mb-2">View Ticket</div>
                     <button
                       type="button"
                       className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -1323,6 +1324,41 @@ export default function TicketPage1() {
                     />
                   </div>
                   )}
+
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"?(
+                    <div class="px-6 py-4">
+                    <h1>Type</h1>
+                    <input
+                      type="text"
+                      id="question"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      disabled="true"
+                      value={selectedTicket2?.type}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          ticketId: e.target.value,
+                        })
+                      }
+
+                    />
+                  </div>):(<div class="px-6 py-4">
+                    <h1>Type</h1>
+                    <select
+                      id="type"
+                      className="w-full p-2 border border-gray-50 rounded-md"
+                      value={selectedTicket2.type}
+                      onChange={(e) =>
+                        setSelectedTicket2({
+                          ...selectedTicket2,
+                          type: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="SOFTWARE">SOFTWARE</option>
+                      <option value="HARDWARE">HARDWARE</option>
+                    </select>
+                  </div>)}
                   
                   {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" ?(
                   <div class="px-6 py-4">
