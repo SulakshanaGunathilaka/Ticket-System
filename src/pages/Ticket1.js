@@ -70,6 +70,7 @@ export default function TicketPage1() {
   const [showModal3, setShowModal3] = useState(false);
   const [showModal4, setShowModal4] = useState(false);
   const [showModal5, setShowModal5] = useState(false);
+  const [showTicketHistoryModel, setTicketHistoryModel] = useState(false);
   const [showEmployeeCloseModel, setShowEmployeeCloseModel] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
@@ -286,6 +287,7 @@ export default function TicketPage1() {
 
   const CloseComment = () => {
     const ticketId = selectedTicket.id;
+    const userId = user1.user.userId;
     try {
       axios({
         method: "put",
@@ -299,8 +301,9 @@ export default function TicketPage1() {
         data: {
 
           // id: id,
-          comment: comment,
-          status1: status1
+          comments: comment,
+          userId : userId
+
           // createdDate: createdDate,
           // userId: user1.user.userId,
           // userName:  userName,
@@ -311,7 +314,7 @@ export default function TicketPage1() {
       }).then((res) => {
         console.log("response", res);
         if (res.status == 200) {
-
+          setComment('');
           CommonToasts.basicToast("Successfully Comment Added");
           AllTicketBasedOnUser();
 
@@ -530,6 +533,11 @@ export default function TicketPage1() {
     setShowModal5(true)
   };
 
+  const handleTicketHistory = (data) => {
+    setSelectedTicket(data);
+    setTicketHistoryModel(true);
+  };
+
 
 
 
@@ -728,24 +736,24 @@ export default function TicketPage1() {
 
               <div class=" relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
                 <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-sky-300 via-blue-100 to-sky-500"></span>
-                <div class="px-6 py-4">
-                  <div class="flex justify-between items-center">
-                    <div class="flex flex-col">
+                <div className="px-6 py-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
 
-                      <button class=" text-gray-700 text-base font-bold " className="ellipsis"
-                        onClick={() => handleView2(ticket.id)}
+                      <button className=" text-gray-700 text-base font-bold " className="ellipsis"
+                              onClick={() => handleView2(ticket.id)}
 
                       >
                         {ticket.title}
                       </button>
-                      <div class="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
+                      <div className="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
                       {ticket.type == "SOFTWARE" ? (
-                        <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
+                          <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
                           SOFTWARE
                         </span>
                       ) : (
-                        <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
+                          <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
                           HARDWARE
                         </span>
                       )}
@@ -753,151 +761,184 @@ export default function TicketPage1() {
 
                     <a href="#" class="inline-block pb-12">
 
-                      <span class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-sky-300 via-sky-200 to-blue-200 rounded-full">
+                      <span
+                          class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-sky-300 via-sky-200 to-blue-200 rounded-full">
                         {ticket.id}
                       </span>
                     </a>
                   </div>
                   <dl class="mt-4 flex gap-4 sm:gap-6">
-                    <div class="flex flex-col-reverse">
+                    <div className="flex flex-col-reverse">
                       <dt class="text-sm font-medium text-gray-600">{formatCreatedDate(ticket.createdDate)}</dt>
-                      <dd class="text-sm text-gray-500">Date</dd>
+                      <dd className="text-sm text-gray-500">Date</dd>
                     </div>
 
                   </dl>
 
-                  <dd class="text-sm text-gray-500 mt-4 font-bold ">
+                  <dd className="text-sm text-gray-500 mt-4 font-bold ">
                     <Tooltip title="View Comment" position="bottom" trigger="mouseenter">
                       <button
 
-                        type="button"
-                        class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
+                          type="button"
+                          className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
 
-                        onClick={() => handleView4(ticket)}
+                          onClick={() => handleView4(ticket)}
 
                       >
-                        <div class="flex  ">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black ">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                        <div className="flex  ">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                               stroke="currentColor" className="w-4 h-4 text-black ">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
                           </svg>
-
-
 
 
                         </div>
 
+
+                      </button>
+                    </Tooltip>
+                  {/*  Ticket History */}
+
+                    <Tooltip title="View Ticket History" position="bottom" trigger="mouseenter">
+                      <button
+
+                          type="button"
+                          className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
+
+                          onClick={() => handleTicketHistory(ticket)}
+
+                      >
+                        <div className="flex  ">
+                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18"
+                               viewBox="0 0 48 48">
+                            <path
+                                d="M 15.5 5 C 11.928062 5 9 7.9280619 9 11.5 L 9 34 L 5.5 34 C 4.1364058 34 3 35.136406 3 36.5 L 3 38.5 C 3 40.967501 5.0324991 43 7.5 43 L 34.5 43 C 36.967501 43 39 40.967501 39 38.5 L 39 14 L 42.5 14 C 43.863594 14 45 12.863594 45 11.5 L 45 9.5 C 45 7.1132596 43.09387 5.1504737 40.736328 5.0234375 A 1.50015 1.50015 0 0 0 40.5 5 L 15.5 5 z M 15.5 8 L 36.306641 8 C 36.134564 8.4744795 36 8.9694092 36 9.5 L 36 12.253906 A 1.50015 1.50015 0 0 0 36 12.740234 L 36 38.5 C 36 39.346499 35.346499 40 34.5 40 C 33.653501 40 33 39.346499 33 38.5 L 33 36.5 C 33 35.136406 31.863594 34 30.5 34 L 12 34 L 12 11.5 C 12 9.5499381 13.549938 8 15.5 8 z M 40.5 8 C 41.346499 8 42 8.6535009 42 9.5 L 42 11 L 39 11 L 39 9.5 C 39 8.6535009 39.653501 8 40.5 8 z M 17.5 13 A 1.50015 1.50015 0 1 0 17.5 16 L 30.5 16 A 1.50015 1.50015 0 1 0 30.5 13 L 17.5 13 z M 17.5 20 A 1.50015 1.50015 0 1 0 17.5 23 L 30.5 23 A 1.50015 1.50015 0 1 0 30.5 20 L 17.5 20 z M 17.5 27 A 1.50015 1.50015 0 1 0 17.5 30 L 28.5 30 A 1.50015 1.50015 0 1 0 28.5 27 L 17.5 27 z M 6 37 L 10.253906 37 A 1.50015 1.50015 0 0 0 10.740234 37 L 30 37 L 30 38.5 C 30 39.030591 30.134564 39.52552 30.306641 40 L 7.5 40 C 6.6535009 40 6 39.346499 6 38.5 L 6 37 z"></path>
+                          </svg>
+
+
+                        </div>
 
 
                       </button>
                     </Tooltip>
 
                   </dd>
-
-
-
                   <dl class="mt-6 flex gap-4 sm:gap-6">
-                    <div class="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600">{ }</dt>
+                    <div className="flex flex-col-reverse">
+                      <dt class="text-sm font-medium text-gray-600">{}</dt>
 
                     </div>
 
                   </dl>
 
 
-                  <div class="flex items-center justify-between ">
-                    <dt class="text-sm font-medium text-gray-600 "><dd class="text-xs text-gray-500">Ticket Status</dd> {ticket.status === "OPEN" ? (
-                      <span className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                  <div className="flex items-center justify-between ">
+                    <dt class="text-sm font-medium text-gray-600 ">
+                      <dd className="text-xs text-gray-500">Ticket Status</dd>
+                      {ticket.status === "OPEN" ? (
+                          <span
+                              className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
                         OPEN
                       </span>
-                    ) : ticket.status === "IN_PROGRESS" ? (
-                      <span className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                      ) : ticket.status === "IN_PROGRESS" ? (
+                          <span
+                              className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
                         IN_PROGRESS
                       </span>
-                    ) : ticket.status === "ACCEPTED" ? (
-                      <span className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
+                      ) : ticket.status === "ACCEPTED" ? (
+                          <span
+                              className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
                         ACCEPTED
                       </span>
                     ): ticket.status === "COMPLETED" ? (
                       <span className="text-pink-900 text-sm font-semibold text-black-600 bg-pink-200  px-2  rounded-full mt-2 ">
                         COMPLETED
                       </span>
-                    ) : (
-                      <span className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
+                      ) : (
+                          <span
+                              className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
                         CLOSED
                       </span>
-                    )}</dt>
+                      )}</dt>
 
-                    <div class="flex items-center">
+                    <div className="flex items-center">
                       {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
-                        <Tooltip title="Delete" position="bottom" trigger="mouseenter">
-                          <button
-                            type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                          <Tooltip title="Delete" position="bottom" trigger="mouseenter">
+                            <button
+                                type="button"
+                                className="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                            onClick={() => TicketDelete(ticket.id)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke-width="1.5"
-                              stroke="currentColor"
-                              class="w-4 h-4"
+                                onClick={() => TicketDelete(ticket.id)}
                             >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                              />
-                            </svg>
-                          </button>
-                        </Tooltip>
+                              <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  className="w-4 h-4"
+                              >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                />
+                              </svg>
+                            </button>
+                          </Tooltip>
                       ) : null}
                       <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
                         <button
-                          type="button"
-                          class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                            type="button"
+                            className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                          onClick={() => handleView(ticket)}
+                            onClick={() => handleView(ticket)}
 
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                               stroke="currentColor" className="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
                           </svg>
 
                         </button>
                       </Tooltip>
                       {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
-                        <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
-                          <button
-                            type="button"
-                            class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
-
-                            onClick={() => handleView6(ticket)}
-
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
-
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                            </svg>
-
-
-                          </button>
-
-                        </Tooltip>
-                      ) : null}
-                      { user1.user.roles[0].name === 'EMPLOYEE' && ticket.status !== "CLOSED" ? (
                           <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
                             <button
                                 type="button"
-                                class="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                                className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+
+                                onClick={() => handleView6(ticket)}
+
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                   stroke="currentColor" className="w-4 h-4 text-black">
+
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
+                              </svg>
+
+
+                            </button>
+
+                          </Tooltip>
+                      ) : null}
+                      {user1.user.roles[0].name === 'EMPLOYEE' && ticket.status !== "CLOSED" ? (
+                          <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
+                            <button
+                                type="button"
+                                className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
                                 onClick={() => handleView7(ticket)}
 
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                   stroke="currentColor" className="w-4 h-4 text-black">
 
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
                               </svg>
 
 
@@ -916,8 +957,6 @@ export default function TicketPage1() {
               </div>
 
 
-
-
             ))}
           </div>
 
@@ -925,24 +964,23 @@ export default function TicketPage1() {
           <nav className='block'>
             <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
               {pageNumbers.map((number) => (
-                <li key={number}>
-                  <a
-                    onClick={() => handlePageChange(number)}
-                    href='#'
-                    className={
-                      currentPage === number
-                        ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                        : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                    }
-                  >
-                    {number}
-                  </a>
-                </li>
+                  <li key={number}>
+                    <a
+                        onClick={() => handlePageChange(number)}
+                        href='#'
+                        className={
+                          currentPage === number
+                              ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                              : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                        }
+                    >
+                      {number}
+                    </a>
+                  </li>
               ))}
             </ul>
           </nav>
         </div>
-
 
 
         {/* <button onClick={() => getTikctetpage(currentPage + 1)}>Next Page</button> */}
@@ -953,17 +991,15 @@ export default function TicketPage1() {
       </div>
 
 
-
-
       {showModal1 ? (
-        <>
+          <>
 
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div
-              className="fixed inset-0 w-full h-full bg-black opacity-40"
-              onClick={() => setShowModal1(false)}
-            ></div>
-            <div>
+            <div className="fixed inset-0 z-10 overflow-y-auto">
+              <div
+                  className="fixed inset-0 w-full h-full bg-black opacity-40"
+                  onClick={() => setShowModal1(false)}
+              ></div>
+              <div>
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -1563,6 +1599,101 @@ export default function TicketPage1() {
 
         </>
       ) : null}
+
+      {showTicketHistoryModel ? (
+          <>
+            {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
+            <div className="fixed inset-0 z-10 overflow-y-auto " >
+              <div
+                  className="fixed inset-0 w-full h-full bg-black opacity-40"
+                  onClick={() => setTicketHistoryModel(false)}
+              ></div>
+              <div>
+                <div className="flex items-center min-h-screen px-4 py-8">
+                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
+                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                      <div class="font-bold text-xl mb-2">View Ticket History</div>
+                      <button
+                          type="button"
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          onClick={() => setTicketHistoryModel(false)}
+                      >
+                        <svg
+                            className="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                              fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+
+
+
+
+                    <p class="text-gray-700 text-base font-bold "   >
+
+
+
+                    </p>
+
+
+                    {selectedTicket.history.map((history) => (
+
+
+                        <div class="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-light text-gray-600 dark:text-gray-400">{history?.updatedUser?.firstName}</span>
+                            <a class="px-3 py-1 text-sm font-bold text-gray-600 transition-colors duration-300 " tabindex="0" role="button"> {formatCreatedDate(history?.date)}</a>
+                          </div>
+
+                          <div class="flex items-center justify-between">
+                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status From :
+                              <span
+                                  className="text-sm font-bold text-gray-600 dark:text-gray-400">{history?.oldStatus}</span>
+                            </label>
+                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status To :
+                              <span className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{history?.newStatus}</span>
+                            </label>
+                          </div>
+
+                          <div class="flex items-center justify-between mt-4">
+                            <p className="mt-2 text-gray-600 dark:text-gray-300">{history.comment}</p>
+
+
+                          </div>
+                        </div>
+
+
+                    ))}
+                  </div>
+
+
+                  <br />
+
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="max-w-sm rounded overflow-hidden shadow-lg ">
+
+
+            </div>
+
+
+
+            {/* ))}  */}
+
+          </>
+      ) : null}
+
 
       {showEmployeeCloseModel ? (
           <>
