@@ -239,6 +239,9 @@ export default function TicketPage1() {
 
   const CreateComment = () => {
     const ticketId = selectedTicket.id;
+    if(comment.trim().length === 0){
+      CommonToasts.errorToast("Please make sure you have added a Comment");
+    }else{
     try {
       axios({
         method: "post",
@@ -283,7 +286,7 @@ export default function TicketPage1() {
       CommonToasts.errorToast(e.message);
       setLoading(false);
     }
-  };
+  }};
 
   const CloseComment = () => {
     const ticketId = selectedTicket.id;
