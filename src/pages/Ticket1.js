@@ -868,7 +868,7 @@ export default function TicketPage1() {
                       )}</dt>
 
                     <div className="flex items-center">
-                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                      {user1.user.roles[0].name == "ADMIN"  ? (
                           <Tooltip title="Delete" position="bottom" trigger="mouseenter">
                             <button
                                 type="button"
@@ -909,7 +909,7 @@ export default function TicketPage1() {
 
                         </button>
                       </Tooltip>
-                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                      {user1.user.roles[0].name == "ADMIN" ? (
                           <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
                             <button
                                 type="button"
