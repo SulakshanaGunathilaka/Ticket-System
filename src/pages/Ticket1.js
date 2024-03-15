@@ -240,7 +240,7 @@ export default function TicketPage1() {
   const CreateComment = () => {
     const ticketId = selectedTicket.id;
     if(comment.trim().length === 0){
-      CommonToasts.errorToast("Please make sure you have added a Comment");
+      CommonToasts.errorToast("Comment field is Mandatory");
     }else{
     try {
       axios({
