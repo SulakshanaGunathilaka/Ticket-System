@@ -318,10 +318,14 @@ export default function TicketPage1() {
         },
         mode: "cors",
       }).then((res) => {
-        console.log("response", res);
+        console.log("response close ticket admin", res);
         if (res.status == 200) {
           setComment('');
-          CommonToasts.basicToast("Successfully Comment Added");
+          if(res.data.status === 'failed'){
+            CommonToasts.errorToast(res.data.message);
+          }else{
+            CommonToasts.basicToast("Successfully Closed the Ticket");
+          }
           AllTicketBasedOnUser();
 
 
@@ -366,10 +370,14 @@ export default function TicketPage1() {
         },
         mode: "cors",
       }).then((res) => {
-        console.log("response", res);
+        console.log("response close ticket employee", res);
         if (res.status == 200) {
-
-          CommonToasts.basicToast("Successfully Closed the Ticket");
+          setComment('');
+          if(res.data.status === 'failed'){
+            CommonToasts.errorToast(res.data.message);
+          }else{
+            CommonToasts.basicToast("Successfully Closed the Ticket");
+          }
           AllTicketBasedOnUser();
 
 
