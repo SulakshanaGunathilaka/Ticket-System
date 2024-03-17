@@ -508,6 +508,45 @@ export default function TicketPage1() {
     }
   };
 
+  // get updated time
+  function timeSince(date) {
+    // Get the current timestamp in milliseconds
+    const now = Date.now();
+    const givenDate = new Date(date).getTime();
+    // Calculate the difference between current time and the provided date
+    const difference = now - givenDate;
+    // Handle cases where the date is in the future (shouldn't happen, but protect against it)
+    if (difference <= 0) {
+      return "Just now";
+    }
+
+    // Convert the difference to seconds
+    const seconds = Math.floor(difference / 1000);
+
+    // Define intervals and their corresponding units
+    const intervals = [
+      { value: 31536000, unit: "year" },
+      { value: 2592000, unit: "month" },
+      { value: 86400, unit: "day" },
+      { value: 3600, unit: "hour" },
+      { value: 60, unit: "minute" },
+    ];
+
+    // Find the largest interval that fits into the difference
+    let biggestInterval = intervals.find((interval) => seconds >= interval.value);
+
+    // If no interval fits (less than a minute), return "Just now"
+    if (!biggestInterval) {
+      return "Just now";
+    }
+
+    // Calculate the number of units for the chosen interval
+    const count = Math.floor(seconds / biggestInterval.value);
+
+    // Return the formatted string with count and unit
+    return `${count} ${biggestInterval.unit}${count > 1 ? "s" : "" } ago`;
+  }
+
 
 
   const handleView = (data) => {
@@ -1691,30 +1730,40 @@ export default function TicketPage1() {
                   {selectedTicket.comments.map((comment) => (
 
 
-                    <div class="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                      <div class="flex items-center justify-between">
-                        <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
-                        <a class="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 " tabindex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
+                      <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                          <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
+                          <a className="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 "
+                             tabIndex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
+                        </div>
+                        <div className="flex items-center justify-between mt-4">
+                          <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline" tabIndex="0"
+                             role="link">{comment.id}</a>
+                        </div>
+                        <div className="mt-2">
+
+                          <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
+                        </div>
+                        <div className="flex items-center justify-between mt-4">
+                          <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                              <span
+                                  className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
+                          </label>
+                          <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                              <span
+                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(comment.createdDate)}</span>
+                          </label>
+
+
+                        </div>
                       </div>
-
-                      <div class="mt-2">
-
-                        <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
-                      </div>
-
-                      <div class="flex items-center justify-between mt-4">
-                        <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline" tabindex="0" role="link">{comment.id}</a>
-
-
-                      </div>
-                    </div>
 
 
                   ))}
                 </div>
 
 
-                <br />
+                <br/>
 
               </div>
             </div>
@@ -1728,7 +1777,6 @@ export default function TicketPage1() {
           </div>
 
 
-
           {/* ))}  */}
 
         </>
@@ -1737,7 +1785,7 @@ export default function TicketPage1() {
       {showTicketHistoryModel ? (
           <>
             {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
-            <div className="fixed inset-0 z-10 overflow-y-auto " >
+            <div className="fixed inset-0 z-10 overflow-y-auto ">
               <div
                   className="fixed inset-0 w-full h-full bg-black opacity-40"
                   onClick={() => setTicketHistoryModel(false)}
@@ -1780,24 +1828,39 @@ export default function TicketPage1() {
                     {selectedTicket.history.map((history) => (
 
 
-                        <div class="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                          <div class="flex items-center justify-between">
-                            <span class="text-sm font-light text-gray-600 dark:text-gray-400">{history?.updatedUser?.firstName}</span>
-                            <a class="px-3 py-1 text-sm font-bold text-gray-600 transition-colors duration-300 " tabindex="0" role="button"> {formatCreatedDate(history?.date)}</a>
+                        <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                          <div className="flex items-center justify-between">
+                            <span
+                                class="text-sm font-light text-gray-600 dark:text-gray-400">{history?.updatedUser?.firstName}</span>
+                            <a class="px-3 py-1 text-sm font-bold text-gray-600 transition-colors duration-300 "
+                               tabindex="0" role="button"> {formatCreatedDate(history?.date)}</a>
                           </div>
 
-                          <div class="flex items-center justify-between">
+                          <div className="flex items-center justify-between">
                             <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status From :
                               <span
                                   className="text-sm font-bold text-gray-600 dark:text-gray-400">{history?.oldStatus}</span>
                             </label>
                             <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status To :
-                              <span className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{history?.newStatus}</span>
+                              <span
+                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{history?.newStatus}</span>
                             </label>
                           </div>
 
-                          <div class="flex items-center justify-between mt-4">
+                          <div className="flex items-center justify-between mt-4">
                             <p className="mt-2 text-gray-600 dark:text-gray-300">{history.comment}</p>
+
+
+                          </div>
+                          <div className="flex items-center justify-between mt-4">
+                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                              <span
+                                  className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
+                            </label>
+                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                              <span
+                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(history?.date)}</span>
+                            </label>
 
 
                           </div>
@@ -1808,7 +1871,7 @@ export default function TicketPage1() {
                   </div>
 
 
-                  <br />
+                  <br/>
 
                 </div>
               </div>
@@ -1820,7 +1883,6 @@ export default function TicketPage1() {
 
 
             </div>
-
 
 
             {/* ))}  */}
