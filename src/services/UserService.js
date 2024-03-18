@@ -35,7 +35,7 @@ const DeleteUser = (userId) => {
   console.log(userId);
   axios({
     method: "delete",
-    url: "http://localhost:8080/users/" + userId,
+    url: urls.USER_BASE_URL + userId,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",

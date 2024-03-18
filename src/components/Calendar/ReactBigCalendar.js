@@ -6,6 +6,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import TitleText from "../TitleText";
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import urls from "../../common/Urls";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
@@ -37,7 +38,7 @@ export default function ReactBigCalendar() {
 
       axios({
         method: "post",
-        url: "http://localhost:8080/holidays/",
+        url: urls.HOLIDAY_URL,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,PATCH,OPTIONS",
@@ -87,7 +88,7 @@ export default function ReactBigCalendar() {
 
       await axios({
         method: "get",
-        url: "http://localhost:8080/holidays/",
+        url: urls.HOLIDAY_URL,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,PATCH,OPTIONS",

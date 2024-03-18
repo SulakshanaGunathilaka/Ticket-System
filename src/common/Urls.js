@@ -6,6 +6,11 @@ const VIEW_USER = GET_ALL_USERS_URL + "/userId"
 const GET_ALL_LEAVE_DETAILS_URL = BASE_URL + "/leaveApplication/";
 const GET_ALL_TICKETS_URL  = BASE_URL + "/tickets";
 
+const USER_BASE_URL = BASE_URL+"/users/";
+const USER_FILTER_URL = BASE_URL+"/users/filter";
+
+const HOLIDAY_URL = BASE_URL+"/holidays"
+
 const GET_TICKETS_WITH_FILTER_URL  = BASE_URL + "/tickets/filter?";
 const GET_TICKETS_BY_USER=BASE_URL+"/tickets/user/";
 const CREATE_TICKET=BASE_URL+"/tickets/dto";
@@ -17,7 +22,11 @@ const CREATE_USER = BASE_URL+"/users/dto";
 const GET_ADMIN_DASHBOARD= BASE_URL+"/dashboard/admin";
 const GET_USER_DASHBOARD =BASE_URL+"/dashboard/user/";
 
-const GET_CURRENT_USER = BASE_URL + "/users/"
+const GET_CURRENT_USER = BASE_URL + "/users/";
+
+const FAQ_BASE_URL = BASE_URL+"/feqItems";
+
+const GET_TICKET_REPORT = BASE_URL+"/reports/tickets/";
 
 
 
@@ -36,7 +45,12 @@ const urls = {
     CREATE_USER,
     GET_ADMIN_DASHBOARD,
     GET_USER_DASHBOARD,
-    GET_CURRENT_USER
+    GET_CURRENT_USER,
+    USER_BASE_URL,
+    FAQ_BASE_URL,
+    GET_TICKET_REPORT,
+    USER_FILTER_URL,
+    HOLIDAY_URL
   }
 
   export default urls;
