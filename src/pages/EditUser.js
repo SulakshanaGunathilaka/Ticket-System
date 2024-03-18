@@ -13,6 +13,7 @@ import FormInputText from "../components/FormInputText";
 import FormInputField from "../components/FormInputField";
 import { useForm } from 'react-hook-form';
 import AuthService from "../services/AuthenticationService";
+import urls from "../common/Urls";
 
 
 function Icon({ id, open }) {
@@ -151,7 +152,7 @@ export default function EditUser() {
     console.log(state);
     axios({
       method: "put",
-      url: "http://localhost:8080/users/"+ user1?.user?.userId,
+      url: urls.USER_BASE_URL+ user1?.user?.userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",

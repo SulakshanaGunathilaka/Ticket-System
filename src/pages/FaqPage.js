@@ -8,6 +8,7 @@ import CommonToasts from "../common/Toasts";
 import { Tooltip } from 'react-tippy';
 import 'react-tippy/dist/tippy.css';
 import TitleText from '../components/TitleText';
+import urls from "../common/Urls";
 
 
 
@@ -32,7 +33,7 @@ const FAQPage = () => {
     try {
       axios({
         method: "post",
-        url: 'http://localhost:8080/faqItems',
+        url: urls.FAQ_BASE_URL,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -79,7 +80,7 @@ const FAQPage = () => {
     try {
       axios({
         method: "get",
-        url: 'http://localhost:8080/faqItems',
+        url: urls.FAQ_BASE_URL,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -118,7 +119,7 @@ const FaqDelete = (faqItemId) => {
   try {
     axios({
       method: "delete",
-      url: `http://localhost:8080/faqItems/${faqItemId}`,
+      url: urls.FAQ_BASE_URL+"/"+faqItemId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -167,7 +168,7 @@ const ViewFaq = (faqItemId) => {
     const faqItem = { id: faqItemId };
     axios({
       method: "get",
-      url: 'http://localhost:8080/faqItems/'+ faqItemId,
+      url: urls.FAQ_BASE_URL+"/"+faqItemId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -216,7 +217,7 @@ const EditFaq = (e) => {
   try {
     axios({
       method: "put",
-      url: 'http://localhost:8080/faqItems',
+      url: urls.FAQ_BASE_URL,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -254,7 +255,7 @@ const [totalPages, setTotalPages] = useState(1);
 const getFaq = (page) => {
   axios({
     method: 'get',
-    url: `http://localhost:8080/faqItems/page?page=${page}&offset=10`,
+    url: urls.FAQ_BASE_URL+`/page?page=${page}&offset=10`,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',

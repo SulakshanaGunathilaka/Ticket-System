@@ -39,6 +39,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { addTickets, deleteTicket, getAllTickets, getTicketPages, handleSearchInputChange, handleSearchStatus, handleSearchUserId, performSearch, viewTicketDescription, fetchTicketpage } from "../redux/actions/ticketAction";
 import useDidMountEffect from "../common/didMountEffect";
 import UserService from "../services/UserService";
+import urls from "../common/Urls";
 
 
 
@@ -289,7 +290,7 @@ console.log("Test Ticket..................",tickets?.searchResults?.body)
     try {
       axios({
         method: "put",
-        url: 'http://localhost:8080/faqItems',
+        url: urls.FAQ_BASE_URL+"/feqItems",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",

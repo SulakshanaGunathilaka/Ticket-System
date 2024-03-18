@@ -9,11 +9,12 @@
 //   } from "./types";
   import Axios from "axios";
   import SetAuthorizationToken from "./SetAuthorizationToken";
+import urls from "../common/Urls";
   // import SetAuthorizationToken from "./setAuthorizationToken";
   // import { SIGN_IN } from "../../configs/api-config";
    
 
-  const SIGN_IN = "http://localhost:8080/authenticate";
+  const SIGN_IN = urls.LOGIN_URL;
 
   // export const setAuthetication = (data) => (dispatch) => {
   //    dispatch({

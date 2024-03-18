@@ -24,6 +24,7 @@ import {
 import FormInputText from "../components/FormInputText";
 import FormInputField from "../components/FormInputField";
 import { useForm } from 'react-hook-form';
+import urls from "../common/Urls";
 
 
 function Icon({ id, open }) {
@@ -73,7 +74,7 @@ export default function EmployeePage() {
 
   const performSearch = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/users/filter', {
+      const response = await axios.get(urls.USER_FILTER_URL, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -200,7 +201,7 @@ export default function EmployeePage() {
     console.log(userId);
     axios({
       method: "get",
-      url: "http://localhost:8080/users/" + userId,
+      url: urls.USER_BASE_URL + userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -342,7 +343,7 @@ export default function EmployeePage() {
     try {
       axios({
         method: "put",
-        url: `http://localhost:8080/users/${edituserDetails.id}`,
+        url: urls.USER_BASE_URL+ `${edituserDetails.id}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -421,7 +422,7 @@ export default function EmployeePage() {
     try {
       axios({
         method: "put",
-        url: `http://localhost:8080/users/${edituserDetails.id}`,
+        url: urls.USER_BASE_URL+`${edituserDetails.id}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -473,7 +474,7 @@ export default function EmployeePage() {
   const UserStatus = (userId) => {
     axios({
       method: "put",
-      url: "http://localhost:8080/users/" + userId,
+      url: urls.USER_BASE_URL+ userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -522,7 +523,7 @@ export default function EmployeePage() {
   const getEmployeePage = (page) => {
     axios({
       method: 'get',
-      url: `http://localhost:8080/users/page?page=${page}&offset=10`,
+      url: urls.USER_BASE_URL+`page?page=${page}&offset=10`,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',

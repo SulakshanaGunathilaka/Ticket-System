@@ -116,7 +116,7 @@ export default function HomePage() {
     try {
       axios({
         method: "get",
-        url: `http://localhost:8080/reports/tickets/created?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
+        url: urls.GET_TICKET_REPORT+`created?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -164,7 +164,7 @@ export default function HomePage() {
     try {
       axios({
         method: "get",
-        url: `http://localhost:8080/reports/tickets/closed?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
+        url: urls.GET_TICKET_REPORT+`closed?startDate=${selectedDate}&endDate=${selectedDate1}&userId=${userId}`,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
