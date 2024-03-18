@@ -1480,38 +1480,8 @@ export default function EmployeePage() {
                           </div>
 
                           <div className=' w-1/2 '>
-                            <label for="accountNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">Account number</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="accountNo"{...register("accountNo", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p>
-                          </div>
-                        </div>
-
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="bankName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank name</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankName" {...register("bankName", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.bankName?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="bankBranch" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank branch</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankBranch"{...register("bankBranch", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p>
-                          </div>
-                        </div>
-
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="bankAccountType" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Bank account type</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="bankAccountType" {...register("bankAccountType", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.bankAccountType?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
                             <label for="name" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">Department Name</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="name"{...register("name", { required: "This is required" })} />
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="departmentName" value={edituserDetails?.department?.name} {...register("name", { required: "This is required" })} />
                             <p className="text-red-400 text-xs"> {errors.name?.message}</p>
                           </div>
                         </div>
@@ -1520,7 +1490,7 @@ export default function EmployeePage() {
 
                           <div className=' w-1/2 '>
                             <label for="agency" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Agency</label>
-                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="agency" {...register("agency", { required: "This is required" })} />
+                            <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="agency" value={edituserDetails?.department?.agency} {...register("agency", { required: "This is required" })} />
                             <p className="text-red-400 text-xs"> {errors.agency?.message}</p>
                           </div>
 
