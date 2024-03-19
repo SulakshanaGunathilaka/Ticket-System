@@ -1567,7 +1567,7 @@ export default function EmployeePage() {
                             type="text" 
                             class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
                             placeholder="designationLevel" 
-                            value={edituserDetails?.designation.designationLevel} 
+                            value={edituserDetails?.designation?.designationLevel} 
                             {...register("designationLevel", { required: "This is required" })} />
                             <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p>
                           </div>
