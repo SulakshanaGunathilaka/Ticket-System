@@ -37,8 +37,8 @@ const FAQPage = () => {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: {
           id: id,
@@ -84,8 +84,8 @@ const FAQPage = () => {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` +  user1.jwt,
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+          "Authorization": `Bearer ` + user1.jwt,
         },
         data: null,
         mode: "cors",
@@ -123,8 +123,8 @@ const FaqDelete = (faqItemId) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        Authorization: `Bearer ${user1.jwt}`,
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Authorization": `Bearer ` + user1.jwt,
       },
       data: null,
       mode: "cors",
@@ -172,7 +172,8 @@ const ViewFaq = (faqItemId) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        "Authorization": `Bearer ` +  user1.jwt,
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Authorization": `Bearer ` + user1.jwt,
       },
       data: null,
       mode: "cors",
@@ -221,7 +222,8 @@ const EditFaq = (e) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        "Authorization": `Bearer ${user1.jwt}`,
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Authorization": `Bearer ` + user1.jwt,
       },
       data: {
         id: questionDetails.id,
@@ -257,9 +259,10 @@ const getFaq = (page) => {
     method: 'get',
     url: urls.FAQ_BASE_URL+`/page?page=${page}&offset=10`,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      Authorization: `Bearer ${user1.jwt}`,
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+      "Authorization": `Bearer ` + user1.jwt,
     },
     mode: 'cors',
   })
@@ -312,20 +315,23 @@ const handleInput = (event, characterLimit) => {
 <section className="dark:bg-gray-800 dark:text-gray-100">
 	<div className="container flex flex-col justify-center px-4 py-8 mx-auto md:p-8">
 		<h3 className="text-xl font-semibold sm:text-3xl">Frequently Asked Questions</h3>
-    <div class="flex items-center justify-between mt-4 gap-x-4 shrink-0">
-    <p className="mt-4 mb-8 dark:text-gray-400">If you've got any questions about Sketch for team, read on below for answers to some of the most common ones
-    we 've already been asked.</p>
+      {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name ==="IT_ADMIN" ?(
+          <div class="flex items-center justify-between mt-4 gap-x-4 shrink-0">
+            <p className="mt-4 mb-8 dark:text-gray-400">If you've got any questions about Sketch for team, read on below for answers to some of the most common ones
+              we 've already been asked.</p>
 
-    <Tooltip title="Add FAQ" position="bottom" trigger="mouseenter">
-        <button class= "p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"onClick={() => setShowModal(true)}>
-   
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                  </svg>
-                 
-        </button>
-        </Tooltip>
-    </div>
+            <Tooltip title="Add FAQ" position="bottom" trigger="mouseenter">
+              <button class= "p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"onClick={() => setShowModal(true)}>
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                </svg>
+
+              </button>
+            </Tooltip>
+          </div>
+      ):null}
+
 		<div className="space-y-4 overflow-y-auto max-h-128  "style={{ maxHeight: '500px' }}>
     {faqItems?.map((faqItem,index) => ( 
 
@@ -334,6 +340,8 @@ const handleInput = (event, characterLimit) => {
 				<summary className="px-4 py-6 focus:outline-none focus-visible:ri">{faqItem.question}</summary>
       
 				<p className="px-4 py-6 pt-0 ml-4  dark:text-gray-400">{faqItem.answer} </p>
+
+              {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name ==="IT_ADMIN" ?(
         <div class=" bg-sky-300">
         <div class="inline-block  px-4 py-2">
         <Tooltip title="Delete" position="bottom" trigger="mouseenter">
@@ -385,6 +393,7 @@ const handleInput = (event, characterLimit) => {
         </div>
       
       </div>
+              ):null}
 
 
       

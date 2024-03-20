@@ -4,10 +4,6 @@ import urls from "../common/Urls";
 
 
 const login = async (username, password) => {
-    console.log("username");
-    console.log(username);
-    console.log("password");
-    console.log(password);
 
     await axios
         .post(urls.LOGIN_URL, {
@@ -21,8 +17,6 @@ const login = async (username, password) => {
                     localStorage.setItem("user", JSON.stringify(response.data.body));
                     //console.log("token saved angi ",response.data.body);
                // }
-               console.log("response code");
-               console.log(response.status);
                 return response.data;
             }
 

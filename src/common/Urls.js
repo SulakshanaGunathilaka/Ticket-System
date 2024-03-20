@@ -1,4 +1,8 @@
+
+//production
+// const BASE_URL = "http://172.16.1.237:8080";
 const BASE_URL = "http://localhost:8080";
+
 
 const LOGIN_URL = BASE_URL + "/authenticate";
 const GET_ALL_USERS_URL  = BASE_URL + "/users";
@@ -24,7 +28,7 @@ const GET_USER_DASHBOARD =BASE_URL+"/dashboard/user/";
 
 const GET_CURRENT_USER = BASE_URL + "/users/";
 
-const FAQ_BASE_URL = BASE_URL+"/feqItems";
+const FAQ_BASE_URL = BASE_URL+"/faqItems";
 
 const GET_TICKET_REPORT = BASE_URL+"/reports/tickets/";
 
