@@ -37,6 +37,12 @@ import { Tooltip } from 'react-tippy';
 import 'react-tippy/dist/tippy.css';
 import urls from "../common/Urls";
 
+import {over} from 'stompjs';
+import SockJS from 'sockjs-client';
+import SockJsClient from 'react-stomp';
+
+
+
 
 
 function Icon({ id, open }) {
@@ -125,7 +131,35 @@ export default function TicketPage1() {
 
   const user1 = AuthService.getCurrentUser();
 
-  console.log("current user details : "+ user1.user.userId)
+  console.log("current user details : "+ user1.user.userId);
+
+// websocket
+//   useEffect(() => {
+//     connect()
+//   }, []);
+//    var stompClient =null;
+//
+//    const connect = () =>{
+//      let Sock = new SockJS(urls.WEBSOCKET);
+//      stompClient = over(Sock);
+//      stompClient.connect({}, onConnected, onError);
+//    };
+//
+//    const onConnected = () => {
+//
+//      stompClient.subscribe("/topic/tickets", onTicketReceived);
+//      console.log("Connected .......");
+//    }
+//
+//   const onTicketReceived = (payload) => {
+//      let payloadData = JSON.parse(payload.body);
+//      console.log("payload Data ", payloadData);
+//   };
+//
+//    const onError = () =>{
+//      console.log("Error in Connecting to WS");
+//    };
+
 
   useEffect(() => {
     console.log("initial load");
@@ -687,9 +721,25 @@ export default function TicketPage1() {
 
   console.log("test update tic", selectedTicket2)
 
+  let onConnected = () => {
+    console.log("connected to ws");
+  }
+
+  let onReceived=(data) => {
+    console.log("ws data ", data);
+    setTickets(data);
+  }
+
 
   return (
     <>
+      <SockJsClient url={urls.WEBSOCKET}
+                    topics={['/topic/tickets']}
+                    onConnect ={onConnected}
+                    onDisconnect = {console.log("Ws Disconnected !")}
+                    onMessage ={msg => onReceived(msg)}
+                    debug={false}
+      />
       <div className=" bg-grey h-fit w-full ">
         <TitleText titleText="Ticket" />
 
