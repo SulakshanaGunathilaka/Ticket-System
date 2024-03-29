@@ -81,8 +81,8 @@ export default function LoginCard() {
           <h4 className="flex text-xl justify-center font-semibold text-gray-700 dark:text-white mb-3 mt-0">Welcome</h4>
           <h5 className="text-l font-medium text-gray-700 dark:text-white mt-0 mb-5">Sign in with your Username and Password</h5>
           <div className="flex flex-wrap w-full mt-3 mb-3">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
-            <input type="email" name="email" id="email" onChange={onChangeUsername} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-600 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="example@ccmsltd.com" required />
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Employee ID</label>
+            <input type="text" name="email" id="email" onChange={onChangeUsername} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-600 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Employee ID" required />
           </div>
           <div className="flex flex-wrap w-full mt-5 mb-8">
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Password</label>
