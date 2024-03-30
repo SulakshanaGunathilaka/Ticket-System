@@ -1470,7 +1470,7 @@ export default function TicketPage1() {
                     /></div>
 
 
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"?(
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"|| (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN") ?(
                   <div class="px-6 py-4">
                     <h1>Description</h1>
                     {/* <p class="text-gray-700 text-base" className="break">
@@ -1512,7 +1512,7 @@ export default function TicketPage1() {
                   </div>
                   )}
 
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"?(
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN")?(
                     <div class="px-6 py-4">
                     <h1>Type</h1>
                     <input
@@ -1547,7 +1547,7 @@ export default function TicketPage1() {
                     </select>
                   </div>)}
                   
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" ?(
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN") ?(
                   <div class="px-6 py-4">
                     <h1>Title</h1>
                     
