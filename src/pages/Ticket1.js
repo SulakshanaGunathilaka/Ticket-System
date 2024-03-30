@@ -1039,7 +1039,7 @@ export default function TicketPage1() {
 
                           </Tooltip>
                       ) : null}
-                      {user1.user.roles[0].name === 'EMPLOYEE' && ticket.status !== "CLOSED" ? (
+                      {user1.user.roles[0].name === 'EMPLOYEE' && (ticket.status === "OPEN" || ticket.status === "COMPLETED" ) ? (
                           <Tooltip title="Close Comment" position="bottom" trigger="mouseenter">
                             <button
                                 type="button"
