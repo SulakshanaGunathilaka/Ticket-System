@@ -18,14 +18,31 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Accordion,
   AccordionHeader,
-  AccordionBody,
+  AccordionBody, IconButton,
 } from "@material-tailwind/react";
 // import TitleText from "../components/TitleText";
 import FormInputText from "../components/FormInputText";
 import FormInputField from "../components/FormInputField";
 import { useForm } from 'react-hook-form';
 import urls from "../common/Urls";
+import {Tooltip} from "react-tippy";
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {Alert, Grid, InputAdornment, Snackbar, TextField} from "@mui/material";
 
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 function Icon({ id, open }) {
   return (
@@ -54,6 +71,7 @@ export default function EmployeePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
+  const [showBulkUserUpload, setBulkUserUpload] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
   const [userStatus, setUserStatus] = useState("");
@@ -564,6 +582,62 @@ export default function EmployeePage() {
   console.log("test update Ticket", edituserDetails)
 
 
+  // bulk user upload
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      setSelectedFile(file);
+    };
+
+    const handleUpload = async () => {
+      if (!selectedFile) {
+        setUploadMessage('Please select an Excel file to upload.');
+        setOpenSnackbar(true);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await axios.post(urls.BULK_USER_UPLOAD, formData, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            "Authorization": `Bearer ${user1.jwt}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        if (response.status ===200){
+          CommonToasts.basicToast("Excel file uploaded successfully!");
+          setOpenSnackbar(true);
+          setSelectedFile(null);
+          setBulkUserUpload(false);
+          getEmployeePage();
+
+        }else{
+          CommonToasts.errorToast("Error uploading file. Please try again.");
+          setOpenSnackbar(true);
+          setSelectedFile(null);
+          setBulkUserUpload(false);
+        }
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        setUploadMessage('Error uploading file. Please try again.');
+        setOpenSnackbar(true);
+      }
+    };
+
+    const handleSnackbarClose = () => {
+      setOpenSnackbar(false);
+    };
+
+
 
 
 
@@ -586,33 +660,28 @@ export default function EmployeePage() {
             <div class="space-y-10">
 
 
+              <div className="flex items-center p-3 space-x-6 bg-sky-300  shadow-lg hover:shadow-xl">
 
-
-
-
-
-
-              <div class="flex items-center p-3 space-x-6 bg-sky-300  shadow-lg hover:shadow-xl">
-
-                <div class="flex bg-white p-2 w-96 space-x-4 rounded-lg">
-
+                <div className="flex bg-white p-2 w-96 space-x-4 rounded-lg">
 
 
                   <input
-                    className="bg-white  outline-none"
-                    type="text"
-                    placeholder="Search......"
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    onKeyDown={handleKeyDown}
+                      className="bg-white  outline-none"
+                      type="text"
+                      placeholder="Search......"
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                      onKeyDown={handleKeyDown}
                   />
                 </div>
 
 
-                <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
+                <div className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
                   <button onClick={performSearch}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mx-1 ">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" className="w-6 h-6 mt-1 mx-1 ">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                     </svg>
 
                   </button>
@@ -620,9 +689,9 @@ export default function EmployeePage() {
 
                 <div className="w-48">
                   <select
-                    id="type"
-                    className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    onChange={(e) => setStatus(e.target.value)}
+                      id="type"
+                      className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setStatus(e.target.value)}
                   >
                     <option value="">Select type</option>
                     <option value="ACTIVE">ACTIVE</option>
@@ -631,26 +700,45 @@ export default function EmployeePage() {
                     <option value="DORMANT">DORMANT</option>
                   </select>
                 </div>
+                <div className="flex justify-between">
+
+                  <button
+                      className="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 absolute right-16 top-3"
+                      type="button"
+
+                      onClick={() => setBulkUserUpload(true)}
+                  >
+                    <Tooltip title="Bulk User Upload" position="bottom" trigger="mouseenter " className="right-16 top-3">
+                      {/*<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"*/}
+                      {/*     stroke="currentColor" className="w-6 h-6 mt-1 mx-1 ">*/}
+                      {/*  <path stroke-linecap="round" stroke-linejoin="round"*/}
+                      {/*        d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>*/}
+                      {/*</svg>*/}
+                      <CloudUploadIcon/>
+                    </Tooltip>
+                  </button>
+
+
+                </div>
 
               </div>
             </div>
 
 
-
             {/* {user && ( */}
             <table className="table-auto m-4 border-separate border-spacing-y-2">
               <thead>
-                <tr>
-                  <th className="text-center w-64" scope="col">First Name</th>
-                  <th className="text-center w-64">Last Name</th>
-                  <th className="text-center w-64">Email</th>
-                  <th className="text-center w-64">Status</th>
-                  {/* <th className="text-center w-64">Commands</th> */}
-                </tr>
+              <tr>
+                <th className="text-center w-64" scope="col">First Name</th>
+                <th className="text-center w-64">Last Name</th>
+                <th className="text-center w-64">Email</th>
+                <th className="text-center w-64">Status</th>
+                {/* <th className="text-center w-64">Commands</th> */}
+              </tr>
               </thead>
               <tbody>
-                {/* const items = userList.map((user) => ( */}
-                {userList?.map((user) => (
+              {/* const items = userList.map((user) => ( */}
+              {userList?.map((user) => (
                   <tr className="" key={user.id}>
                     <td className="text-center">{user.firstName}</td>
                     <td className="text-center">{user.lastName}</td>
@@ -1616,6 +1704,90 @@ export default function EmployeePage() {
 
 
         </>
+      ) : null}
+
+      {showBulkUserUpload ? (
+          <>
+
+            <div className="fixed inset-0 z-10 w-100 overflow-y-auto ">
+              <div
+                  className="fixed inset-0 w-full h-full bg-black opacity-40 "
+                  onClick={() => setBulkUserUpload(false)}
+              ></div>
+              <div>
+
+                <div className="flex items-center min-h-screen px-4 py-8 ">
+                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                      <h5 className="text-4xl font-bold text-blue-400">
+                        Bulk User Upload
+                      </h5>
+                      <button
+                          type="button"
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          onClick={() => setBulkUserUpload(false)}
+                      >
+                        <svg
+                            className="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                              fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                      <div>
+                        <label>Please Upload the Excel sheet ..</label>
+                        <br></br>
+                        <div className="flex" >
+                        <TextField
+                            id="file-upload"
+                            type="file"
+                            variant="outlined"
+                            accept=".xlsx"
+                            onChange={handleFileChange}
+                            InputProps={{
+                              endAdornment: (
+                                  <InputAdornment position="end">
+
+                                  </InputAdornment>
+                              ),
+                            }}
+                        /></div>
+                        <div className="flex-auto items-end">
+                        <Button variant="contained" component="span" onClick={handleUpload}>
+                          Upload
+                        </Button>
+                        </div>
+                        <Snackbar
+                            open={openSnackbar}
+                            autoHideDuration={6000}
+                            onClose={handleSnackbarClose}
+                        >
+                          <Alert onClose={handleSnackbarClose}
+                                 severity={uploadMessage.includes('Error') ? 'error' : 'success'}>
+                            {uploadMessage}
+                          </Alert>
+                        </Snackbar>
+                      </div>
+                    <div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+
+          </>
       ) : null}
 
 

@@ -34,6 +34,8 @@ const FAQ_BASE_URL = BASE_URL+"/faqItems";
 
 const GET_TICKET_REPORT = BASE_URL+"/reports/tickets/";
 
+const BULK_USER_UPLOAD = BASE_URL+"/users/bulk";
+
 
 
 
@@ -57,7 +59,8 @@ const urls = {
     GET_TICKET_REPORT,
     USER_FILTER_URL,
     HOLIDAY_URL,
-    WEBSOCKET
+    WEBSOCKET,
+    BULK_USER_UPLOAD
   }
 
   export default urls;
