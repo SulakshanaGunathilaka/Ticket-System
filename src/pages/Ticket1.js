@@ -40,6 +40,8 @@ import urls from "../common/Urls";
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import SockJsClient from 'react-stomp';
+import Textarea from '@mui/joy/Textarea';
+import {TextareaAutosize, TextField} from "@mui/material";
 
 
 
@@ -1248,12 +1250,36 @@ export default function TicketPage1() {
                     <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
                       Description
                     </label>
-                    <textarea
-                      id="description"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="Description"
-                      onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                    {/*<textarea*/}
+                    {/*  id="description"*/}
+                    {/*  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"*/}
+                    {/*  placeholder="Description"*/}
+                    {/*  onChange={(e) => setDescription(e.target.value)}*/}
+                    {/*></textarea>*/}
+
+                    {/*<Textarea*/}
+                    {/*  label="description"*/}
+                    {/*  inputProps = {{*/}
+                    {/*    maxlength: 300*/}
+                    {/*  }}*/}
+                    {/*  onChange={ (e) => setDescription(e.target.value)}*/}
+                    {/*  value={description}*/}
+                    {/*  helperText={`${description.length}/300`}*/}
+                    {/*/>*/}
+
+                    <TextField
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        inputProps={{
+                          maxlength: 300
+                        }}
+                        multiline
+                        value={description}
+                        helperText={`${description.length}/ 300`}
+                        onChange={(e) => setDescription(e.target.value)}
+                        margin="normal"
+                        variant="outlined"
+                        rows={3}
+                    />
 
                   </div>
 
@@ -1345,7 +1371,7 @@ export default function TicketPage1() {
                     <textarea
                       id="description"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setComment(e.target.value)}
-                      placeholder="Description"
+                      placeholder="comment"
 
                     ></textarea>
 
@@ -1496,19 +1522,37 @@ export default function TicketPage1() {
                     {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.description}
                     </p> */}
-                    <textarea
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={selectedTicket2.description}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          description: e.target.value,
-                        })
-                      }
+                    {/*<textarea*/}
+                    {/*  type="text"*/}
+                    {/*  id="question"*/}
+                    {/*  className="w-full p-2 border border-gray-300 rounded-md"*/}
+                    {/*  value={selectedTicket2.description}*/}
+                    {/*  onChange={(e) =>*/}
+                    {/*    setSelectedTicket2({*/}
+                    {/*      ...selectedTicket2,*/}
+                    {/*      description: e.target.value,*/}
+                    {/*    })*/}
+                    {/*  }*/}
 
-                    />
+                    {/*/>*/}
+                      <TextField
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                          inputProps={{
+                            maxlength: 300
+                          }}
+                          multiline
+                          value={selectedTicket2.description}
+                          helperText={`${selectedTicket2.description.length}/ 300`}
+                          onChange={(e) =>
+                              setSelectedTicket2({
+                                ...selectedTicket2,
+                                description: e.target.value,
+                              })}
+                          margin="normal"
+                          variant="outlined"
+                          rows={3}
+                      />
+
                   </div>
                   )}
 
@@ -1693,7 +1737,7 @@ export default function TicketPage1() {
                     <textarea
                       id="description"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" onChange={(e) => setComment(e.target.value)}
-                      placeholder="Description"
+                      placeholder="comment"
 
                     ></textarea>
 
@@ -1987,7 +2031,7 @@ export default function TicketPage1() {
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                           onChange={(e) => setComment(e.target.value)
                       }
-                          placeholder="Description"
+                          placeholder="comment"
 
                       ></textarea>
 
