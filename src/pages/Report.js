@@ -8,6 +8,8 @@ import AuthService from "../services/AuthenticationService";
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
 import urls from "../common/Urls";
+import DatePicker from 'react-datepicker'; 
+import 'react-datepicker/dist/react-datepicker.css'; 
 
 export default function Report(){
     const [userList, setUserList] = useState([]);
@@ -21,6 +23,8 @@ export default function Report(){
     const [type, settype] = useState("");
     const [user, setUser] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
   
     const [data, setData] = useState(null);
   
@@ -43,6 +47,8 @@ export default function Report(){
             q: searchQuery,
             status: status,
             type: type,
+            startDate: startDate ? startDate.toISOString() : null, // Convert to ISO format
+            endDate: endDate ? endDate.toISOString() : null,
           },
         });
   
@@ -314,6 +320,28 @@ export default function Report(){
                     <option value="SOFTWARE">SOFTWARE</option>
                     <option value="OTHER">OTHER</option>
                   </select>
+                </div>
+
+                                <div className="flex flex-col space-y-2"> {/* Added space-y-4 for spacing */}
+                <div className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">  {/* Nested flexbox for Start Date */}
+                    <div className="text-sm font-low">Start Date:</div>
+                    <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    dateFormat="yyyy/MM/dd"
+                    />
+                </div>
+                <div className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"> {/* Nested flexbox for End Date */}
+                    <div className="text-sm font-low">End Date:</div>
+                    <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    dateFormat="yyyy/MM/dd"
+                    selectsRange={startDate} // Disable selecting a date before startDate
+                    startDate={startDate}  // Disable selecting a date after endDate
+                    endDate={endDate}
+                    />
+                </div>
                 </div>
 
               </div>
