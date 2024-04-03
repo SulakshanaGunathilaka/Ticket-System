@@ -729,7 +729,14 @@ export default function TicketPage1() {
 
   let onReceived=(data) => {
     console.log("ws data ", data);
-    setTickets(data);
+    let usersRole = user1.user.roles[0].name;
+    let userId = user1.user.id;
+    if (usersRole === 'EMPLOYEE'){
+      setTickets(data.filter(ticket => ticket.user.id === userId));
+    }else{
+      setTickets(data);
+    }
+
   }
 
 
