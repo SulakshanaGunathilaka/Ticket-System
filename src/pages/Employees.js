@@ -29,7 +29,7 @@ import {Tooltip} from "react-tippy";
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {Alert, Grid, InputAdornment, Snackbar, TextField} from "@mui/material";
+import {Alert, Box, Grid, InputAdornment, Paper, Snackbar, TextField} from "@mui/material";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -1709,11 +1709,13 @@ export default function EmployeePage() {
       {showBulkUserUpload ? (
           <>
 
-            <div className="fixed inset-0 z-10 w-100 overflow-y-auto ">
-              <div
-                  className="fixed inset-0 w-full h-full bg-black opacity-40 "
+            <Box display="flex" justifyContent="center" >
+              <Paper
+                  className="fixed inset-0 w-full h-full bg-dark opacity-40 "
                   onClick={() => setBulkUserUpload(false)}
-              ></div>
+                  elevation={24} square sx={{ width: '100%' }}
+                  variant="outlined"
+              ></Paper>
               <div>
 
                 <div className="flex items-center min-h-screen px-4 py-8 ">
@@ -1741,40 +1743,44 @@ export default function EmployeePage() {
                         </svg>
                       </button>
                     </div>
-                      <div>
-                        <label>Please Upload the Excel sheet ..</label>
-                        <br></br>
-                        <div className="flex" >
-                        <TextField
-                            id="file-upload"
-                            type="file"
-                            variant="outlined"
-                            accept=".xlsx"
-                            onChange={handleFileChange}
-                            InputProps={{
-                              endAdornment: (
-                                  <InputAdornment position="end">
+                    <Grid sx={{ my: 1, mx: 1 }}>
+                      <label >Please Upload the Excel sheet ..</label>
+                      <br></br>
+                      <br></br>
+                      <div className="flex" >
+                        <TextField sx={{ width: '500px' }}
+                                   id="file-upload"
+                                   type="file"
+                                   variant="outlined"
+                                   accept=".xlsx"
+                                   onChange={handleFileChange}
+                                   InputProps={{
+                                     endAdornment: (
+                                         <InputAdornment position="end">
 
-                                  </InputAdornment>
-                              ),
-                            }}
-                        /></div>
-                        <div className="flex-auto items-end">
+                                         </InputAdornment>
+                                     ),
+                                   }}
+                        />
+                      </div>
+
+                      <br></br>
+                      <div className="flex justify-end items-end">
                         <Button variant="contained" component="span" onClick={handleUpload}>
                           Upload
                         </Button>
-                        </div>
-                        <Snackbar
-                            open={openSnackbar}
-                            autoHideDuration={6000}
-                            onClose={handleSnackbarClose}
-                        >
-                          <Alert onClose={handleSnackbarClose}
-                                 severity={uploadMessage.includes('Error') ? 'error' : 'success'}>
-                            {uploadMessage}
-                          </Alert>
-                        </Snackbar>
                       </div>
+                      <Snackbar
+                          open={openSnackbar}
+                          autoHideDuration={6000}
+                          onClose={handleSnackbarClose}
+                      >
+                        <Alert onClose={handleSnackbarClose}
+                               severity={uploadMessage.includes('Error') ? 'error' : 'success'}>
+                          {uploadMessage}
+                        </Alert>
+                      </Snackbar>
+                    </Grid>
                     <div>
 
                     </div>
@@ -1784,7 +1790,7 @@ export default function EmployeePage() {
               </div>
 
 
-            </div>
+            </Box>
 
 
           </>
