@@ -12,6 +12,17 @@ import AuthService from "../services/AuthenticationService";
 import CommonToasts from "../common/Toasts";
 import urls from "../common/Urls";
 import { useNavigate } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
 
 function CreateUser2() {
   const user1 = AuthService.getCurrentUser();
@@ -81,7 +92,7 @@ function CreateUser2() {
       state.province
     ) {
       setFormNo(formNo + 1);
-    } 
+    }
     // else if (
     //   formNo === 3 &&
     //   state.accountNo &&
@@ -159,7 +170,7 @@ function CreateUser2() {
       if (res.status == 200) {
         CommonToasts.basicToast("User Created Successfully");
         navigate("/employees")
-      }else {
+      } else {
         CommonToasts.errorToast("Error while creating user");
       }
 
@@ -180,6 +191,8 @@ function CreateUser2() {
     }
   };
 
+  const classes = useStyles();
+
   return (
     <div className=" bg-grey h-fit w-full ">
       <TitleText titleText="Create User" />
@@ -198,11 +211,11 @@ function CreateUser2() {
             <>
               <div
                 className={`w-[35px] my-3 text-white rounded-full ${formNo - 1 === i ||
-                    // formNo - 1 === i + 1 ||
-                    // formNo - 1 === i + 2 ||
-                    formNo === formArray.length
-                    ? "bg-sky-400"
-                    : "bg-sky-200"
+                  // formNo - 1 === i + 1 ||
+                  // formNo - 1 === i + 2 ||
+                  formNo === formArray.length
+                  ? "bg-sky-400"
+                  : "bg-sky-200"
                   } h-[35px] flex justify-center items-center`}
               >
                 {v}
@@ -210,8 +223,8 @@ function CreateUser2() {
               {i !== formArray.length - 1 && (
                 <div
                   className={`w-[85px] h-[2px] ${formNo === i + 2 || formNo === formArray.length
-                      ? "bg-sky-500"
-                      : "bg-sky-400"
+                    ? "bg-sky-500"
+                    : "bg-sky-400"
                     }`}
                 ></div>
               )}
@@ -222,11 +235,11 @@ function CreateUser2() {
           {formNo === 1 && (
 
             <div>
-              <div className="block p-6  bg-white w-full h-fit">
+              <div className="block p-2  bg-white w-full h-fit">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="First Name" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="First Name" /> */}
+                    {/* <FormInputField
                       value={state.firstName}
                       inputHandle={inputHandle}
                       type="text"
@@ -234,12 +247,21 @@ function CreateUser2() {
                       id="firstName"
                       placeholder="First Name"
                       {...register("firstName", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.firstName?.message}</p> */}
+                    <TextField
+                      id="firstname"
+                      label="First Name"
+                      variant="outlined"
+                      value={state.firstName}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="firstName"
+                    />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Other Names" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Other Names" /> */}
+                    {/* <FormInputField
                       value={state.otherNames}
                       inputHandle={inputHandle}
                       type="text"
@@ -247,14 +269,23 @@ function CreateUser2() {
                       id="otherNames"
                       placeholder="Other Names"
                       {...register("otherNames", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.otherNames?.message}</p> */}
+                    <TextField
+                      id="lastname"
+                      label="Last Name"
+                      variant="outlined"
+                      value={state.otherNames}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="otherNames"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Last Name" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Last Name" /> */}
+                    {/* <FormInputField
                       value={state.lastName}
                       inputHandle={inputHandle}
                       type="text"
@@ -262,12 +293,21 @@ function CreateUser2() {
                       id="lastName"
                       placeholder="Last Name"
                       {...register("lastName", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.lastName?.message}</p> */}
+                    <TextField
+                      id="othername"
+                      label="Other Names"
+                      variant="outlined"
+                      value={state.lastName}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="lastName"
+                    />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Email" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Email" /> */}
+                    {/* <FormInputField
                       value={state.email}
                       inputHandle={inputHandle}
                       type="email"
@@ -275,14 +315,23 @@ function CreateUser2() {
                       id="email"
                       placeholder="Email"
                       {...register("email", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.email?.message}</p> */}
+                    <TextField
+                      id="email"
+                      label="Email"
+                      variant="outlined"
+                      value={state.email}
+                      inputHandle={inputHandle}
+                      type="email"
+                      name="email"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Password" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Password" /> */}
+                    {/* <FormInputField
                       value={state.password}
                       inputHandle={inputHandle}
                       type="password"
@@ -290,12 +339,21 @@ function CreateUser2() {
                       id="password"
                       placeholder="Password"
                       {...register("password", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.password?.message}</p> */}
+                    <TextField
+                      id="password"
+                      label="Password"
+                      variant="outlined"
+                      value={state.password}
+                      inputHandle={inputHandle}
+                      type="password"
+                      name="password"
+                    />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="NIC" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="NIC" /> */}
+                    {/* <FormInputField
                       value={state.nicNumber}
                       inputHandle={inputHandle}
                       type="text"
@@ -303,14 +361,23 @@ function CreateUser2() {
                       id="nicNumber"
                       placeholder="NIC"
                       {...register("nicNumber", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.nicNo?.message}</p> */}
+                    <TextField
+                      id="nicNumber"
+                      label="NIC Number"
+                      variant="outlined"
+                      value={state.nicNumber}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="nicNumber"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Primary Contact" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Primary Contact" /> */}
+                    {/* <FormInputField
                       value={state.primaryContactNo}
                       inputHandle={inputHandle}
                       type="text"
@@ -318,12 +385,21 @@ function CreateUser2() {
                       id="primaryContactNo"
                       placeholder="Primary Contact"
                       {...register("primaryContactNo", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.primaryContactNo?.message}</p> */}
+                    <TextField
+                      id="primaryContactNo"
+                      label="Primary Contact"
+                      variant="outlined"
+                      value={state.primaryContactNo}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="primaryContactNo"
+                    />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Secondary Contact" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Secondary Contact" /> */}
+                    {/* <FormInputField
                       value={state.secondaryContactNo}
                       inputHandle={inputHandle}
                       type="text"
@@ -331,14 +407,23 @@ function CreateUser2() {
                       id="secondaryContactNo"
                       placeholder="Secondary Contact"
                       {...register("secondaryContactNo", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p> */}
+                    <TextField
+                      id="socondaryContactNo"
+                      label="Secondary Contact"
+                      variant="outlined"
+                      value={state.secondaryContactNo}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="secondaryContactNo"
+                    />
                   </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Joined Date" />
-                    <FormInputField
+                    {/* <FormInputText formInputText="Joined Date" /> */}
+                    {/* <FormInputField
                       value={state.joinDate}
                       inputHandle={inputHandle}
                       type="date"
@@ -346,11 +431,20 @@ function CreateUser2() {
                       id="joinDate"
                       placeholder="Joined Date"
                       {...register("joinDate", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.joinDate?.message}</p> */}
+                    <TextField
+                      id="joinDate"
+                      label="Joined Date"
+                      variant="outlined"
+                      value={state.joinDate}
+                      inputHandle={inputHandle}
+                      type="date"
+                      name="joinDate"
+                    />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <FormInputText formInputText="Gender" />
+                    {/* <FormInputText formInputText="Gender" />
                     <FormInputField
                       value={state.gender}
                       inputHandle={inputHandle}
@@ -359,13 +453,23 @@ function CreateUser2() {
                       id="gender"
                       placeholder="Gender"
                       {...register("gender", { required: "This is required" })}
-                    />
+                    /> */}
                     {/* <p className="text-red-400 text-xs"> {errors.gender?.message}</p> */}
                     {/* <Select options={options} onChange={inputHandle}  classNamePrefix="select"    name='gender' value={state.gender} class='p-2 border border-slate-400 mt-1 outline-0 focus:border-blue-500 rounded-md'/> */}
+                    <TextField
+                      id="gender"
+                      label="Gender"
+                      variant="outlined"
+                      value={state.gender}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="gender"
+                    />
                   </div>
                 </div>
-                <div className="flex flex-col mb-2">
-                  <FormInputText formInputText="Date Of Birth" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    {/* <FormInputText formInputText="Date Of Birth" />
                   <FormInputField
                     value={state.dateOfBirth}
                     inputHandle={inputHandle}
@@ -374,19 +478,97 @@ function CreateUser2() {
                     id="dateOfBirth"
                     placeholder="dateOfBirth"
                     {...register("dateOfBirth", { required: "This is required" })}
-                  />
-                  {/* <p className="text-red-400 text-xs"> {errors.dateOfBirth?.message}</p> */}
+                  /> */}
+                    {/* <p className="text-red-400 text-xs"> {errors.dateOfBirth?.message}</p> */}
+                    <TextField
+                      id="dateOfBirth"
+                      label="Date Of Birth"
+                      variant="outlined"
+                      value={state.dateOfBirth}
+                      inputHandle={inputHandle}
+                      type="date"
+                      name="dateOfBirth"
+                    />
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    {/* <FormInputText formInputText="Date Of Birth" />
+                  <FormInputField
+                    value={state.dateOfBirth}
+                    inputHandle={inputHandle}
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    placeholder="dateOfBirth"
+                    {...register("dateOfBirth", { required: "This is required" })}
+                  /> */}
+                    {/* <p className="text-red-400 text-xs"> {errors.dateOfBirth?.message}</p> */}
+                    <TextField
+                      id="epfNumber"
+                      label="EPF Number"
+                      variant="outlined"
+                      value={state.epfNumber}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="epfNumber"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col mb-2">
+                    {/* <FormInputText formInputText="Date Of Birth" />
+                  <FormInputField
+                    value={state.dateOfBirth}
+                    inputHandle={inputHandle}
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    placeholder="dateOfBirth"
+                    {...register("dateOfBirth", { required: "This is required" })}
+                  /> */}
+                    {/* <p className="text-red-400 text-xs"> {errors.dateOfBirth?.message}</p> */}
+                    <TextField
+                      id="agency"
+                      label="Agency"
+                      variant="outlined"
+                      value={state.agency}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="agency"
+                    />
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    {/* <FormInputText formInputText="Date Of Birth" />
+                  <FormInputField
+                    value={state.dateOfBirth}
+                    inputHandle={inputHandle}
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    placeholder="dateOfBirth"
+                    {...register("dateOfBirth", { required: "This is required" })}
+                  /> */}
+                    {/* <p className="text-red-400 text-xs"> {errors.dateOfBirth?.message}</p> */}
+                    <TextField
+                      id="department"
+                      label="Department"
+                      variant="outlined"
+                      value={state.department}
+                      inputHandle={inputHandle}
+                      type="text"
+                      name="department"
+                    />
+                  </div>
                 </div>
 
-                <div className="mt-4 flex justify-center items-center">
+                <div className="mt-4 flex justify-end">
                   <button
                     onClick={next}
-                    className="px-3 py-2 text-lg rounded-md w-full text-black bg-sky-500"
-
+                    className="px-3 py-2 text-sm rounded-md w-small text-black bg-sky-500"
                   >
                     Next
                   </button>
                 </div>
+
               </div>
             </div>
 
@@ -484,8 +666,8 @@ function CreateUser2() {
                     placeholder="Account Number"
                     {...register("accountNo", { required: "This is required" })}
                   /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p> */}
-                {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.accountNo?.message}</p> */}
+          {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Bank Name" />
                   <FormInputField
@@ -497,8 +679,8 @@ function CreateUser2() {
                     placeholder="Bank Name"
                     {...register("bankName", { required: "This is required" })}
                   /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.bankName?.message}</p> */}
-                {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.bankName?.message}</p> */}
+          {/* </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col mb-2">
@@ -512,8 +694,8 @@ function CreateUser2() {
                       placeholder="Bank Branch"
                       {...register("bankBranch", { required: "This is required" })}
                     /> */}
-                    {/* <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p> */}
-                  {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.bankBranch?.message}</p> */}
+          {/* </div>
                   <div className="flex flex-col mb-2">
                     <FormInputText formInputText="Account Type" />
                     <FormInputField
@@ -527,8 +709,8 @@ function CreateUser2() {
                     /> */}
 
 
-                    {/* <p className="text-red-400 text-xs"> {errors.accountType?.message}</p> */}
-                  {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.accountType?.message}</p> */}
+          {/* </div>
                 </div>
                 <div className="mt-4 gap-3 flex justify-center items-center">
                   <button
@@ -551,7 +733,7 @@ function CreateUser2() {
           )}
  */}
 
-  
+
 
           {/* {formNo === 4 && (
             <div>
@@ -567,8 +749,8 @@ function CreateUser2() {
                     placeholder="Designation"
                     {...register("designationName", { required: "This is required" })}
                   /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.designationName?.message}</p> */}
-                {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.designationName?.message}</p> */}
+          {/* </div>
                 <div className="flex flex-col mb-2">
                   <FormInputText formInputText="Designation Level" />
                   <FormInputField
@@ -580,8 +762,8 @@ function CreateUser2() {
                     placeholder="Designation Level"
                     {...register("designationLevel", { required: "This is required" })}
                   /> */}
-                  {/* <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p> */}
-                {/* </div>
+          {/* <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p> */}
+          {/* </div>
 
                 <div className="mt-4 gap-3 flex justify-center items-center">
                   <button
