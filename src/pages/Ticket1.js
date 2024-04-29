@@ -42,6 +42,8 @@ import SockJS from 'sockjs-client';
 import SockJsClient from 'react-stomp';
 import Textarea from '@mui/joy/Textarea';
 import {TextareaAutosize, TextField} from "@mui/material";
+import ReactPaginate from "react-paginate";
+import Pagination from '@mui/material/Pagination';
 
 
 
@@ -117,6 +119,21 @@ export default function TicketPage1() {
   const [userName, setUserName] = useState('');
   const [sendEmail, setsendEmail] = useState('');
   const [recipient, setrecipient] = useState('');
+
+  // pagination
+
+  const [pageNumber,setPageNumber] = useState(0);
+  const ticketsPerPage = 10;
+  const pagesVisited = pageNumber * ticketsPerPage;
+  const pageCount= Math.ceil(tickets.length / ticketsPerPage);
+
+  const changePage = ({selected}) => {
+    console.log("selected page" , selected)
+    setPageNumber(selected);
+  }
+
+  // const displayTickets = tickets.slice(pagesVisited,pagesVisited+ticketsPerPage)
+  //     .map()
 
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -855,7 +872,7 @@ export default function TicketPage1() {
 
 
 
-            {tickets.map((ticket, index) => (
+            {tickets.slice(pagesVisited,pagesVisited+ticketsPerPage).map((ticket, index) => (
 
               <div class=" relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
                 <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-sky-300 via-blue-100 to-sky-500"></span>
@@ -1155,7 +1172,26 @@ export default function TicketPage1() {
 
 
             ))}
+
+            <br/>
+
+
+            
           </div>
+
+          <br/>
+          <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={changePage}
+              containerClassName={"paginationBttns"}
+              previousLinkClassName={"previousBttn"}
+              nextLinkClassName={"nextBttn"}
+              disabledClassName={"paginationDisabled"}
+              activeClassName={"paginationActive"}
+          />
+
 
 
           <nav className='block'>
