@@ -4,6 +4,7 @@ import { Collapse } from "react-collapse";
 import { Flowbite } from "flowbite-react";
 import { useState } from "react";
 import AuthService from "../services/AuthenticationService";
+import {SummarizeOutlined} from "@mui/icons-material";
 
 export default function SideBar() {
   const location = useLocation();
@@ -241,6 +242,22 @@ export default function SideBar() {
             </Link>
           </li>
             ) : null}
+
+          {user1.user.roles[0].name == "ADMIN" ||  user1.user.roles[0].name == "IT_ADMIN" ?(
+              <li className={splitLocation[1] === "Reports" ? "active" : ""}>
+                <Link
+                    end
+                    to="/report"
+                    className="flex items-center p-2 text-base font-normal text-black rounded-lg hover:bg-sky-300"
+                >
+
+                  <SummarizeOutlined/>
+
+
+                  <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
+                </Link>
+              </li>
+          ) : null}
 
 
 
