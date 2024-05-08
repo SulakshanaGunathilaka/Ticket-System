@@ -38,6 +38,8 @@ const BULK_USER_UPLOAD = BASE_URL+"/users/bulk";
 
 const RESET_PASSWORD = BASE_URL+"/rest-password";
 
+const TICKET_REPORT = BASE_URL+"/reports/tickets/report";
+
 
 
 
@@ -63,7 +65,8 @@ const urls = {
     HOLIDAY_URL,
     WEBSOCKET,
     BULK_USER_UPLOAD,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    TICKET_REPORT
   }
 
   export default urls;
