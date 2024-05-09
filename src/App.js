@@ -25,6 +25,7 @@ import store from './redux/store';
 import TicketPage1 from './pages/Ticket1';
 import Useprofile from './pages/Useprofile';
 import ReportPage from "./pages/Report";
+import TicketHistory from './pages/TicketHistory';
 
 
 
@@ -86,7 +87,8 @@ function App() {
             <Route path='/ticket' element={<TicketPage1 />} />
             <Route path='/fullcalendar' element={<FAQPage/>} />
             <Route path='/userprofile' element={<Useprofile/>} />
-          <Route path='/report' element={<ReportPage/>} />
+            <Route path='/report' element={<ReportPage/>} />
+            <Route path='/tickethistory' element={<TicketHistory/>} />
             
          
           </Route>

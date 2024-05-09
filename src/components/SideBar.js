@@ -5,6 +5,7 @@ import { Flowbite } from "flowbite-react";
 import { useState } from "react";
 import AuthService from "../services/AuthenticationService";
 import {SummarizeOutlined} from "@mui/icons-material";
+import RestoreFromTrashOutlinedIcon from '@mui/icons-material/RestoreFromTrashOutlined';
 
 export default function SideBar() {
   const location = useLocation();
@@ -278,6 +279,22 @@ export default function SideBar() {
             </Link>
           </li>
             ) : null}
+
+{user1.user.roles[0].name == "ADMIN" ||  user1.user.roles[0].name == "IT_ADMIN" ?(
+              <li className={splitLocation[1] === "TicketHistory" ? "active" : ""}>
+                <Link
+                    end
+                    to="/tickethistory"
+                    className="flex items-center p-2 text-base font-normal text-black rounded-lg hover:bg-sky-300"
+                >
+
+                  <RestoreFromTrashOutlinedIcon/>
+
+
+                  <span className="flex-1 ml-3 whitespace-nowrap">Ticket History</span>
+                </Link>
+              </li>
+          ) : null}
 
 
 

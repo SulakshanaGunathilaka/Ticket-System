@@ -673,7 +673,7 @@ export default function TicketPage1() {
     try {
       axios({
         method: "delete",
-        url: urls.TICKET_BASE_URL+ticketId,
+        url: urls.DELETE_TICKET+ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
