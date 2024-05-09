@@ -40,6 +40,10 @@ const RESET_PASSWORD = BASE_URL+"/rest-password";
 
 const TICKET_REPORT = BASE_URL+"/reports/tickets/report";
 
+const GET_TICKET_HISTORY = BASE_URL+"/ticketHistory/deletedTicketHistory"
+
+const DELETE_TICKET = BASE_URL+"/tickets/deleteTicket/"
+
 
 
 
@@ -66,7 +70,9 @@ const urls = {
     WEBSOCKET,
     BULK_USER_UPLOAD,
     RESET_PASSWORD,
-    TICKET_REPORT
+    TICKET_REPORT,
+    GET_TICKET_HISTORY,
+    DELETE_TICKET
   }
 
   export default urls;
