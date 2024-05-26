@@ -73,12 +73,12 @@ function App() {
         {/* <Route path='/leave' element={<Leave />} /> */}
         
            {/* <Route path='/createUser' element={<CreateUserPage />} />, */}
-            <Route path='/create' element={<CreateUser2 />} />,
+           {/* <Route path='/create' element={<CreateUser2 />} />,*/}
             <Route path='/edituser' element={<EditUser />} />
 
          
           
-            <Route path='/create' element={<CreateUser2 />} />
+            {/*<Route path='/create' element={<CreateUser2 />} />*/}
             <Route path='/profile' element={<Profile />} />
             <Route path='/search' element={<Search />} />
             <Route path='/calendar' element={<Calendar />} />
