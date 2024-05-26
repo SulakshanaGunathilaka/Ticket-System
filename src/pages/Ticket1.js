@@ -92,6 +92,7 @@ export default function TicketPage1() {
   const [showTicketHistoryModel, setTicketHistoryModel] = useState(false);
   const [showEmployeeCloseModel, setShowEmployeeCloseModel] = useState(false);
   const [showDeleteTicketModel, setShowDeleteTicketModel] = useState(false);
+  const [deleteTicketId,setDeleteTicketId] = useState(0);
   const [deleteStatus, set] = useState(false);
 
   const [userStatus, setUserStatus] = useState("");
@@ -660,9 +661,10 @@ export default function TicketPage1() {
 
 
 
-  const handleDeleteTicket = (ticketId) => {
+  const handleDeleteTicket = () => {
     setShowDeleteTicketModel(false);
-    TicketDelete(ticketId);
+    console.log("delete Ticket Id: ",deleteTicketId)
+    TicketDelete(deleteTicketId);
 
 
   };
@@ -671,6 +673,9 @@ export default function TicketPage1() {
   const TicketDelete = (ticketId) => {
     setLoading(true);
     try {
+      if (ticketId ===0){
+        CommonToasts.errorToast("Invalid Ticket Number");
+      }
       axios({
         method: "delete",
         url: urls.DELETE_TICKET+ticketId,
@@ -705,6 +710,7 @@ export default function TicketPage1() {
       CommonToasts.errorToast(e.message);
       setLoading(false);
     }
+    setDeleteTicketId(0);
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -1018,7 +1024,11 @@ export default function TicketPage1() {
                                 type="button"
                                 className="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                                onClick={() => setShowDeleteTicketModel(true)}
+                                onClick={() => {setShowDeleteTicketModel(true);
+                                    setDeleteTicketId(ticket.id);
+                                }
+
+                            }
                             >
 
                               <DeleteOutlineOutlined/>
@@ -1127,7 +1137,7 @@ export default function TicketPage1() {
                                       <button
                                           type="button"
                                           class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                                          onClick={() => handleDeleteTicket(ticket.id)}
+                                          onClick={() => handleDeleteTicket()}
                                       >
                                         Yes, I'm sure
                                       </button>

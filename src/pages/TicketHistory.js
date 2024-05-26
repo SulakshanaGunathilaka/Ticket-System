@@ -164,13 +164,13 @@ export default function TicketHistory() {
                 header,
                 body: tickets.map((data) => {
                     // Destructure relevant properties from ticket object
-                    const { id, title, description, type, status, user } = data;
+                    const { ticketId, title, description, type, status, user } = data;
 
                     // Access nested user properties
                     const { firstName, lastName, employeeId } = user;
 
                     // Construct the data row with desired properties
-                    return { id, title, description, type, status, fullName: `${firstName} ${lastName}`, employeeId }
+                    return { ticketId, title, description, type, status, fullName: `${firstName} ${lastName}`, employeeId }
                 })
             }
         });
@@ -348,8 +348,8 @@ export default function TicketHistory() {
                         </thead>
                         <tbody>
                         {tickets.slice(pageVisited, pageVisited + ticketPerPage).map((ticket) => (
-                            <tr className="" key={ticket.id}>
-                                <td className="text-center">{ticket.id}</td>
+                            <tr className="" key={ticket.ticketId}>
+                                <td className="text-center">{ticket.ticketId}</td>
                                 <td className="text-center">{ticket.title}</td>
                                 <td className="text-center">{ticket.description}</td>
                                 <td className="text-center">{ticket.type}</td>
