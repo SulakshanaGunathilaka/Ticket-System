@@ -44,6 +44,8 @@ const GET_TICKET_HISTORY = BASE_URL+"/ticketHistory/deletedTicketHistory"
 
 const DELETE_TICKET = BASE_URL+"/tickets/deleteTicket/"
 
+const UPDATE_USER_STATUS = BASE_URL+"/users/update/"
+
 
 
 
@@ -72,7 +74,8 @@ const urls = {
     RESET_PASSWORD,
     TICKET_REPORT,
     GET_TICKET_HISTORY,
-    DELETE_TICKET
+    DELETE_TICKET,
+    UPDATE_USER_STATUS
   }
 
   export default urls;

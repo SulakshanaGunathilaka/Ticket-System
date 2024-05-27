@@ -30,6 +30,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {Alert, Box, Grid, InputAdornment, Paper, Snackbar, TextField} from "@mui/material";
+import {PublishedWithChanges} from "@mui/icons-material";
+import SockJsClient from "react-stomp";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -135,6 +137,7 @@ export default function EmployeePage() {
 
         console.log("Hellooo", response)
         setData(response.data.body.content);
+        console.log("user data: ",response.data.body);
         setUserList(response.data.body);
 
         setTotalPages(response.data.body.totalPages);
@@ -467,9 +470,87 @@ export default function EmployeePage() {
 
 
   const handleClickView2 = (userId) => {
-    ViewUser(userId);
+    // ViewUser(userId);
+    console.log("User id: ",userId);
+    showUserDetails(userId);
     setShowModal3(true);
   };
+
+  const [updateUserData,setUpdateUserData] =useState({
+    id:0,
+    userStatus:""
+  })
+
+  const showUserDetails = (userId) =>{
+    axios({
+      method: "get",
+      url: urls.USER_BASE_URL + userId,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        Authorization:
+            `Bearer ` +
+            user1.jwt,
+      },
+      data: null,
+
+      mode: "cors",
+    }).then((res) => {
+      console.log("response user details", res);
+      // var users = res.data.body;
+      var userid = res.data.body.id;
+      var status = res.data.body.userStatus;
+      setUpdateUserData({
+        id:userid,
+        userStatus:status
+      });
+      // setShowModal2(true);
+      console.log("set user data: ",updateUserData);
+      // setUserDetails(users);
+
+    });
+  }
+
+  const updateUserStatus =() =>{
+    console.log("updated User Data from Button: ",updateUserData);
+
+    if (updateUserData.userStatus === ''){
+      CommonToasts.errorToast("Please select valid status");
+    }else {
+
+
+      axios({
+        method: "PATCH",
+        url: urls.UPDATE_USER_STATUS + updateUserData.id,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          Authorization:
+              `Bearer ` +
+              user1.jwt,
+        },
+        params: {
+          status: updateUserData.userStatus
+        },
+
+
+        mode: "cors",
+      }).then((res) => {
+        console.log("update user status: ", res);
+        // var users = res.data.body;
+        setUpdateUserData({
+          id: 0,
+          userStatus: ""
+        });
+        // setShowModal2(true);
+        console.log("set user data: ", updateUserData);
+        // setUserDetails(users);
+        CommonToasts.basicToast("Status Updated");
+
+
+      });
+    }
+  }
 
 
 
@@ -638,12 +719,29 @@ export default function EmployeePage() {
     };
 
 
+  let onConnected = () => {
+    console.log("connected to ws");
+  }
+
+  let onReceived=(data) => {
+    console.log("ws data user data ", data);
+    setUserList(data);
+  }
 
 
 
 
   return (
     <>
+
+      <SockJsClient url={urls.WEBSOCKET}
+                    topics={['/topic/users']}
+                    onConnect ={onConnected}
+                    onDisconnect = {console.log("Ws Disconnected !")}
+                    onMessage ={msg => onReceived(msg)}
+                    debug={false}
+      />
+
       <div className=" bg-grey h-fit w-full ">
         <TitleText titleText="Employees" />
 
@@ -693,11 +791,9 @@ export default function EmployeePage() {
                       className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                       onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="">Select type</option>
+                    <option value="">Select Status</option>
                     <option value="ACTIVE">ACTIVE</option>
-                    <option value="INACTIVE">INACTIVE</option>
                     <option value="DEACTIVATED">DEACTIVATED</option>
-                    <option value="DORMANT">DORMANT</option>
                   </select>
                 </div>
                 <div className="flex justify-between">
@@ -729,9 +825,11 @@ export default function EmployeePage() {
             <table className="table-auto m-4 border-separate border-spacing-y-2">
               <thead>
               <tr>
+                <th className="text-center w-64" scope="col">Employee ID</th>
                 <th className="text-center w-64" scope="col">First Name</th>
                 <th className="text-center w-64">Last Name</th>
                 <th className="text-center w-64">Email</th>
+                <th className="text-center w-64">Role</th>
                 <th className="text-center w-64">Status</th>
                 {/* <th className="text-center w-64">Commands</th> */}
               </tr>
@@ -740,52 +838,58 @@ export default function EmployeePage() {
               {/* const items = userList.map((user) => ( */}
               {userList?.map((user) => (
                   <tr className="" key={user.id}>
+                    <td className="text-center">{user.employeeId}</td>
                     <td className="text-center">{user.firstName}</td>
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
+                    <td className="text-center">{user.roles[0].name}</td>
                     <td className="text-center">
                       {user.userStatus === "ACTIVE" ? (
-                        <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
+                          <span
+                              className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
                           ACTIVE
                         </span>
                       ) : user.userStatus === "INACTIVE" ? (
-                        <span className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
+                          <span
+                              className="m-2 px-3 py-1 bg-red-200 hover:bg-red-300 rounded-full text-sm font-semibold text-red-600">
                           INACTIVE
                         </span>
                       ) : user.userStatus === "DEACTIVATED" ? (
-                        <span className="m-2 px-3 py-1 bg-blue-200 hover:bg-blue-300 rounded-full text-sm font-semibold text-blue-600">
+                          <span
+                              className="m-2 px-3 py-1 bg-blue-200 hover:bg-blue-300 rounded-full text-sm font-semibold text-blue-600">
                           DEACTIVATED
                         </span>
                       ) : (
-                        <span className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
+                          <span
+                              className="m-2 px-3 py-1 bg-green-200 hover:bg-green-300 rounded-full text-sm font-semibold text-green-600">
                           DORMANT
                         </span>
                       )}
                     </td>
                     <td className="text-center">
                       {/* {console.log("admin"+ user1.roles.name)} */}
-                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
-                        <button
-                          type="button"
-                          class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                          onClick={() => handleClick(user.id)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
-                        </button>
-                      ) : null}
+                      {/*{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (*/}
+                      {/*  <button*/}
+                      {/*    type="button"*/}
+                      {/*    class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"*/}
+                      {/*    onClick={() => handleClick(user.id)}*/}
+                      {/*  >*/}
+                      {/*    <svg*/}
+                      {/*      xmlns="http://www.w3.org/2000/svg"*/}
+                      {/*      fill="none"*/}
+                      {/*      viewBox="0 0 24 24"*/}
+                      {/*      stroke-width="1.5"*/}
+                      {/*      stroke="currentColor"*/}
+                      {/*      class="w-4 h-4"*/}
+                      {/*    >*/}
+                      {/*      <path*/}
+                      {/*        stroke-linecap="round"*/}
+                      {/*        stroke-linejoin="round"*/}
+                      {/*        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"*/}
+                      {/*      />*/}
+                      {/*    </svg>*/}
+                      {/*  </button>*/}
+                      {/*) : null}*/}
                       {/* {user1.user.roles[0].name == "ADMIN" ? (
                         <button
                           type="button"
@@ -813,49 +917,48 @@ export default function EmployeePage() {
                     </td>
                     <td>
 
-                      <button
-                        type="button"
-                        class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                        onClick={() => handleClickView(user.id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                          />
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
-                      </button>
+                      {/*<button*/}
+                      {/*  type="button"*/}
+                      {/*  class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"*/}
+                      {/*  onClick={() => handleClickView(user.id)}*/}
+                      {/*>*/}
+                      {/*  <svg*/}
+                      {/*    xmlns="http://www.w3.org/2000/svg"*/}
+                      {/*    fill="none"*/}
+                      {/*    viewBox="0 0 24 24"*/}
+                      {/*    stroke-width="1.5"*/}
+                      {/*    stroke="currentColor"*/}
+                      {/*    class="w-4 h-4"*/}
+                      {/*  >*/}
+                      {/*    <path*/}
+                      {/*      stroke-linecap="round"*/}
+                      {/*      stroke-linejoin="round"*/}
+                      {/*      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"*/}
+                      {/*    />*/}
+                      {/*    <path*/}
+                      {/*      stroke-linecap="round"*/}
+                      {/*      stroke-linejoin="round"*/}
+                      {/*      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"*/}
+                      {/*    />*/}
+                      {/*  </svg>*/}
+                      {/*</button>*/}
 
                     </td>
                     <td>
                       {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
-                        <button
-                          type="button"
-                          class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                          onClick={() => handleClickView2(user.id)}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                          </svg>
 
-                        </button>
+                          <button
+                              type="button"
+                              class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                              onClick={() => handleClickView2(user.id)}
+                          >
+                          <PublishedWithChanges/>
+
+                          </button>
                       ) : null}
                     </td>
                   </tr>
-                ))}
+              ))}
               </tbody>
             </table>
             {/* )} */}
@@ -1446,280 +1549,113 @@ export default function EmployeePage() {
 
 
       {showModal3 ? (
-        <>
+          <>
+            <div className="fixed inset-0 z-10 overflow-y-auto">
+              <div
+                  className="fixed inset-0 w-full h-full bg-black opacity-40"
+                  onClick={() => setShowModal3(false)}
+              ></div>
+              <div>
 
-          <div className="fixed inset-0 z-10 w-100 overflow-y-auto ">
-            <div
-              className="fixed inset-0 w-full h-full bg-black opacity-40 "
-              onClick={() => setShowModal3(false)}
-            ></div>
-            <div>
-
-              <div className="flex items-center min-h-screen px-4 py-8 ">
-                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
-                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h5 className="text-4xl font-bold text-blue-400">
-                      Update User
-                    </h5>
-                    <button
-                      type="button"
-                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => setShowModal3(false)}
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
-
-
-
-
-
-
-                  <div className="w-full ">
-
-                    <form onSubmit={handleSubmit(finalSubmit)}
-                    >
-
-                      <div className="flex  flex-col justify-between p-5 mb-3 ">
-                        <h3 className="text-3xl font-semibold">
-
-                        </h3>
-                        <div className='flex space-x-3 mr-4 mt-10'  >
-                          <div className=' w-1/2 '>
-                            <label for="firstName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">First name</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="First Name" 
-                            value={edituserDetails.firstName}  
-                            {...register("firstName", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.firstName?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="lastName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Last name</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="lastName" 
-                            value={edituserDetails.lastName} 
-                            {...register("lastName", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.lastName?.message}</p>
-                          </div>
-                        </div>
-
-                        <div className=' w-1/2 '>
-
-                        </div>
-
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="primaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Primary contact number</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="primaryContactNo" 
-                            value={edituserDetails.primaryContactNo} 
-                            {...register("primaryContactNo", { required: "This is required" })} />
-                            {/* <label for="email" class="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300 ">Primary contact number</label>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"  value={edituserDetails.primaryContactNo} {...register("primaryContactNo", { required: "This is required" })} /> */}
-                            <p className="text-red-400 text-xs"> {errors.primaryContactNo?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="secondaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> secoundary contact number</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="secondaryContactNo" 
-                            value={edituserDetails.secondaryContactNo}
-                            {...register("secondaryContactNo", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p>
-                          </div>
-                        </div>
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="userStatus" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> User status</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="userStatus" 
-                            value={edituserDetails.userStatus}
-                            {...register("userStatus", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.userStatus?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="addressLine1" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Address line1</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="addressLine1" 
-                            value={edituserDetails?.address?.addressLine1}
-                            {...register("addressLine1", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.addressLine1?.message}</p>
-                          </div>
-                        </div>
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="addressLine2" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Address line2</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="addressLine2" 
-                            value={edituserDetails?.address?.addressLine2}
-                            {...register("addressLine2", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.addressLine2?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="city" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">City</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="city" 
-                            value={edituserDetails?.address?.city}
-                            {...register("city", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.city?.message}</p>
-                          </div>
-                        </div>
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="province" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Province</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                            placeholder="province" 
-                            value={edituserDetails?.address?.province}
-                            {...register("province", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.province?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="name" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300">Department Name</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="departmentName" 
-                            value={edituserDetails?.department?.name} 
-                            {...register("name", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.name?.message}</p>
-                          </div>
-                        </div>
-
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="agency" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Agency</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="agency" 
-                            value={edituserDetails?.department?.agency} 
-                            {...register("agency", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.agency?.message}</p>
-                          </div>
-
-                          <div className=' w-1/2 '>
-                            <label for="designationName" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation name</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="designationName" 
-                            value={edituserDetails?.designation?.designationName}
-                            {...register("designationName", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.designationName?.message}</p>
-                          </div>
-                        </div>
-
-                        <div className='flex space-x-3 mr-4'  >
-
-                          <div className=' w-1/2 '>
-                            <label for="designationLevel" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation level</label>
-                            <input 
-                            type="text" 
-                            class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
-                            placeholder="designationLevel" 
-                            value={edituserDetails?.designation?.designationLevel} 
-                            {...register("designationLevel", { required: "This is required" })} />
-                            <p className="text-red-400 text-xs"> {errors.designationLevel?.message}</p>
-                          </div>
-
-                          {/* <div className=' w-1/2 '>
-  <label for="secondaryContactNo" class="block mb-2 w-96 text-sm  mt-2 font-medium text-gray-900 dark:text-gray-300"> Designation name</label>
-  <input type="text" class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder="secondaryContactNo"{...register("secondaryContactNo", { required: "This is required" })} />
-  <p className="text-red-400 text-xs"> {errors.secondaryContactNo?.message}</p>
-</div> */}
-                        </div>
-
-
-                      </div>
-
-
-                      <div className="relative p-6 flex-auto">
-
-
-                      </div>
-                      {/*footer*/}
-                      <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                        {/* <button
-                          className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                <div className="flex items-center min-h-screen px-4 py-8">
+                  <div
+                      className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                      <h5 className="text-4xl font-bold text-blue-400">
+                        Update User Status
+                      </h5>
+                      <button
                           type="button"
-                          onClick={() => setShowModal(false)}
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          onClick={() => setShowModal3(false)}
+                      >
+                        <svg
+                            className="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
                         >
-                          Close
-                        </button> */}
-                        <button
-                          className="bg-gray-800 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                          type="submit"
-                        // onClick={notify}
-                        >
-                          Save Changes
-                        </button>
-                        <ToastContainer />
-                      </div>
+                          <path
+                              fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
 
-                    </form>
+                    <input type={"hidden"}/>
+                    <div className="w-full">
+                      <label htmlFor="employeeId"
+                             className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                        Employee ID - {updateUserData.id}
+                      </label>
+                    </div>
+                    <div className="w-full flex items-center">
+                      <label htmlFor="status"
+                             className="block mb-2 w-32 text-sm font-medium text-gray-900 dark:text-gray-600">
+                        Status
+                      </label>
+                      <select
+                          id="status"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 ml-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white justify-end"
+                          // onClick={handleSearchStatus}
+                          onChange={(e) => {
+                            setUpdateUserData({
+                              id: updateUserData.id,
+                              userStatus: e.target.value
+                            });
+                            console.log(e.target.value)
+                          }
+                          }
+                          // value={status}
+                      >
+                        {/* <option value="">Status</option> */}
+                        <option value="">Select Status</option>
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="DEACTIVATED">DEACTIVATED</option>
+                      </select>
+                    </div>
+                    <br/>
+                    <button
+                        type="button"
+                        className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                        // onClick={CloseComment}
+                        onClick={() => {
+                          updateUserStatus();
+                          setShowModal3(false);
+                        }}
+                    >
+                      Update User Status
+                    </button>
 
-                  </div></div></div></div>
+
+                  </div>
+                </div>
 
 
-          </div>
+              </div>
 
 
-
-        </>
+            </div>
+          </>
       ) : null}
 
       {showBulkUserUpload ? (
           <>
 
-            <Box display="flex" justifyContent="center" >
+            <Box display="flex" justifyContent="center">
               <Paper
                   className="fixed inset-0 w-full h-full bg-dark opacity-40 "
                   onClick={() => setBulkUserUpload(false)}
-                  elevation={24} square sx={{ width: '100%' }}
+                  elevation={24} square sx={{width: '100%'}}
                   variant="outlined"
               ></Paper>
               <div>
 
                 <div className="flex items-center min-h-screen px-4 py-8 ">
-                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div
+                      className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                     <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                       <h5 className="text-4xl font-bold text-blue-400">
                         Bulk User Upload
@@ -1743,12 +1679,12 @@ export default function EmployeePage() {
                         </svg>
                       </button>
                     </div>
-                    <Grid sx={{ my: 1, mx: 1 }}>
-                      <label >Please Upload the Excel sheet ..</label>
+                    <Grid sx={{my: 1, mx: 1}}>
+                      <label>Please Upload the Excel sheet ..</label>
                       <br></br>
                       <br></br>
-                      <div className="flex" >
-                        <TextField sx={{ width: '500px' }}
+                      <div className="flex">
+                        <TextField sx={{width: '500px'}}
                                    id="file-upload"
                                    type="file"
                                    variant="outlined"
