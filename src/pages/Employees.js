@@ -32,6 +32,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {Alert, Box, Grid, InputAdornment, Paper, Snackbar, TextField} from "@mui/material";
 import {PublishedWithChanges} from "@mui/icons-material";
 import SockJsClient from "react-stomp";
+import ReactPaginate from "react-paginate";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -113,6 +114,21 @@ export default function EmployeePage() {
     }
   };
 
+
+  // pagination
+  const [pageNumber, setPageNumber] = useState(0);
+  const usersPerPage =10;
+  const pageVisited = pageNumber * usersPerPage;
+  const pageCount = Math.ceil(userList.length / usersPerPage);
+  console.log("User List ",userList.length);
+  console.log("Page Visited ",pageVisited);
+  console.log("Page count ",pageCount);
+
+  const changePage = ({selected}) => {
+    console.log("selected page",selected);
+    setPageNumber(selected);
+  }
+
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       performSearch();
@@ -140,8 +156,8 @@ export default function EmployeePage() {
         console.log("user data: ",response.data.body);
         setUserList(response.data.body);
 
-        setTotalPages(response.data.body.totalPages);
-        setCurrentPage(1);
+        // setTotalPages(response.data.body.totalPages);
+        // setCurrentPage(1);
         setLoading(false);
       } catch (e) {
         CommonToasts.errorToast(e.message);
@@ -150,15 +166,14 @@ export default function EmployeePage() {
     }
 
     getAllUsers();
-    setCurrentPage(1);
-    updatePageNumbers();
+    // setCurrentPage(1);
   }, []);
 
-  useEffect(() => {
-    console.log("updatePageNumbers");
-
-    updatePageNumbers();
-  }, [totalPages]);
+  // useEffect(() => {
+  //   console.log("updatePageNumbers");
+  //
+  //   updatePageNumbers();
+  // }, [totalPages]);
 
 
   async function getNewPage(pageNo) {
@@ -179,13 +194,13 @@ export default function EmployeePage() {
     }
   }
 
-  function updatePageNumbers() {
-    const pageNumberArray = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumberArray.push(i);
-    }
-    // setPageNumbers(pageNumberArray);
-  }
+  // function updatePageNumbers() {
+  //   const pageNumberArray = [];
+  //   for (let i = 1; i <= totalPages; i++) {
+  //     pageNumberArray.push(i);
+  //   }
+  //   // setPageNumbers(pageNumberArray);
+  // }
 
   const handleDelete = async (userId) => {
     // loginUser(username,password)
@@ -753,7 +768,7 @@ export default function EmployeePage() {
 
 
 
-          <div className=" absolute mt-4 h-[82%] w-[82%] bg-white rounded-lg border-2 border-gray-200 shadow-md">
+          <div className=" absolute mt-4  w-[82%] bg-white rounded-lg border-2 border-gray-200 shadow-md">
 
             <div class="space-y-10">
 
@@ -836,13 +851,13 @@ export default function EmployeePage() {
               </thead>
               <tbody>
               {/* const items = userList.map((user) => ( */}
-              {userList?.map((user) => (
+              {userList?.slice(pageVisited, pageVisited + usersPerPage).map((user) => (
                   <tr className="" key={user.id}>
                     <td className="text-center">{user.employeeId}</td>
                     <td className="text-center">{user.firstName}</td>
                     <td className="text-center">{user.lastName}</td>
                     <td className="text-center">{user.email}</td>
-                    <td className="text-center">{user.roles[0].name}</td>
+                    <td className="text-center">{user.roles[0]?.name}</td>
                     <td className="text-center">
                       {user.userStatus === "ACTIVE" ? (
                           <span
@@ -866,86 +881,8 @@ export default function EmployeePage() {
                         </span>
                       )}
                     </td>
-                    <td className="text-center">
-                      {/* {console.log("admin"+ user1.roles.name)} */}
-                      {/*{user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (*/}
-                      {/*  <button*/}
-                      {/*    type="button"*/}
-                      {/*    class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"*/}
-                      {/*    onClick={() => handleClick(user.id)}*/}
-                      {/*  >*/}
-                      {/*    <svg*/}
-                      {/*      xmlns="http://www.w3.org/2000/svg"*/}
-                      {/*      fill="none"*/}
-                      {/*      viewBox="0 0 24 24"*/}
-                      {/*      stroke-width="1.5"*/}
-                      {/*      stroke="currentColor"*/}
-                      {/*      class="w-4 h-4"*/}
-                      {/*    >*/}
-                      {/*      <path*/}
-                      {/*        stroke-linecap="round"*/}
-                      {/*        stroke-linejoin="round"*/}
-                      {/*        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"*/}
-                      {/*      />*/}
-                      {/*    </svg>*/}
-                      {/*  </button>*/}
-                      {/*) : null}*/}
-                      {/* {user1.user.roles[0].name == "ADMIN" ? (
-                        <button
-                          type="button"
-                          class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
-                          onClick={() => handleView(user)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                            />
-                          </svg>
-                        </button>
-                      ) : null
-
-                      } */}
-                    </td>
                     <td>
-
-                      {/*<button*/}
-                      {/*  type="button"*/}
-                      {/*  class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"*/}
-                      {/*  onClick={() => handleClickView(user.id)}*/}
-                      {/*>*/}
-                      {/*  <svg*/}
-                      {/*    xmlns="http://www.w3.org/2000/svg"*/}
-                      {/*    fill="none"*/}
-                      {/*    viewBox="0 0 24 24"*/}
-                      {/*    stroke-width="1.5"*/}
-                      {/*    stroke="currentColor"*/}
-                      {/*    class="w-4 h-4"*/}
-                      {/*  >*/}
-                      {/*    <path*/}
-                      {/*      stroke-linecap="round"*/}
-                      {/*      stroke-linejoin="round"*/}
-                      {/*      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"*/}
-                      {/*    />*/}
-                      {/*    <path*/}
-                      {/*      stroke-linecap="round"*/}
-                      {/*      stroke-linejoin="round"*/}
-                      {/*      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"*/}
-                      {/*    />*/}
-                      {/*  </svg>*/}
-                      {/*</button>*/}
-
-                    </td>
-                    <td>
-                      {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+                      {((user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN") && (user1.user.userId !== user.id)) ? (
 
                           <button
                               type="button"
@@ -961,29 +898,18 @@ export default function EmployeePage() {
               ))}
               </tbody>
             </table>
-            {/* )} */}
 
-            <nav className='block'>
-              <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
-                {pageNumbers.map((number) => (
-                  <li key={number}>
-                    <a
-                      onClick={() => handlePageChange(number)}
-                      href='#'
-                      className={
-                        currentPage === number
-                          ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                          : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                      }
-                    >
-                      {number}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-
+            <br/>
+            <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                pageCount={pageCount}
+                onPageChange={changePage}
+                containerClassName={"paginationBttns"}
+                previousLinkClassName={"previousBttn"}
+                nextLinkClassName={"nextBttn"}
+                disabledClassName={"paginationDisabled"}
+                activeClassName={"paginationActive"} />
 
 
           </div>
