@@ -28,6 +28,7 @@ export default function LoginCard() {
 
   const onChangePassword = (e) => {
     const password = e.target.value;
+    console.log("User password: ",e.target.value);
     setPassword(password);
   };
 
@@ -35,6 +36,11 @@ export default function LoginCard() {
     resolve => setTimeout(resolve, ms)
   );
 
+  const handleKeyDownInPassword = (e) =>{
+    if (e.keyCode ===13){
+      handleLogin(e);
+    }
+  }
 
   const handleLogin = async (e) => {
 
@@ -86,7 +92,7 @@ export default function LoginCard() {
           </div>
           <div className="flex flex-wrap w-full mt-5 mb-8">
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Password</label>
-            <input type="password" name="password" id="password" onChange={onChangePassword} placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-600 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+            <input type="password" name="password" id="password" onChange={onChangePassword} onKeyDown={handleKeyDownInPassword} placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-600 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
           </div>
 
 
