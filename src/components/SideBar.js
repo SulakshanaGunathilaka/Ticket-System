@@ -291,7 +291,7 @@ export default function SideBar() {
                   <RestoreFromTrashOutlinedIcon/>
 
 
-                  <span className="flex-1 ml-3 whitespace-nowrap">Ticket History</span>
+                  <span className="flex-1 ml-3 whitespace-nowrap">Deletion History</span>
                 </Link>
               </li>
           ) : null}

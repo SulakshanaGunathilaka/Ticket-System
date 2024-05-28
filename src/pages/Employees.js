@@ -637,7 +637,7 @@ export default function EmployeePage() {
   const getEmployeePage = (page) => {
     axios({
       method: 'get',
-      url: urls.USER_BASE_URL+`page?page=${page}&offset=10`,
+      url: urls.GET_ALL_USERS_URL,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -648,8 +648,8 @@ export default function EmployeePage() {
       .then((res) => {
         console.log('response', res);
         if (res.status === 200) {
-          setTotalPages(res.data.totalPages);
-          setUserList(res.data.content);
+          // setTotalPages(res.data.totalPages);
+          setUserList(res.data.body);
         }
       })
       .catch((error) => {
