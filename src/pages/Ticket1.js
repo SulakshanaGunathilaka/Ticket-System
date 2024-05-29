@@ -357,50 +357,55 @@ export default function TicketPage1() {
   const CloseComment = () => {
     const ticketId = selectedTicket.id;
     const userId = user1.user.userId;
-    try {
-      axios({
-        method: "put",
-        url: urls.TICKET_BASE_URL+ticketId+'/status?status='+status1,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` + user1.jwt,
-        },
-        data: {
+    if(status1 === ""){
+      CommonToasts.errorToast("Select Valid Status");
+    }else{
+      try {
+        axios({
+          method: "put",
+          url: urls.TICKET_BASE_URL+ticketId+'/status?status='+status1,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Authorization": `Bearer ` + user1.jwt,
+          },
+          data: {
 
-          // id: id,
-          comment: comment,
-          userId : userId
+            // id: id,
+            comment: comment,
+            userId : userId
 
-          // createdDate: createdDate,
-          // userId: user1.user.userId,
-          // userName:  userName,
+            // createdDate: createdDate,
+            // userId: user1.user.userId,
+            // userName:  userName,
 
 
-        },
-        mode: "cors",
-      }).then((res) => {
-        console.log("response close ticket admin", res);
-        if (res.status == 200) {
-          setComment('');
-          if(res.data.status === 'failed'){
-            CommonToasts.errorToast(res.data.message);
-          }else{
-            CommonToasts.basicToast("Successfully Changed the Ticket status");
+          },
+          mode: "cors",
+        }).then((res) => {
+          console.log("response close ticket admin", res);
+          if (res.status == 200) {
+            setComment('');
+            if(res.data.status === 'failed'){
+              CommonToasts.errorToast(res.data.message);
+            }else{
+              CommonToasts.basicToast("Successfully Changed the Ticket status");
+            }
+            AllTicketBasedOnUser();
+
+
           }
-          AllTicketBasedOnUser();
-
-
-        }
-      }).catch((error) => {
-        CommonToasts.errorToast(error.message);
+        }).catch((error) => {
+          CommonToasts.errorToast(error.message);
+          setLoading(false);
+        });
+      } catch (e) {
+        CommonToasts.errorToast(e.message);
         setLoading(false);
-      });
-    } catch (e) {
-      CommonToasts.errorToast(e.message);
-      setLoading(false);
+      }
     }
+
   };
 
   const CloseEmployeeTicket = () => {
@@ -1758,7 +1763,7 @@ export default function TicketPage1() {
                     // value={status}
                     >
                       {/* <option value="">Status</option> */}
-                      <option value="">All</option>
+                      <option value="">SELECT STATUS</option>
                       <option value="OPEN">OPEN</option>
                       <option value="ACCEPTED">ACCEPTED</option>
                       <option value="IN_PROGRESS">IN_PROGRESS</option>
