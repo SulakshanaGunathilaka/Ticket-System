@@ -466,7 +466,7 @@ export default function TicketPage1() {
     const userId = user1.user.userId;
     let url;
     let usersRole = user1.user.roles[0].name;
-    if (usersRole === 'EMPLOYEE'){
+    if (usersRole === 'EMPLOYEE' || usersRole === 'MANAGER'){
       url = urls.GET_TICKETS_BY_USER+userId;
     }else{
       url = urls.GET_ALL_TICKETS_URL;
@@ -490,17 +490,21 @@ export default function TicketPage1() {
   const GetTickets = async () => {
     // const userId = user1.user.userId;
     let userId;
+    let url;
     let usersRole = user1.user.roles[0].name;
-    if (usersRole !== 'EMPLOYEE'){
+    if (usersRole !== 'EMPLOYEE' && selectedUserId !== ''){
       userId = selectedUserId;
+      url = urls.GET_TICKETS_WITH_FILTER_URL
     }else{
       userId = user1.user.userId;
+      url = urls.GET_TICKETS_WITH_FILTER_URL_MANAGER
     }
 
-    console.log("user id - "+ selectedUserId);
+    console.log("user id - "+ user1.user.userId);
+    console.log("user id - "+ userId);
     try {
 
-      const response = await axios.get(urls.GET_TICKETS_WITH_FILTER_URL, {
+      const response = await axios.get(url, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -839,7 +843,7 @@ export default function TicketPage1() {
                 <option value="CLOSED">CLOSED</option>
               </select>
 
-              {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" ? (
+              {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"  || user1.user.roles[0].name == "MANAGER"? (
               <select
                 id="type"
                 className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"

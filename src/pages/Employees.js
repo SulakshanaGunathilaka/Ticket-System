@@ -120,6 +120,7 @@ export default function EmployeePage() {
   const usersPerPage =10;
   const pageVisited = pageNumber * usersPerPage;
   const pageCount = Math.ceil(userList.length / usersPerPage);
+  console.log("User List Data: ",userList);
   console.log("User List ",userList.length);
   console.log("Page Visited ",pageVisited);
   console.log("Page count ",pageCount);
