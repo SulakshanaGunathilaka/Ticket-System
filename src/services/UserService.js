@@ -10,7 +10,7 @@ const getAllUsers = (pageNo, pageSize) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   return axios
-    .get(urls.GET_ALL_USERS_URL, {
+    .get(urls.GET_USERS_BY_LOGGED_IN_USER_URL, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + user.jwt,

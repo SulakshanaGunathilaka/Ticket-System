@@ -203,7 +203,8 @@ export default function SideBar() {
               </span>
             </Link>
           </li> */}
-            {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "EMPLOYEE"|| user1.user.roles[0].name == "IT_ADMIN" ?(
+            {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "EMPLOYEE"|| user1.user.roles[0].name === "IT_ADMIN"
+                || user1.user.roles[0].name === "MANAGER" ?(
           <li className={splitLocation[1] === "Ticket" ? "active" : ""}>
             <Link
               end
