@@ -30,7 +30,9 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {Alert, Box, Grid, InputAdornment, Paper, Snackbar, TextField} from "@mui/material";
-import {PublishedWithChanges} from "@mui/icons-material";
+import {AssignmentInd, LinkOff, PublishedWithChanges} from "@mui/icons-material";
+import LinkIcon from '@mui/icons-material/Link';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
 import SockJsClient from "react-stomp";
 import ReactPaginate from "react-paginate";
 
@@ -77,6 +79,7 @@ export default function EmployeePage() {
   const [showBulkUserUpload, setBulkUserUpload] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [showModal3, setShowModal3] = useState(false);
+  const [showUserAssignModel, setUserAssignModel] = useState(false);
   const [userStatus, setUserStatus] = useState("");
   const [status, setStatus] = useState("");
   const [user, setUser] = useState(null);
@@ -491,6 +494,49 @@ export default function EmployeePage() {
     showUserDetails(userId);
     setShowModal3(true);
   };
+  // Get All the Managers
+  useEffect(() => {
+   async function getAllManagers() {
+
+     setLoading(true);
+     try {
+       axios({
+         method:"get",
+         url:urls.GET_ALL_MANAGERS,
+         headers:{
+           "Access-Control-Allow-Origin": "*",
+           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+           "Authorization": `Bearer ${user1.jwt}`,
+         },
+         mode:"cors"
+       }).then((res) => {
+         if(res.status === 200){
+           console.log("All Managers : ",res.data.body);
+         }
+       }).catch((error) => {
+         CommonToasts.errorToast(error.message);
+         setLoading(false);
+       })
+     }catch (e){
+       CommonToasts.errorToast(e);
+       setLoading(false);
+     }
+
+
+    }
+
+    getAllManagers();
+
+  }, []);
+
+
+  // to assign the users to managers
+  const handleAssignToManager = (userId) => {
+    console.log("User Id: ", userId);
+    setUserAssignModel(true);
+
+
+  }
 
   const [updateUserData,setUpdateUserData] =useState({
     id:0,
@@ -887,10 +933,36 @@ export default function EmployeePage() {
 
                           <button
                               type="button"
-                              class="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                              className="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
                               onClick={() => handleClickView2(user.id)}
                           >
-                          <PublishedWithChanges/>
+                            <PublishedWithChanges/>
+
+                          </button>
+                      ) : null}
+                    </td>
+                    <td>
+                      {((user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN") && (user1.user.userId !== user.id)) ? (
+
+                          <button
+                              type="button"
+                              className="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                              onClick={() => handleClickView2(user.id)}
+                          >
+                            <LinkIcon/>
+
+                          </button>
+                      ) : null}
+                    </td>
+                    <td>
+                      {((user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN") && (user1.user.userId !== user.id)) ? (
+
+                          <button
+                              type="button"
+                              className="p-2 bg-white w-fit h-fit hover:bg-gray-200 rounded-lg shadow-md mx-1"
+                              onClick={() => handleClickView2(user.id)}
+                          >
+                            <LinkOff/>
 
                           </button>
                       ) : null}
@@ -910,19 +982,13 @@ export default function EmployeePage() {
                 previousLinkClassName={"previousBttn"}
                 nextLinkClassName={"nextBttn"}
                 disabledClassName={"paginationDisabled"}
-                activeClassName={"paginationActive"} />
+                activeClassName={"paginationActive"}/>
 
 
           </div>
 
 
-
-
         }
-
-
-
-
 
 
       </div>
@@ -1565,6 +1631,97 @@ export default function EmployeePage() {
 
 
             </div>
+          </>
+      ) : null}
+
+
+      {/*Assign Users to Manager */}
+
+      {showUserAssignModel ? (
+          <>
+            <Box display="flex" justifyContent="center">
+              <Paper
+                  className="fixed inset-0 w-full h-full bg-dark opacity-40 "
+                  onClick={() => setBulkUserUpload(false)}
+                  elevation={24} square sx={{width: '100%'}}
+                  variant="outlined"
+              ></Paper>
+              <div>
+
+                <div className="flex items-center min-h-screen px-4 py-8 ">
+                  <div
+                      className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                      <h5 className="text-4xl font-bold text-blue-400">
+                        Bulk User Upload
+                      </h5>
+                      <button
+                          type="button"
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          onClick={() => setBulkUserUpload(false)}
+                      >
+                        <svg
+                            className="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                              fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <Grid sx={{my: 1, mx: 1}}>
+                      <label>Please Upload the Excel sheet ..</label>
+                      <br></br>
+                      <br></br>
+                      <div className="flex">
+                        <TextField sx={{width: '500px'}}
+                                   id="file-upload"
+                                   type="file"
+                                   variant="outlined"
+                                   accept=".xlsx"
+                                   onChange={handleFileChange}
+                                   InputProps={{
+                                     endAdornment: (
+                                         <InputAdornment position="end">
+
+                                         </InputAdornment>
+                                     ),
+                                   }}
+                        />
+                      </div>
+
+                      <br></br>
+                      <div className="flex justify-end items-end">
+                        <Button variant="contained" component="span" onClick={handleUpload}>
+                          Upload
+                        </Button>
+                      </div>
+                      <Snackbar
+                          open={openSnackbar}
+                          autoHideDuration={6000}
+                          onClose={handleSnackbarClose}
+                      >
+                        <Alert onClose={handleSnackbarClose}
+                               severity={uploadMessage.includes('Error') ? 'error' : 'success'}>
+                          {uploadMessage}
+                        </Alert>
+                      </Snackbar>
+                    </Grid>
+                    <div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+            </Box>
           </>
       ) : null}
 

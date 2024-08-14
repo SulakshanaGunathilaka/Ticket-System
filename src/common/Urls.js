@@ -15,6 +15,7 @@ const GET_ALL_TICKETS_URL  = BASE_URL + "/tickets";
 const USER_BASE_URL = BASE_URL+"/users/";
 const USER_FILTER_URL = BASE_URL+"/users/filter";
 const GET_USERS_BY_LOGGED_IN_USER_URL = BASE_URL + "/users/forRole";
+const GET_ALL_MANAGERS = BASE_URL+"/users/managers"
 
 const HOLIDAY_URL = BASE_URL+"/holidays"
 
@@ -81,7 +82,8 @@ const urls = {
     DELETE_TICKET,
     UPDATE_USER_STATUS,
     GET_USERS_BY_LOGGED_IN_USER_URL,
-    GET_TICKETS_BY_MANAGER
+    GET_TICKETS_BY_MANAGER,
+    GET_ALL_MANAGERS
   }
 
   export default urls;
