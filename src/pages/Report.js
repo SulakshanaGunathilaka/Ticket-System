@@ -35,7 +35,6 @@ export default function ReportPage() {
     const pageCount = Math.ceil(tickets.length / ticketPerPage);
 
     const changePage = ({ selected }) => {
-        console.log("selected page", selected);
         setPageNumber(selected);
     }
 
@@ -74,13 +73,6 @@ export default function ReportPage() {
 
     const getReportData = async () => {
         try {
-            console.log("logged in user", user1.jwt);
-            console.log("selected query", searchQuery);
-            console.log("selected status", status);
-            console.log("selected User", selectedUserId);
-            console.log("selected ticket type", selectedTicketType);
-            console.log("selected starting date", startDate);
-            console.log("selected end date", endDate);
 
             let formatStartingDate = null;
             let formatEndingDate = null;
@@ -102,8 +94,6 @@ export default function ReportPage() {
                 formatEndingDate = moment(endDate).format("YYYY/MM/DD");
                 paramList.endDate = formatEndingDate;
             }
-
-            console.log("paramList", paramList);
 
             const response = await axios.get(urls.TICKET_REPORT, {
                 headers: {
@@ -131,8 +121,6 @@ export default function ReportPage() {
                     acceptedBy,
                 };
             });
-
-            console.log(response.data.body);
             setTickets(updatedTickets);
 
 
