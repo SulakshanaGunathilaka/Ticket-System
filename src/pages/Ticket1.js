@@ -24,7 +24,6 @@ import {
   CardFooter,
   Typography,
   MenuItem,
-  Select,
   Button,
 } from "@material-tailwind/react";
 import { RocketLaunchIcon } from "@heroicons/react/24/solid";
@@ -37,11 +36,11 @@ import { Tooltip } from 'react-tippy';
 import 'react-tippy/dist/tippy.css';
 import urls from "../common/Urls";
 
-import {over} from 'stompjs';
+import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import SockJsClient from 'react-stomp';
 import Textarea from '@mui/joy/Textarea';
-import {TextareaAutosize, TextField} from "@mui/material";
+import { TextareaAutosize, TextField } from "@mui/material";
 import ReactPaginate from "react-paginate";
 import Pagination from '@mui/material/Pagination';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -53,6 +52,7 @@ import {
   ForumOutlined,
   WorkHistoryOutlined
 } from "@mui/icons-material";
+import Select from 'react-select';
 
 
 
@@ -92,7 +92,7 @@ export default function TicketPage1() {
   const [showTicketHistoryModel, setTicketHistoryModel] = useState(false);
   const [showEmployeeCloseModel, setShowEmployeeCloseModel] = useState(false);
   const [showDeleteTicketModel, setShowDeleteTicketModel] = useState(false);
-  const [deleteTicketId,setDeleteTicketId] = useState(0);
+  const [deleteTicketId, setDeleteTicketId] = useState(0);
   const [deleteStatus, set] = useState(false);
 
   const [userStatus, setUserStatus] = useState("");
@@ -106,7 +106,8 @@ export default function TicketPage1() {
   const [title, setTitle] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTicket, setSelectedTicket] = useState('');
-  const [selectedUserId,setSelectedUserId] =useState('');
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [sortBy, setSortBy] = useState('');
 
   const [selectedTicket2, setSelectedTicket2] = useState({
     status: '',
@@ -132,13 +133,12 @@ export default function TicketPage1() {
 
   // pagination
 
-  const [pageNumber,setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
   const ticketsPerPage = 10;
   const pagesVisited = pageNumber * ticketsPerPage;
-  const pageCount= Math.ceil(tickets.length / ticketsPerPage);
+  const pageCount = Math.ceil(tickets.length / ticketsPerPage);
 
-  const changePage = ({selected}) => {
-    console.log("selected page" , selected)
+  const changePage = ({ selected }) => {
     setPageNumber(selected);
   }
 
@@ -160,51 +160,43 @@ export default function TicketPage1() {
 
   const user1 = AuthService.getCurrentUser();
 
-  console.log("current user details : "+ user1.user.userId);
-
-// websocket
-//   useEffect(() => {
-//     connect()
-//   }, []);
-//    var stompClient =null;
-//
-//    const connect = () =>{
-//      let Sock = new SockJS(urls.WEBSOCKET);
-//      stompClient = over(Sock);
-//      stompClient.connect({}, onConnected, onError);
-//    };
-//
-//    const onConnected = () => {
-//
-//      stompClient.subscribe("/topic/tickets", onTicketReceived);
-//      console.log("Connected .......");
-//    }
-//
-//   const onTicketReceived = (payload) => {
-//      let payloadData = JSON.parse(payload.body);
-//      console.log("payload Data ", payloadData);
-//   };
-//
-//    const onError = () =>{
-//      console.log("Error in Connecting to WS");
-//    };
+  // websocket
+  //   useEffect(() => {
+  //     connect()
+  //   }, []);
+  //    var stompClient =null;
+  //
+  //    const connect = () =>{
+  //      let Sock = new SockJS(urls.WEBSOCKET);
+  //      stompClient = over(Sock);
+  //      stompClient.connect({}, onConnected, onError);
+  //    };
+  //
+  //    const onConnected = () => {
+  //
+  //      stompClient.subscribe("/topic/tickets", onTicketReceived);
+  //      console.log("Connected .......");
+  //    }
+  //
+  //   const onTicketReceived = (payload) => {
+  //      let payloadData = JSON.parse(payload.body);
+  //      console.log("payload Data ", payloadData);
+  //   };
+  //
+  //    const onError = () =>{
+  //      console.log("Error in Connecting to WS");
+  //    };
 
 
   useEffect(() => {
-    console.log("initial load");
 
     async function getAllUsers() {
       setLoading(true);
       try {
         const response = await UserService.getAllUsers(1, 5);
-        //await delay(2000);
 
-        console.log("Hellooo", response)
-        // setData(response.data.body.content);
         setUserList(response.data.body);
 
-        // setTotalPages(tickets?.searchResults?.body?.totalPages);
-        // setCurrentPage(1);
         setLoading(false);
       } catch (e) {
         CommonToasts.errorToast(e.message);
@@ -213,8 +205,6 @@ export default function TicketPage1() {
     }
 
     getAllUsers();
-    // setCurrentPage(1);
-    // updatePageNumbers();
   }, []);
 
   const CreatTicket = (e) => {
@@ -242,7 +232,6 @@ export default function TicketPage1() {
         },
         mode: "cors",
       }).then((res) => {
-        console.log("response", res);
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Ticket Added");
@@ -263,11 +252,11 @@ export default function TicketPage1() {
 
   const EditTicket = (e) => {
 
-    const ticketId =selectedTicket2.id;
+    const ticketId = selectedTicket2.id;
     try {
       axios({
         method: "put",
-        url: urls.TICKET_BASE_URL+ticketId,
+        url: urls.TICKET_BASE_URL + ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -282,12 +271,10 @@ export default function TicketPage1() {
         },
         mode: "cors",
       }).then((res) => {
-        console.log("response", res);
         if (res.status == 200) {
 
           CommonToasts.basicToast("Successfully Updated Ticket");
           setShowModal1(false);
-          console.log(res)
           AllTicketBasedOnUser()
 
         }
@@ -305,65 +292,65 @@ export default function TicketPage1() {
 
   const CreateComment = () => {
     const ticketId = selectedTicket.id;
-    if(comment.trim().length === 0){
+    if (comment.trim().length === 0) {
       CommonToasts.errorToast("Comment field is Mandatory");
-    }else{
-    try {
-      axios({
-        method: "post",
-        url: urls.TICKET_BASE_URL+ticketId+'/comments',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` + user1.jwt,
-        },
-        data: {
+    } else {
+      try {
+        axios({
+          method: "post",
+          url: urls.TICKET_BASE_URL + ticketId + '/comments',
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Authorization": `Bearer ` + user1.jwt,
+          },
+          data: {
 
-          id: id,
-          comment: comment,
-          createdDate: createdDate,
-          userId: user1.user.userId,
-          userName: userName,
-
-
-        },
-        params: {
-          q: searchQuery,
-          status: status,
-          userId: userId,
-        },
-        mode: "cors",
-      }).then((res) => {
-        console.log("response", res);
-        if (res.status == 200) {
-
-          CommonToasts.basicToast("Successfully Comment Added");
-          AllTicketBasedOnUser();
+            id: id,
+            comment: comment,
+            createdDate: createdDate,
+            userId: user1.user.userId,
+            userName: userName,
 
 
+          },
+          params: {
+            q: searchQuery,
+            status: status,
+            userId: userId,
+          },
+          mode: "cors",
+        }).then((res) => {
+          if (res.status == 200) {
 
-        }
-      }).catch((error) => {
-        CommonToasts.errorToast(error.message);
+            CommonToasts.basicToast("Successfully Comment Added");
+            AllTicketBasedOnUser();
+
+
+
+          }
+        }).catch((error) => {
+          CommonToasts.errorToast(error.message);
+          setLoading(false);
+        });
+      } catch (e) {
+        CommonToasts.errorToast(e.message);
         setLoading(false);
-      });
-    } catch (e) {
-      CommonToasts.errorToast(e.message);
-      setLoading(false);
+      }
     }
-  }};
+  };
 
   const CloseComment = () => {
     const ticketId = selectedTicket.id;
     const userId = user1.user.userId;
-    if(status1 === ""){
+    if (status1 === "") {
       CommonToasts.errorToast("Select Valid Status");
-    }else{
+    } else {
       try {
         axios({
           method: "put",
-          url: urls.TICKET_BASE_URL+ticketId+'/status?status='+status1,
+          url: urls.TICKET_BASE_URL + ticketId + '/status?status=' + status1,
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -374,7 +361,7 @@ export default function TicketPage1() {
 
             // id: id,
             comment: comment,
-            userId : userId
+            userId: userId
 
             // createdDate: createdDate,
             // userId: user1.user.userId,
@@ -384,12 +371,11 @@ export default function TicketPage1() {
           },
           mode: "cors",
         }).then((res) => {
-          console.log("response close ticket admin", res);
           if (res.status == 200) {
             setComment('');
-            if(res.data.status === 'failed'){
+            if (res.data.status === 'failed') {
               CommonToasts.errorToast(res.data.message);
-            }else{
+            } else {
               CommonToasts.basicToast("Successfully Changed the Ticket status");
             }
             AllTicketBasedOnUser();
@@ -412,52 +398,51 @@ export default function TicketPage1() {
     const ticketId = selectedTicket.id;
     const status = "CLOSED";
     const userId = user1.user.userId;
-    if(comment.trim().length === 0){
+    if (comment.trim().length === 0) {
       CommonToasts.errorToast("Comment is Mandatory When closing the ticket");
-    }else{
-    try {
-      axios({
-        method: "put",
-        url: urls.TICKET_BASE_URL+ticketId+'/status?status='+status,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-          "Authorization": `Bearer ` + user1.jwt,
-        },
-        data: {
+    } else {
+      try {
+        axios({
+          method: "put",
+          url: urls.TICKET_BASE_URL + ticketId + '/status?status=' + status,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Authorization": `Bearer ` + user1.jwt,
+          },
+          data: {
 
-          // id: id,
-          comment: comment,
-          userId : userId
-          // createdDate: createdDate,
-          // userId: user1.user.userId,
-          // userName:  userName,
+            // id: id,
+            comment: comment,
+            userId: userId
+            // createdDate: createdDate,
+            // userId: user1.user.userId,
+            // userName:  userName,
 
 
-        },
-        mode: "cors",
-      }).then((res) => {
-        console.log("response close ticket employee", res);
-        if (res.status == 200) {
-          setComment('');
-          if(res.data.status === 'failed'){
-            CommonToasts.errorToast(res.data.message);
-          }else{
-            CommonToasts.basicToast("Successfully Closed the Ticket");
+          },
+          mode: "cors",
+        }).then((res) => {
+          if (res.status == 200) {
+            setComment('');
+            if (res.data.status === 'failed') {
+              CommonToasts.errorToast(res.data.message);
+            } else {
+              CommonToasts.basicToast("Successfully Closed the Ticket");
+            }
+            AllTicketBasedOnUser();
+
+
           }
-          AllTicketBasedOnUser();
-
-
-        }
-      }).catch((error) => {
-        CommonToasts.errorToast(error.message);
+        }).catch((error) => {
+          CommonToasts.errorToast(error.message);
+          setLoading(false);
+        });
+      } catch (e) {
+        CommonToasts.errorToast(e.message);
         setLoading(false);
-      });
-    } catch (e) {
-      CommonToasts.errorToast(e.message);
-      setLoading(false);
-    }
+      }
     }
   };
 
@@ -466,20 +451,18 @@ export default function TicketPage1() {
     const userId = user1.user.userId;
     let url;
     let usersRole = user1.user.roles[0].name;
-    if (usersRole === 'EMPLOYEE' || usersRole === 'MANAGER'){
-      url = urls.GET_TICKETS_BY_USER+userId;
-    }else{
+    if (usersRole === 'EMPLOYEE' || usersRole === 'MANAGER') {
+      url = urls.GET_TICKETS_BY_USER + userId;
+    } else {
       url = urls.GET_ALL_TICKETS_URL;
     }
-    console.log('This is the url = '+url)
-    const response = await axios.get(url,{
+    const response = await axios.get(url, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
         "Authorization": `Bearer ` + user1.jwt,
-  }
+      }
     });
-    console.log(response.data);
     setTickets(response.data.body);
 
   }
@@ -499,11 +482,7 @@ export default function TicketPage1() {
       userId = user1.user.userId;
       url = urls.GET_TICKETS_WITH_FILTER_URL_MANAGER
     }
-
-    console.log("user id - "+ user1.user.userId);
-    console.log("user id - "+ userId);
     try {
-
       const response = await axios.get(url, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -514,11 +493,11 @@ export default function TicketPage1() {
           q: searchQuery,
           status: status,
           userId: userId,
+          sort: sortBy
         },
       });
-
-      console.log(response.data);
       setTickets(response.data.body.content);
+    
     } catch (error) {
       console.error(error);
     }
@@ -530,6 +509,7 @@ export default function TicketPage1() {
 
 
   }, []);
+
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -564,7 +544,6 @@ export default function TicketPage1() {
         data: null,
         mode: "cors",
       }).then((res) => {
-        console.log("response", res);
         if (res.status == 200) {
 
           setSelectedTicket2(res.data.body);
@@ -616,7 +595,7 @@ export default function TicketPage1() {
     const count = Math.floor(seconds / biggestInterval.value);
 
     // Return the formatted string with count and unit
-    return `${count} ${biggestInterval.unit}${count > 1 ? "s" : "" } ago`;
+    return `${count} ${biggestInterval.unit}${count > 1 ? "s" : ""} ago`;
   }
 
 
@@ -624,14 +603,12 @@ export default function TicketPage1() {
   const handleView = (data) => {
     // ViewTicketDetails (data)
     setSelectedTicket(data)
-    console.log("View Ticket", data)
     setShowModal2(true);
 
   };
 
   const handleViewForSetSelectedUser = (data) => {
     setSelectedUserId(data);
-    console.log("selected User - "+ data);
   }
 
   const handleView6 = (data) => {
@@ -672,7 +649,7 @@ export default function TicketPage1() {
 
   const handleDeleteTicket = () => {
     setShowDeleteTicketModel(false);
-    console.log("delete Ticket Id: ",deleteTicketId)
+    console.log("delete Ticket Id: ", deleteTicketId)
     TicketDelete(deleteTicketId);
 
 
@@ -682,12 +659,12 @@ export default function TicketPage1() {
   const TicketDelete = (ticketId) => {
     setLoading(true);
     try {
-      if (ticketId ===0){
+      if (ticketId === 0) {
         CommonToasts.errorToast("Invalid Ticket Number");
       }
       axios({
         method: "delete",
-        url: urls.DELETE_TICKET+ticketId,
+        url: urls.DELETE_TICKET + ticketId,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -698,7 +675,6 @@ export default function TicketPage1() {
         mode: "cors",
       })
         .then((res) => {
-          console.log("response", res);
           if (res.status === 200) {
             // setFaqItems(res.data.body);
             const updatedTickets = tickets.filter(
@@ -728,11 +704,10 @@ export default function TicketPage1() {
 
 
   const getTicketpage = (page) => {
-    console.log("logged user : "+user1.user.userId);
-    const userId= user1.user.userId;
+    const userId = user1.user.userId;
     axios({
       method: 'get',
-      url: urls.GET_TICKETS_BY_USER+userId,
+      url: urls.GET_TICKETS_BY_USER + userId,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
@@ -762,33 +737,44 @@ export default function TicketPage1() {
 
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-  console.log("test update tic", selectedTicket2)
 
   let onConnected = () => {
     console.log("connected to ws");
   }
 
-  let onReceived=(data) => {
-    console.log("ws data ", data);
+  let onReceived = (data) => {
     let usersRole = user1.user.roles[0].name;
     let userId = user1.user.id;
-    if (usersRole === 'EMPLOYEE'){
+    if (usersRole === 'EMPLOYEE') {
       setTickets(data.filter(ticket => ticket.user.id === userId));
-    }else{
+    } else {
       setTickets(data);
     }
 
   }
 
+  const userOptions = [
+    { value: "", label: "-- Select --" },
+    ...userList.map((user) => ({
+      value: user.id,
+      label: `${user.firstName} ${user.lastName}`,
+    }))];
+
+  const handleChange = (selectedOption) => {
+    if (selectedOption) {
+      handleViewForSetSelectedUser(selectedOption.value);
+    }
+  };
+
 
   return (
     <>
       <SockJsClient url={urls.WEBSOCKET}
-                    topics={['/topic/tickets']}
-                    onConnect ={onConnected}
-                    onDisconnect = {console.log("Ws Disconnected !")}
-                    onMessage ={msg => onReceived(msg)}
-                    debug={false}
+        topics={['/topic/tickets']}
+        onConnect={onConnected}
+        onDisconnect={console.log("Ws Disconnected !")}
+        onMessage={msg => onReceived(msg)}
+        debug={false}
       />
       <div className=" bg-grey h-fit w-full ">
         <TitleText titleText="Ticket" />
@@ -803,18 +789,17 @@ export default function TicketPage1() {
 
             <div class="flex items-center p-3 space-x-6  bg-sky-300  shadow-lg hover:shadow-xl">
 
-              <div class="md:flex bg-white  p-2 w-96 space-x-4 rounded-lg">
-
+              <div className="md:flex bg-white p-2 w-96 space-x-4 rounded-lg">
                 <input
-                  className="bg-white  outline-none"
+                  className="bg-white outline-none flex-grow w-full"
                   type="text"
                   placeholder="Search......"
                   value={searchQuery}
                   onChange={handleSearchInputChange}
                   onKeyDown={handleKeyDown}
                 />
-
               </div>
+
 
               <div class="p-1 bg-white w-10 h-10 hover:bg-gray-200 rounded-lg shadow-md mx-1 ">
                 <Tooltip title="Search" position="bottom" trigger="mouseenter">
@@ -843,27 +828,44 @@ export default function TicketPage1() {
                 <option value="CLOSED">CLOSED</option>
               </select>
 
-              {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN"  || user1.user.roles[0].name == "MANAGER"? (
+              {user1.user.roles[0].name == "ADMIN" || user1.user.roles[0].name == "IT_ADMIN" || user1.user.roles[0].name == "MANAGER" ? (
+                <div className="w-44 space-y-2">
+                <Select
+                  onChange={handleChange}
+                  options={userOptions}
+                  placeholder="Select..."
+                  isSearchable
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      borderRadius: "8px",
+                    }),
+                  }}
+                  theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                      ...theme.colors,
+                      primary25: "#4CC9FE",
+                      primary: "#4CC9FE",
+                    },
+                  })}
+                />
+              </div>
+              ) : null}
+
+
               <select
-                id="type"
+                id="sortBy"
                 className="bg-white border border-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-44 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                // onClick={handleSearchStatus}
-                onChange={(e) => handleViewForSetSelectedUser(e.target.value)}
-              // value={tickets?.user?.id}
+                onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value="">Select...</option>
-                {userList?.map((user) => (
-                  <option
-                    key={user.id} value={user.id}
-                  >
-                    {user.firstName} {user.lastName}
-                  </option>
-                ))}
-
+                <option value="">Sort By</option>
+                <option value="createdDate">Created Date</option>
+                <option value="updatedDate">Updated Date</option>
+                <option value="closedDate">Closed Date</option>
               </select>
-                  ):null}
 
-
+              
 
 
               <div class="flex justify-between">
@@ -896,7 +898,7 @@ export default function TicketPage1() {
 
 
 
-            {tickets.slice(pagesVisited,pagesVisited+ticketsPerPage).map((ticket, index) => (
+            {tickets.slice(pagesVisited, pagesVisited + ticketsPerPage).map((ticket, index) => (
 
               <div class=" relative block overflow-hidden rounded-lg border border-gray-100 p-2 sm:p-6 lg:p-2 mx-2 mt-4 max-w-sm shadow-lg w-5/6 h-auto">
                 <span class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-sky-300 via-blue-100 to-sky-500"></span>
@@ -905,7 +907,7 @@ export default function TicketPage1() {
                     <div className="flex flex-col">
 
                       <button className=" text-gray-700 text-base font-bold " className="ellipsis"
-                              onClick={() => handleView2(ticket.id)}
+                        onClick={() => handleView2(ticket.id)}
 
                       >
                         {ticket.title}
@@ -913,11 +915,11 @@ export default function TicketPage1() {
                       <div className="text-base mb-2">{ticket?.user?.firstName} {""} {ticket?.user?.lastName}</div>
 
                       {ticket.type == "SOFTWARE" ? (
-                          <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
+                        <span className=" py-1 text-blue-700 text-sm font-semibold text-black-600">
                           SOFTWARE
                         </span>
                       ) : (
-                          <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
+                        <span className="  py-1 text-blue-500 text-sm font-semibold text-black-600">
                           HARDWARE
                         </span>
                       )}
@@ -926,7 +928,7 @@ export default function TicketPage1() {
                     <a href="#" class="inline-block pb-12">
 
                       <span
-                          class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-sky-300 via-sky-200 to-blue-200 rounded-full">
+                        class="inline-flex items-center justify-center  font-bold w-9 h-9 mx-2 text-sm  text-gray-800 bg-gradient-to-r from-sky-300 via-sky-200 to-blue-200 rounded-full">
                         {ticket.id}
                       </span>
                     </a>
@@ -943,15 +945,15 @@ export default function TicketPage1() {
                     <Tooltip title="View Comment" position="bottom" trigger="mouseenter">
                       <button
 
-                          type="button"
-                          className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
+                        type="button"
+                        className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
 
-                          onClick={() => handleView4(ticket)}
+                        onClick={() => handleView4(ticket)}
 
                       >
                         <div className="flex  ">
 
-                          <ForumOutlined/>
+                          <ForumOutlined />
 
 
                         </div>
@@ -959,20 +961,20 @@ export default function TicketPage1() {
 
                       </button>
                     </Tooltip>
-                  {/*  Ticket History */}
+                    {/*  Ticket History */}
 
                     <Tooltip title="View Ticket History" position="bottom" trigger="mouseenter">
                       <button
 
-                          type="button"
-                          className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
+                        type="button"
+                        className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1 "
 
-                          onClick={() => handleTicketHistory(ticket)}
+                        onClick={() => handleTicketHistory(ticket)}
 
                       >
                         <div className="flex  ">
 
-                          <WorkHistoryOutlined/>
+                          <WorkHistoryOutlined />
 
                           {/*<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18"*/}
                           {/*     viewBox="0 0 48 48">*/}
@@ -990,7 +992,7 @@ export default function TicketPage1() {
                   </dd>
                   <dl class="mt-6 flex gap-4 sm:gap-6">
                     <div className="flex flex-col-reverse">
-                      <dt class="text-sm font-medium text-gray-600">{}</dt>
+                      <dt class="text-sm font-medium text-gray-600">{ }</dt>
 
                     </div>
 
@@ -1001,168 +1003,169 @@ export default function TicketPage1() {
                     <dt class="text-sm font-medium text-gray-600 ">
                       <dd className="text-xs text-gray-500">Ticket Status</dd>
                       {ticket.status === "OPEN" ? (
-                          <span
-                              className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
-                        OPEN
-                      </span>
+                        <span
+                          className="text-green-600 bg-green-300  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                          OPEN
+                        </span>
                       ) : ticket.status === "IN_PROGRESS" ? (
-                          <span
-                              className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
-                        IN_PROGRESS
-                      </span>
+                        <span
+                          className="text-blue-600  bg-blue-400  px-2  rounded-full text-sm font-semibold text-black-600 ">
+                          IN_PROGRESS
+                        </span>
                       ) : ticket.status === "ACCEPTED" ? (
-                          <span
-                              className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
-                        ACCEPTED
-                      </span>
-                    ): ticket.status === "COMPLETED" ? (
-                      <span className="text-pink-900 text-sm font-semibold text-black-600 bg-pink-200  px-2  rounded-full mt-2 ">
-                        COMPLETED
-                      </span>
+                        <span
+                          className="text-pink-600 text-sm font-semibold text-black-600 bg-pink-400  px-2  rounded-full mt-2 ">
+                          ACCEPTED
+                        </span>
+                      ) : ticket.status === "COMPLETED" ? (
+                        <span className="text-pink-900 text-sm font-semibold text-black-600 bg-pink-200  px-2  rounded-full mt-2 ">
+                          COMPLETED
+                        </span>
                       ) : (
-                          <span
-                              className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
-                        CLOSED
-                      </span>
+                        <span
+                          className="text-red-500 text-sm font-semibold text-black-600 bg-red-200  px-2  rounded-full mt-2 ">
+                          CLOSED
+                        </span>
                       )}</dt>
 
                     <div className="flex items-center">
-                      {user1.user.roles[0].name == "ADMIN"  ? (
-                          <Tooltip title="Delete" position="bottom" trigger="mouseenter">
-                            <button
-                                type="button"
-                                className="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
+                      {user1.user.roles[0].name == "ADMIN" ? (
+                        <Tooltip title="Delete" position="bottom" trigger="mouseenter">
+                          <button
+                            type="button"
+                            className="p-2 bg-white border  w-fit h-fit hover:bg-red-200 rounded-lg shadow-md mx-1"
 
-                                onClick={() => {setShowDeleteTicketModel(true);
-                                    setDeleteTicketId(ticket.id);
-                                }
+                            onClick={() => {
+                              setShowDeleteTicketModel(true);
+                              setDeleteTicketId(ticket.id);
+                            }
 
                             }
-                            >
+                          >
 
-                              <DeleteOutlineOutlined/>
+                            <DeleteOutlineOutlined />
 
-                            </button>
-                          </Tooltip>
+                          </button>
+                        </Tooltip>
                       ) : null}
                       <Tooltip title="Add Comment" position="bottom" trigger="mouseenter">
                         <button
-                            type="button"
-                            className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                          type="button"
+                          className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                            onClick={() => handleView(ticket)}
+                          onClick={() => handleView(ticket)}
 
                         >
-                          <AddCommentOutlined/>
+                          <AddCommentOutlined />
 
                         </button>
                       </Tooltip>
                       {user1.user.roles[0].name == "ADMIN" ? (
-                          <Tooltip title="Update Ticket" position="bottom" trigger="mouseenter">
-                            <button
-                                type="button"
-                                className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                        <Tooltip title="Update Ticket" position="bottom" trigger="mouseenter">
+                          <button
+                            type="button"
+                            className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                                onClick={() => handleView6(ticket)}
+                            onClick={() => handleView6(ticket)}
 
-                            >
-                              <UpdateIcon />
+                          >
+                            <UpdateIcon />
 
 
-                            </button>
+                          </button>
 
-                          </Tooltip>
+                        </Tooltip>
                       ) : null}
-                      {user1.user.roles[0].name === 'EMPLOYEE' && (ticket.status === "OPEN" || ticket.status === "COMPLETED" ) ? (
-                          <Tooltip title="Close Ticket" position="bottom" trigger="mouseenter">
-                            <button
-                                type="button"
-                                className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
+                      {user1.user.roles[0].name === 'EMPLOYEE' && (ticket.status === "OPEN" || ticket.status === "COMPLETED") ? (
+                        <Tooltip title="Close Ticket" position="bottom" trigger="mouseenter">
+                          <button
+                            type="button"
+                            className="p-2 bg-white border  w-fit h-fit hover:bg-blue-200 rounded-lg shadow-md mx-1"
 
-                                onClick={() => handleView7(ticket)}
+                            onClick={() => handleView7(ticket)}
 
-                            >
-                              <Close />
+                          >
+                            <Close />
 
 
 
-                            </button>
+                          </button>
 
-                          </Tooltip>
+                        </Tooltip>
                       ) : null
 
                       }
 
                       {showDeleteTicketModel ? (
-                          <>
-                            <div className="fixed inset-0 z-10 overflow-y-auto">
-                              <div
-                                  className="fixed inset-0 w-full h-full bg-black opacity-40"
-                                  onClick={() => setShowDeleteTicketModel(false)}
-                              ></div>
-                              <div className="flex items-center min-h-screen px-4 py-8">
-                                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
-                                  <div className="mt-3 sm:flex">
-                                    <button
-                                        type="button"
-                                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                                        onClick={() => setShowDeleteTicketModel(false)}
+                        <>
+                          <div className="fixed inset-0 z-10 overflow-y-auto">
+                            <div
+                              className="fixed inset-0 w-full h-full bg-black opacity-40"
+                              onClick={() => setShowDeleteTicketModel(false)}
+                            ></div>
+                            <div className="flex items-center min-h-screen px-4 py-8">
+                              <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700">
+                                <div className="mt-3 sm:flex">
+                                  <button
+                                    type="button"
+                                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                                    onClick={() => setShowDeleteTicketModel(false)}
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      class="w-5 h-5"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                      xmlns="http://www.w3.org/2000/svg"
                                     >
-                                      <svg
-                                          aria-hidden="true"
-                                          class="w-5 h-5"
-                                          fill="currentColor"
-                                          viewBox="0 0 20 20"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                            clip-rule="evenodd"
-                                        ></path>
-                                      </svg>
-                                      <span className="sr-only">Close modal</span>
-                                    </button>
+                                      <path
+                                        fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"
+                                      ></path>
+                                    </svg>
+                                    <span className="sr-only">Close modal</span>
+                                  </button>
 
-                                    <div className="p-6 text-center">
-                                      <svg
-                                          aria-hidden="true"
-                                          class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
-                                          fill="none"
-                                          stroke="currentColor"
-                                          viewBox="0 0 24 24"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        ></path>
-                                      </svg>
-                                      <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                        Are you sure you want to delete this ticket?
-                                      </h3>
-                                      <button
-                                          type="button"
-                                          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                                          onClick={() => handleDeleteTicket()}
-                                      >
-                                        Yes, I'm sure
-                                      </button>
-                                      <button
-                                          type="button"
-                                          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                                          onClick={() => setShowDeleteTicketModel(false)}
-                                      >
-                                        No, cancel
-                                      </button>
-                                    </div>
+                                  <div className="p-6 text-center">
+                                    <svg
+                                      aria-hidden="true"
+                                      class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      ></path>
+                                    </svg>
+                                    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                      Are you sure you want to delete this ticket?
+                                    </h3>
+                                    <button
+                                      type="button"
+                                      class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                      onClick={() => handleDeleteTicket()}
+                                    >
+                                      Yes, I'm sure
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                      onClick={() => setShowDeleteTicketModel(false)}
+                                    >
+                                      No, cancel
+                                    </button>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </>
+                          </div>
+                        </>
                       ) : null}
 
                     </div>
@@ -1177,23 +1180,23 @@ export default function TicketPage1() {
 
             ))}
 
-            <br/>
+            <br />
 
 
-            
+
           </div>
 
-          <br/>
+          <br />
           <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={pageCount}
-              onPageChange={changePage}
-              containerClassName={"paginationBttns"}
-              previousLinkClassName={"previousBttn"}
-              nextLinkClassName={"nextBttn"}
-              disabledClassName={"paginationDisabled"}
-              activeClassName={"paginationActive"}
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            pageCount={pageCount}
+            onPageChange={changePage}
+            containerClassName={"paginationBttns"}
+            previousLinkClassName={"previousBttn"}
+            nextLinkClassName={"nextBttn"}
+            disabledClassName={"paginationDisabled"}
+            activeClassName={"paginationActive"}
           />
 
 
@@ -1201,19 +1204,19 @@ export default function TicketPage1() {
           <nav className='block'>
             <ul className='flex pl-0 pb-4 rounded list-none flex-wrap justify-end mr-8'>
               {pageNumbers.map((number) => (
-                  <li key={number}>
-                    <a
-                        onClick={() => handlePageChange(number)}
-                        href='#'
-                        className={
-                          currentPage === number
-                              ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                              : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
-                        }
-                    >
-                      {number}
-                    </a>
-                  </li>
+                <li key={number}>
+                  <a
+                    onClick={() => handlePageChange(number)}
+                    href='#'
+                    className={
+                      currentPage === number
+                        ? 'bg-blue border-sky-500 mx-1 text-sky-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                        : 'bg-white border-sky-500 mx-1 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border-2 rounded-lg text-sm font-medium'
+                    }
+                  >
+                    {number}
+                  </a>
+                </li>
               ))}
             </ul>
           </nav>
@@ -1229,14 +1232,14 @@ export default function TicketPage1() {
 
 
       {showModal1 ? (
-          <>
+        <>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div
-                  className="fixed inset-0 w-full h-full bg-black opacity-40"
-                  onClick={() => setShowModal1(false)}
-              ></div>
-              <div>
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowModal1(false)}
+            ></div>
+            <div>
               <div className="flex items-center min-h-screen px-4 py-8">
                 <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
                   <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -1315,17 +1318,17 @@ export default function TicketPage1() {
                     {/*/>*/}
 
                     <TextField
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        inputProps={{
-                          maxlength: 300
-                        }}
-                        multiline
-                        value={description}
-                        helperText={`${description.length}/ 300`}
-                        onChange={(e) => setDescription(e.target.value)}
-                        margin="normal"
-                        variant="outlined"
-                        rows={3}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      inputProps={{
+                        maxlength: 300
+                      }}
+                      multiline
+                      value={description}
+                      helperText={`${description.length}/ 300`}
+                      onChange={(e) => setDescription(e.target.value)}
+                      margin="normal"
+                      variant="outlined"
+                      rows={3}
                     />
 
                   </div>
@@ -1543,155 +1546,155 @@ export default function TicketPage1() {
                     /></div>
 
 
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN"|| (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN") ?(
-                  <div class="px-6 py-4">
-                    <h1>Description</h1>
-                    {/* <p class="text-gray-700 text-base" className="break">
-                      {selectedTicket.description}
-                    </p> */}
-                    <textarea
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      disabled="true"
-                      value={selectedTicket2.description}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          description: e.target.value,
-                        })
-                      }
-
-                    />
-                  </div>):(
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name === 'EMPLOYEE' && selectedTicket2.status !== "OPEN") ? (
                     <div class="px-6 py-4">
-                    <h1>Description</h1>
-                    {/* <p class="text-gray-700 text-base" className="break">
+                      <h1>Description</h1>
+                      {/* <p class="text-gray-700 text-base" className="break">
                       {selectedTicket.description}
                     </p> */}
-                    {/*<textarea*/}
-                    {/*  type="text"*/}
-                    {/*  id="question"*/}
-                    {/*  className="w-full p-2 border border-gray-300 rounded-md"*/}
-                    {/*  value={selectedTicket2.description}*/}
-                    {/*  onChange={(e) =>*/}
-                    {/*    setSelectedTicket2({*/}
-                    {/*      ...selectedTicket2,*/}
-                    {/*      description: e.target.value,*/}
-                    {/*    })*/}
-                    {/*  }*/}
+                      <textarea
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        disabled="true"
+                        value={selectedTicket2.description}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            description: e.target.value,
+                          })
+                        }
 
-                    {/*/>*/}
+                      />
+                    </div>) : (
+                    <div class="px-6 py-4">
+                      <h1>Description</h1>
+                      {/* <p class="text-gray-700 text-base" className="break">
+                      {selectedTicket.description}
+                    </p> */}
+                      {/*<textarea*/}
+                      {/*  type="text"*/}
+                      {/*  id="question"*/}
+                      {/*  className="w-full p-2 border border-gray-300 rounded-md"*/}
+                      {/*  value={selectedTicket2.description}*/}
+                      {/*  onChange={(e) =>*/}
+                      {/*    setSelectedTicket2({*/}
+                      {/*      ...selectedTicket2,*/}
+                      {/*      description: e.target.value,*/}
+                      {/*    })*/}
+                      {/*  }*/}
+
+                      {/*/>*/}
                       <TextField
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                          inputProps={{
-                            maxlength: 300
-                          }}
-                          multiline
-                          value={selectedTicket2.description}
-                          helperText={`${selectedTicket2.description.length}/ 300`}
-                          onChange={(e) =>
-                              setSelectedTicket2({
-                                ...selectedTicket2,
-                                description: e.target.value,
-                              })}
-                          margin="normal"
-                          variant="outlined"
-                          rows={3}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        inputProps={{
+                          maxlength: 300
+                        }}
+                        multiline
+                        value={selectedTicket2.description}
+                        helperText={`${selectedTicket2.description.length}/ 300`}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            description: e.target.value,
+                          })}
+                        margin="normal"
+                        variant="outlined"
+                        rows={3}
                       />
 
-                  </div>
+                    </div>
                   )}
 
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN")?(
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name === 'EMPLOYEE' && selectedTicket2.status !== "OPEN") ? (
                     <div class="px-6 py-4">
-                    <h1>Type</h1>
-                    <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      disabled="true"
-                      value={selectedTicket2?.type}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          ticketId: e.target.value,
-                        })
-                      }
+                      <h1>Type</h1>
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        disabled="true"
+                        value={selectedTicket2?.type}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            ticketId: e.target.value,
+                          })
+                        }
 
-                    />
-                  </div>):(<div class="px-6 py-4">
-                    <h1>Type</h1>
-                    <select
-                      id="type"
-                      className="w-full p-2 border border-gray-50 rounded-md"
-                      value={selectedTicket2.type}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          type: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="SOFTWARE">SOFTWARE</option>
-                      <option value="HARDWARE">HARDWARE</option>
-                    </select>
-                  </div>)}
-                  
-                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name==='EMPLOYEE' && selectedTicket2.status !=="OPEN") ?(
-                  <div class="px-6 py-4">
-                    <h1>Title</h1>
-                    
-                    <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      disabled="true"
-                      value={selectedTicket2.title}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          title: e.target.value,
-                        })
-                      }
-
-                    />
-
-                  </div>):(
-                    <div class="px-6 py-4">
-                    <h1>Title</h1>
-                    
-                    <input
-                      type="text"
-                      id="question"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      value={selectedTicket2.title}
-                      onChange={(e) =>
-                        setSelectedTicket2({
-                          ...selectedTicket2,
-                          title: e.target.value,
-                        })
-                      }
-
-                    />
-                    <div class="mt-4">
-                      <button
-                        type="button"
-                        className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                        // onClick={EditTicket}
-                        onClick={() => {
-                          EditTicket();
-                          setShowModal3(false);
-                        }}
+                      />
+                    </div>) : (<div class="px-6 py-4">
+                      <h1>Type</h1>
+                      <select
+                        id="type"
+                        className="w-full p-2 border border-gray-50 rounded-md"
+                        value={selectedTicket2.type}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            type: e.target.value,
+                          })
+                        }
                       >
-                        Update
-                      </button>
+                        <option value="SOFTWARE">SOFTWARE</option>
+                        <option value="HARDWARE">HARDWARE</option>
+                      </select>
+                    </div>)}
+
+                  {user1.user.roles[0].name === "ADMIN" || user1.user.roles[0].name === "IT_ADMIN" || (user1.user.roles[0].name === 'EMPLOYEE' && selectedTicket2.status !== "OPEN") ? (
+                    <div class="px-6 py-4">
+                      <h1>Title</h1>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        disabled="true"
+                        value={selectedTicket2.title}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            title: e.target.value,
+                          })
+                        }
+
+                      />
+
+                    </div>) : (
+                    <div class="px-6 py-4">
+                      <h1>Title</h1>
+
+                      <input
+                        type="text"
+                        id="question"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={selectedTicket2.title}
+                        onChange={(e) =>
+                          setSelectedTicket2({
+                            ...selectedTicket2,
+                            title: e.target.value,
+                          })
+                        }
+
+                      />
+                      <div class="mt-4">
+                        <button
+                          type="button"
+                          className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                          // onClick={EditTicket}
+                          onClick={() => {
+                            EditTicket();
+                            setShowModal3(false);
+                          }}
+                        >
+                          Update
+                        </button>
+
+
+                      </div>
 
 
                     </div>
-
-
-                  </div>
                   )}
 
 
@@ -1871,40 +1874,40 @@ export default function TicketPage1() {
                   {selectedTicket.comments.map((comment) => (
 
 
-                      <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                        <div className="flex items-center justify-between">
-                          <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
-                          <a className="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 "
-                             tabIndex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
-                        </div>
-                        <div className="flex items-center justify-between mt-4">
-                          <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline" tabIndex="0"
-                             role="link">{comment.id}</a>
-                        </div>
-                        <div className="mt-2">
-
-                          <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
-                        </div>
-                        <div className="flex items-center justify-between mt-4">
-                          <label className="text-sm font-light text-gray-600 dark:text-gray-400">
-                              <span
-                                  className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
-                          </label>
-                          <label className="text-sm font-light text-gray-600 dark:text-gray-400">
-                              <span
-                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(comment.createdDate)}</span>
-                          </label>
-
-
-                        </div>
+                    <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                      <div className="flex items-center justify-between">
+                        <span class="text-sm font-light text-gray-600 dark:text-gray-400">{comment.userName}</span>
+                        <a className="px-3 py-1 text-sm font-bold text-gray-800 transition-colors duration-300 "
+                          tabIndex="0" role="button"> {formatCreatedDate(comment.createdDate)}</a>
                       </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline" tabIndex="0"
+                          role="link">{comment.id}</a>
+                      </div>
+                      <div className="mt-2">
+
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{comment.comment}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                          <span
+                            className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
+                        </label>
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                          <span
+                            className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(comment.createdDate)}</span>
+                        </label>
+
+
+                      </div>
+                    </div>
 
 
                   ))}
                 </div>
 
 
-                <br/>
+                <br />
 
               </div>
             </div>
@@ -1924,197 +1927,197 @@ export default function TicketPage1() {
       ) : null}
 
       {showTicketHistoryModel ? (
-          <>
-            {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
-            <div className="fixed inset-0 z-10 overflow-y-auto ">
-              <div
-                  className="fixed inset-0 w-full h-full bg-black opacity-40"
-                  onClick={() => setTicketHistoryModel(false)}
-              ></div>
-              <div>
-                <div className="flex items-center min-h-screen px-4 py-8">
-                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
-                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                      <div class="font-bold text-xl mb-2">View Ticket History</div>
-                      <button
-                          type="button"
-                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                          onClick={() => setTicketHistoryModel(false)}
+        <>
+          {/* {tickets?.tickets?.body?.map((ticket, index) => ( */}
+          <div className="fixed inset-0 z-10 overflow-y-auto ">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setTicketHistoryModel(false)}
+            ></div>
+            <div>
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container ">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <div class="font-bold text-xl mb-2">View Ticket History</div>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setTicketHistoryModel(false)}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                              fill-rule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-
-
-
-
-                    <p class="text-gray-700 text-base font-bold "   >
-
-
-
-                    </p>
-
-
-                    {selectedTicket.history.map((history) => (
-
-
-                        <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                          <div className="flex items-center justify-between">
-                            <span
-                                class="text-sm font-light text-gray-600 dark:text-gray-400">{history?.updatedUser?.firstName}</span>
-                            <a class="px-3 py-1 text-sm font-bold text-gray-600 transition-colors duration-300 "
-                               tabindex="0" role="button"> {formatCreatedDate(history?.date)}</a>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status From :
-                              <span
-                                  className="text-sm font-bold text-gray-600 dark:text-gray-400">{history?.oldStatus}</span>
-                            </label>
-                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status To :
-                              <span
-                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{history?.newStatus}</span>
-                            </label>
-                          </div>
-
-                          <div className="flex items-center justify-between mt-4">
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">{history.comment}</p>
-
-
-                          </div>
-                          <div className="flex items-center justify-between mt-4">
-                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">
-                              <span
-                                  className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
-                            </label>
-                            <label className="text-sm font-light text-gray-600 dark:text-gray-400">
-                              <span
-                                  className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(history?.date)}</span>
-                            </label>
-
-
-                          </div>
-                        </div>
-
-
-                    ))}
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
                   </div>
 
 
-                  <br/>
 
+
+                  <p class="text-gray-700 text-base font-bold "   >
+
+
+
+                  </p>
+
+
+                  {selectedTicket.history.map((history) => (
+
+
+                    <div className="mt-2  max-w-2xl px-8 py-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+                      <div className="flex items-center justify-between">
+                        <span
+                          class="text-sm font-light text-gray-600 dark:text-gray-400">{history?.updatedUser?.firstName}</span>
+                        <a class="px-3 py-1 text-sm font-bold text-gray-600 transition-colors duration-300 "
+                          tabindex="0" role="button"> {formatCreatedDate(history?.date)}</a>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status From :
+                          <span
+                            className="text-sm font-bold text-gray-600 dark:text-gray-400">{history?.oldStatus}</span>
+                        </label>
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">Status To :
+                          <span
+                            className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{history?.newStatus}</span>
+                        </label>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-4">
+                        <p className="mt-2 text-gray-600 dark:text-gray-300">{history.comment}</p>
+
+
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                          <span
+                            className="text-sm font-bold text-gray-600 dark:text-gray-400"></span>
+                        </label>
+                        <label className="text-sm font-light text-gray-600 dark:text-gray-400">
+                          <span
+                            className="px-3 py-1 text-sm font-bold text-gray-600 dark:text-gray-400 ">{timeSince(history?.date)}</span>
+                        </label>
+
+
+                      </div>
+                    </div>
+
+
+                  ))}
                 </div>
+
+
+                <br />
+
               </div>
-
-
-            </div>
-
-            <div class="max-w-sm rounded overflow-hidden shadow-lg ">
-
-
             </div>
 
 
-            {/* ))}  */}
+          </div>
 
-          </>
+          <div class="max-w-sm rounded overflow-hidden shadow-lg ">
+
+
+          </div>
+
+
+          {/* ))}  */}
+
+        </>
       ) : null}
 
 
       {showEmployeeCloseModel ? (
-          <>
+        <>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div
-                  className="fixed inset-0 w-full h-full bg-black opacity-40"
-                  onClick={() => setShowEmployeeCloseModel(false)}
-              ></div>
-              <div>
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              className="fixed inset-0 w-full h-full bg-black opacity-40"
+              onClick={() => setShowEmployeeCloseModel(false)}
+            ></div>
+            <div>
 
-                <div className="flex items-center min-h-screen px-4 py-8">
-                  <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
-                    <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                      <h5 className="text-4xl font-bold text-blue-400">
-                        Ticket close
-                      </h5>
-                      <button
-                          type="button"
-                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                          onClick={() => setShowEmployeeCloseModel(false)}
-                      >
-                        <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                              fill-rule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-
-                    <input type={"hidden"}/>
-                    <div className="w-full">
-                      <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
-                        Comment
-                      </label>
-                      <textarea
-                          id="description"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                          onChange={(e) => setComment(e.target.value)
-                      }
-                          placeholder="comment"
-
-                      ></textarea>
-
-                    </div>
-
-
-
-
-
-
-                    <br />
+              <div className="flex items-center min-h-screen px-4 py-8">
+                <div className="relative bg-white rounded-lg max-w-lg p-4 mx-auto shadow dark:bg-gray-700 modal-container1">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h5 className="text-4xl font-bold text-blue-400">
+                      Ticket close
+                    </h5>
                     <button
-                        type="button"
-                        className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                        // onClick={CloseComment}
-                        onClick={() => {
-                          CloseEmployeeTicket();
-                          setShowEmployeeCloseModel(false);
-                        }}
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowEmployeeCloseModel(false)}
                     >
-                      Close Ticket
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
                     </button>
+                  </div>
 
+                  <input type={"hidden"} />
+                  <div className="w-full">
+                    <label htmlFor="description" className="block mb-2 w-96 text-sm mt-2 font-medium text-gray-900 dark:text-gray-300">
+                      Comment
+                    </label>
+                    <textarea
+                      id="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setComment(e.target.value)
+                      }
+                      placeholder="comment"
+
+                    ></textarea>
 
                   </div>
+
+
+
+
+
+
+                  <br />
+                  <button
+                    type="button"
+                    className="text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                    // onClick={CloseComment}
+                    onClick={() => {
+                      CloseEmployeeTicket();
+                      setShowEmployeeCloseModel(false);
+                    }}
+                  >
+                    Close Ticket
+                  </button>
+
+
                 </div>
-
-
               </div>
 
 
             </div>
 
 
+          </div>
 
-          </>
+
+
+        </>
       ) : null}
 
 
